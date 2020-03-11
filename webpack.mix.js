@@ -1,17 +1,6 @@
 const mix = require("laravel-mix");
 
-/* mix.options({
-    hmrOptions: {
-        host: "localhost",
-        port: "8080"
-    }
-});
-
-mix.webpackConfig({
-    devServer: {
-        port: "8080"
-    }
-}); */
+const tailwindcss = require("tailwindcss");
 
 /*
  |--------------------------------------------------------------------------
@@ -24,7 +13,9 @@ mix.webpackConfig({
  |
  */
 
-mix.js("resources/js/app.js", "public/js").sass(
-    "resources/sass/app.scss",
-    "public/css"
-);
+mix.js("resources/js/app.js", "public/js")
+    .sass("resources/sass/app.scss", "public/css")
+    .options({
+        processCssUrls: false,
+        postCss: [tailwindcss("./tailwind.config.js")]
+    });
