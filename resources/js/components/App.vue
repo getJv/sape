@@ -1,15 +1,26 @@
 <template>
-    <div class="flex flex-col flex-1 h-screen overflow-y-hidden">
-        <Nav />
+    <v-app id="inspire">
+        <Sidebar :drawer.sync="drawer" />
 
-        <div class="flex overflow-y-hidden flex-1">
-            <Sidebar />
+        <v-app-bar app clipped-left>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+            <v-toolbar-title>SAPE</v-toolbar-title>
+        </v-app-bar>
 
-            <div class="overflow-x-hidden w-2/3">
-                <router-view></router-view>
-            </div>
-        </div>
-    </div>
+        <v-content>
+            <v-container fluid>
+                <v-row align="baseline" justify="start">
+                    <v-col>
+                        <router-view></router-view>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-content>
+
+        <v-footer app>
+            <span>&copy; 2019</span>
+        </v-footer>
+    </v-app>
 </template>
 
 <script>
@@ -22,6 +33,15 @@ export default {
     components: {
         Nav,
         Sidebar
+    },
+    props: {
+        source: String
+    },
+    data: () => ({
+        drawer: true
+    }),
+    created() {
+        this.$vuetify.theme.dark = true;
     }
 };
 </script>

@@ -1,12 +1,31 @@
 <template>
-    <div class="w-1/6 bg-white p-4 border-r border-gray-400">
-        <h2 class="font-bold text-2xl tracking-tight">Projetos</h2>
-        <ul class="list-none" v-if="!loadingProjects">
-            <li class="mt-2" v-for="item in projects" :key="item.data.id">
-                {{ item.data.attributes.name }}
-            </li>
-        </ul>
-    </div>
+    <v-navigation-drawer
+        ref="navbar"
+        @input="ocultar"
+        :value="drawer"
+        app
+        clipped
+    >
+        <v-list dense>
+            <v-list-item link>
+                <v-list-item-action>
+                    <v-icon>mdi-view-dashboard</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>Dashboard</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+            <v-list-item v-for="item in projects" :key="item.data.id" link>
+                <v-list-item-content
+                    @click="$store.dispatch('fetchProject', item.data.id)"
+                >
+                    <v-list-item-title>{{
+                        item.data.attributes.name
+                    }}</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
+    </v-navigation-drawer>
 </template>
 
 <script>
@@ -14,6 +33,15 @@ import { mapGetters } from "vuex";
 
 export default {
     name: "Sidebar",
+    props: ["drawer"],
+
+    methods: {
+        ocultar() {
+            if (!this.$refs.navbar.isActive) {
+                this.$emit("update:drawer", false);
+            }
+        }
+    },
     created() {
         this.$store.dispatch("fetchProjects");
     },
