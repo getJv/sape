@@ -4,8 +4,9 @@ import App from "./components/App";
 import store from "./store";
 import Vuetify from "vuetify";
 import "@mdi/font/css/materialdesignicons.css";
+import Vuelidate from "vuelidate";
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, Vuelidate);
 
 require("./bootstrap");
 

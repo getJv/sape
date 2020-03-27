@@ -1,8 +1,6 @@
 <template>
     <v-card>
-        <v-card-title>
-            <p>Fases do Projeto</p>
-        </v-card-title>
+        <v-card-title> Fases do Projeto </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
             <v-stepper v-model="e13" vertical>
@@ -12,7 +10,10 @@
                         @click="e13 = phase"
                         :complete="e13 < 1"
                     >
-                        Prospecções de Serviços
+                        <span>
+                            Prospecções de Serviços
+                            <BtnAddEvent :hasSession="true"
+                        /></span>
                     </v-stepper-step>
 
                     <v-stepper-content :step="phase">
@@ -34,8 +35,12 @@
 </template>
 
 <script>
+import BtnAddEvent from "../components/BtnAddEvent";
 export default {
     name: "ProjecStepper",
+    components: {
+        BtnAddEvent
+    },
     data() {
         return {
             e13: 1

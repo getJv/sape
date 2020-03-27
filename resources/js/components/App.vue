@@ -4,7 +4,9 @@
 
         <v-app-bar app clipped-left>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-            <v-toolbar-title>SAPE</v-toolbar-title>
+            <v-toolbar-title>SAPE </v-toolbar-title>
+            <!-- <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer> -->
         </v-app-bar>
 
         <v-content>
