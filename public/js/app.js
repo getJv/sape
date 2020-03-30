@@ -2104,51 +2104,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BtnEditProject",
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
-    projectDescription: {
+    eventDescription: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
       minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(21),
       maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(255)
     },
-    projectName: {
+    eventName: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
       minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(21),
       maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
     }
   },
-  props: ["hasSession"],
+  props: ["hasSession", "step_id"],
   data: function data() {
     return {
-      projectName: "",
-      projectDescription: "",
+      eventName: "",
+      eventDescription: "",
       dialog: false
     };
   },
   computed: {
-    projectNameErrors: function projectNameErrors() {
+    eventNameErrors: function eventNameErrors() {
       var errors = [];
-      if (!this.$v.projectName.$dirty) return errors;
-      !this.$v.projectName.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectName.minLength && errors.push("Mínimo de 50 caracteres");
-      !this.$v.projectName.maxLength && errors.push("Máximo de 100 caracteres");
+      if (!this.$v.eventName.$dirty) return errors;
+      !this.$v.eventName.required && errors.push("Campo Obrigatório.");
+      !this.$v.eventName.minLength && errors.push("Mínimo de 50 caracteres");
+      !this.$v.eventName.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     },
-    projectDescriptionErrors: function projectDescriptionErrors() {
+    eventDescriptionErrors: function eventDescriptionErrors() {
       var errors = [];
-      if (!this.$v.projectDescription.$dirty) return errors;
-      !this.$v.projectDescription.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectDescription.minLength && errors.push("Mínimo de 50 caracteres");
-      !this.$v.projectDescription.maxLength && errors.push("Máximo de 255 caracteres");
+      if (!this.$v.eventDescription.$dirty) return errors;
+      !this.$v.eventDescription.required && errors.push("Campo Obrigatório.");
+      !this.$v.eventDescription.minLength && errors.push("Mínimo de 50 caracteres");
+      !this.$v.eventDescription.maxLength && errors.push("Máximo de 255 caracteres");
       return errors;
     }
   }
@@ -2648,12 +2643,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BtnAddEvent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/BtnAddEvent */ "./resources/js/components/BtnAddEvent.vue");
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -38990,7 +38979,7 @@ var render = function() {
         "v-card",
         [
           _c("v-card-title", { staticClass: "headline" }, [
-            _vm._v("Nova atividade")
+            _vm._v("Nova atividade para a fase #" + _vm._s(_vm.step_id))
           ]),
           _vm._v(" "),
           _c(
@@ -39009,18 +38998,18 @@ var render = function() {
                         [
                           _c("v-text-field", {
                             attrs: {
-                              value: _vm.projectName,
-                              "error-messages": _vm.projectNameErrors,
-                              label: "Nome do Projeto",
+                              value: _vm.eventName,
+                              "error-messages": _vm.eventNameErrors,
+                              label: "Nome da atividade",
                               counter: 100,
                               required: ""
                             },
                             on: {
                               input: function($event) {
-                                return _vm.$v.projectName.$touch()
+                                return _vm.$v.eventName.$touch()
                               },
                               blur: function($event) {
-                                return _vm.$v.projectName.$touch()
+                                return _vm.$v.eventName.$touch()
                               }
                             }
                           })
@@ -39034,9 +39023,9 @@ var render = function() {
                         [
                           _c("v-textarea", {
                             attrs: {
-                              value: _vm.projectDescription,
+                              value: _vm.eventDescription,
                               hint: "Informe uma breve descrição deste projeto",
-                              "error-messages": _vm.projectDescriptionErrors,
+                              "error-messages": _vm.eventDescriptionErrors,
                               label: "Descrição do projeto",
                               counter: 255,
                               outlined: "",
@@ -39044,10 +39033,10 @@ var render = function() {
                             },
                             on: {
                               input: function($event) {
-                                return _vm.$v.projectDescription.$touch()
+                                return _vm.$v.eventDescription.$touch()
                               },
                               blur: function($event) {
-                                return _vm.$v.projectDescription.$touch()
+                                return _vm.$v.eventDescription.$touch()
                               }
                             }
                           })
@@ -39864,7 +39853,7 @@ var render = function() {
   return _c(
     "v-card",
     [
-      _c("v-card-title", [_vm._v(" Fases do Projeto ")]),
+      _c("v-card-title", [_vm._v("Fases do Projeto")]),
       _vm._v(" "),
       _c("v-divider"),
       _vm._v(" "),
@@ -39903,9 +39892,11 @@ var render = function() {
                         "span",
                         [
                           _vm._v(
-                            "\n                        Prospecções de Serviços\n                        "
+                            "\n            Prospecções de Serviços\n            "
                           ),
-                          _c("BtnAddEvent", { attrs: { hasSession: true } })
+                          _c("BtnAddEvent", {
+                            attrs: { hasSession: true, step_id: phase }
+                          })
                         ],
                         1
                       )
@@ -39918,11 +39909,10 @@ var render = function() {
                       _vm._l([1, 2, 3], function(event) {
                         return _c("li", { key: event, staticClass: "mb-3" }, [
                           _vm._v(
-                            "\n                            Fase: " +
+                            "Fase: " +
                               _vm._s(phase) +
                               ", Evento: " +
-                              _vm._s(event) +
-                              "\n                        "
+                              _vm._s(event)
                           )
                         ])
                       }),
@@ -100660,8 +100650,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\git\epl\sape\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\git\epl\sape\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\git\sape\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\git\sape\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
