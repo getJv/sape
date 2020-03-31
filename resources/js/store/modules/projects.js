@@ -12,65 +12,43 @@ const getters = {
 };
 
 const actions = {
+    createProject({ dispatch }, data) {
+        axios
+            .post("/api/projects", data)
+            .then(res => dispatch("fetchProjects"))
+            .catch(err => console.log(err.data));
+    },
+    updateProject({ getters, dispatch }, data) {
+        axios
+            .patch("/api/projects/" + getters.project.data.id, {
+                name: getters.project.data.attributes.name,
+                description: getters.project.data.attributes.description,
+                _method: "patch"
+            })
+            .then(res => dispatch("fetchProjects"))
+            .catch(err => {
+                console.log(err.data);
+            });
+    },
     fetchProjects: ({ commit }) => {
         commit("setLoadingProjects", true);
-        commit("setProjects", [
-            {
-                data: {
-                    type: "projects",
-                    id: 1,
-                    attributes: {
-                        name: "Projeto 1",
-                        description: "Este é o projeto 1",
-                        workflow: [
-                            {
-                                data: {
-                                    type: "step",
-                                    id: 1,
-                                    attributes: {
-                                        order: 1,
-                                        old_status: "Nova",
-                                        new_status: 2,
-                                        completed: "Em Andamento"
-                                    }
-                                }
-                            },
-                            {
-                                data: {
-                                    type: "step",
-                                    id: 2,
-                                    attributes: {
-                                        order: 2,
-                                        old_status: "Em Andamento",
-                                        new_status: "Concluído",
-                                        completed: true
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            {
-                data: {
-                    type: "projects",
-                    id: 2,
-                    attributes: {
-                        name: "Projeto 2",
-                        description: "Este é o projeto 2"
-                    }
-                }
-            }
-        ]);
-        commit("setLoadingProjects", false);
+        axios
+            .get("/api/projects")
+            .then(({ data }) => {
+                commit("setProjects", data);
+            })
+            .catch(err => console.log(err.data))
+            .finally(() => commit("setLoadingProjects", false));
     },
     fetchProject: ({ commit, getters }, projectId) => {
         commit("setLoadingProjects", true);
-        //posterior axios
-        commit(
-            "setProject",
-            getters.projects.find(item => item.data.id == projectId)
-        );
+        axios
+            .get("/api/projects/" + projectId)
+            .then(res => {
+                commit("setProject", res.data);
+                commit("setLoadingProjects", false);
+            })
+            .catch(err => console.log(err.data));
         commit("setLoadingProjects", false);
     }
 };
@@ -87,6 +65,9 @@ const mutations = {
     },
     setSelectedProject(state, value) {
         state.selectedProject = value;
+    },
+    editProject(state, data) {
+        state.project.data.attributes = data;
     }
 };
 

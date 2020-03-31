@@ -67,14 +67,14 @@ export default {
   props: ["hasSession"],
   methods: {
     registrar() {
-      axios
-        .post("/api/projects", {
-          name: this.projectName,
-          description: this.projectDescription
-        })
-        .then(res => console.log(res.data))
-        .catch(res => console.log(res.data))
-        .finally((this.dialog = false));
+      this.$store.dispatch("createProject", {
+        name: this.projectName,
+        description: this.projectDescription
+      });
+      this.projectName = "";
+      this.projectDescription = "";
+      this.$v.$reset();
+      this.dialog = false;
     }
   },
   data() {

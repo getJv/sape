@@ -44,6 +44,37 @@ class ProjectTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_edit_a_project()
+    {
+        $this->withoutExceptionHandling();
+        $project = factory(Project::class)->create();
+
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        $response = $this->patch('/api/projects/' . $project->id, [
+            'name' => 'My edited title',
+            'description' => 'Description of my first project'
+        ])->assertStatus(200);
+
+        $project = Project::find(1);
+        $this->assertEquals('My edited title', $project->name);
+        $this->assertEquals('Description of my first project', $project->description);
+        $response->assertJson([
+            'data' => [
+                'type' => 'projects',
+                'id' => $project->id,
+                'attributes' => [
+                    'name' => $project->name,
+                    'description' => $project->description,
+                ],
+
+            ],
+            'links' => [
+                'self' => url('/projects/' . $project->id)
+            ]
+        ]);
+    }
+
+    /** @test */
     public function a_project_can_be_requested()
     {
         $this->withoutExceptionHandling();

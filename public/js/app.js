@@ -2231,14 +2231,14 @@ __webpack_require__.r(__webpack_exports__);
   props: ["hasSession"],
   methods: {
     registrar: function registrar() {
-      axios.post("/api/projects", {
+      this.$store.dispatch("createProject", {
         name: this.projectName,
         description: this.projectDescription
-      }).then(function (res) {
-        return console.log(res.data);
-      })["catch"](function (res) {
-        return console.log(res.data);
-      })["finally"](this.dialog = false);
+      });
+      this.projectName = "";
+      this.projectDescription = "";
+      this.$v.$reset();
+      this.dialog = false;
     }
   },
   data: function data() {
@@ -2283,6 +2283,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2331,19 +2338,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2362,19 +2357,54 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   props: ["hasSession"],
+  created: function created() {
+    // Valor utilizado em caso do cancelamento da edição
+    this.reset_data = this.project.data.attributes;
+  },
+  methods: {
+    cancelar: function cancelar() {
+      this.$store.commit("editProject", this.reset_data);
+      this.dialog = false;
+    },
+    atualizar: function atualizar() {
+      this.$store.dispatch("updateProject");
+      this.dialog = false;
+    }
+  },
   data: function data() {
     return {
-      projectName: "",
-      projectDescription: "",
-      dialog: false
+      dialog: false,
+      reset_data: ""
     };
   },
-  computed: {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(["project"]), {
+    projectDescription: {
+      get: function get() {
+        return this.project.data.attributes.description;
+      },
+      set: function set(value) {
+        this.$store.commit("editProject", {
+          name: this.project.data.attributes.name,
+          description: value
+        });
+      }
+    },
+    projectName: {
+      get: function get() {
+        return this.project.data.attributes.name;
+      },
+      set: function set(value) {
+        this.$store.commit("editProject", {
+          name: value,
+          description: this.project.data.attributes.description
+        });
+      }
+    },
     projectNameErrors: function projectNameErrors() {
       var errors = [];
       if (!this.$v.projectName.$dirty) return errors;
       !this.$v.projectName.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectName.minLength && errors.push("Mínimo de 50 caracteres");
+      !this.$v.projectName.minLength && errors.push("Mínimo de 21 caracteres");
       !this.$v.projectName.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     },
@@ -2382,11 +2412,11 @@ __webpack_require__.r(__webpack_exports__);
       var errors = [];
       if (!this.$v.projectDescription.$dirty) return errors;
       !this.$v.projectDescription.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectDescription.minLength && errors.push("Mínimo de 50 caracteres");
+      !this.$v.projectDescription.minLength && errors.push("Mínimo de 21 caracteres");
       !this.$v.projectDescription.maxLength && errors.push("Máximo de 255 caracteres");
       return errors;
     }
-  }
+  })
 });
 
 /***/ }),
@@ -2861,6 +2891,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2904,9 +2938,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
 //
 //
 //
@@ -39508,7 +39539,6 @@ var render = function() {
                                 [
                                   _c("v-text-field", {
                                     attrs: {
-                                      value: _vm.projectName,
                                       "error-messages": _vm.projectNameErrors,
                                       label: "Nome do Projeto",
                                       counter: 100,
@@ -39521,6 +39551,13 @@ var render = function() {
                                       blur: function($event) {
                                         return _vm.$v.projectName.$touch()
                                       }
+                                    },
+                                    model: {
+                                      value: _vm.projectName,
+                                      callback: function($$v) {
+                                        _vm.projectName = $$v
+                                      },
+                                      expression: "projectName"
                                     }
                                   })
                                 ],
@@ -39533,7 +39570,6 @@ var render = function() {
                                 [
                                   _c("v-textarea", {
                                     attrs: {
-                                      value: _vm.projectDescription,
                                       hint:
                                         "Informe uma breve descrição deste projeto",
                                       "error-messages":
@@ -39550,6 +39586,13 @@ var render = function() {
                                       blur: function($event) {
                                         return _vm.$v.projectDescription.$touch()
                                       }
+                                    },
+                                    model: {
+                                      value: _vm.projectDescription,
+                                      callback: function($$v) {
+                                        _vm.projectDescription = $$v
+                                      },
+                                      expression: "projectDescription"
                                     }
                                   })
                                 ],
@@ -39576,7 +39619,7 @@ var render = function() {
                           attrs: { color: "primary", text: "" },
                           on: {
                             click: function($event) {
-                              _vm.dialog = false
+                              return _vm.cancelar()
                             }
                           }
                         },
@@ -39589,11 +39632,11 @@ var render = function() {
                           attrs: { color: "primary", outlined: "" },
                           on: {
                             click: function($event) {
-                              _vm.dialog = false
+                              return _vm.atualizar()
                             }
                           }
                         },
-                        [_vm._v("Salvar")]
+                        [_vm._v("Atualizar")]
                       )
                     ],
                     1
@@ -40335,37 +40378,48 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _vm._l(_vm.projects, function(item) {
-            return _c(
-              "v-list-item",
-              { key: item.data.id, attrs: { link: "" } },
-              [
-                _c(
-                  "v-list-item-content",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.$store.dispatch("fetchProject", item.data.id)
-                      }
-                    }
-                  },
-                  [
-                    _c("v-list-item-title", [
-                      _vm._v(
-                        "\n          " +
-                          _vm._s(item.data.attributes.name) +
-                          "\n        "
+          _vm.projects
+            ? _c(
+                "span",
+                _vm._l(_vm.projects.data, function(item) {
+                  return _c(
+                    "v-list-item",
+                    { key: item.data.id, attrs: { link: "" } },
+                    [
+                      _c(
+                        "v-list-item-content",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.$store.dispatch(
+                                "fetchProject",
+                                item.data.id
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c("v-list-item-title", [
+                            _vm._v(
+                              "\n            " +
+                                _vm._s(item.data.id) +
+                                " -\n            " +
+                                _vm._s(item.data.attributes.name) +
+                                "\n          "
+                            )
+                          ])
+                        ],
+                        1
                       )
-                    ])
-                  ],
-                  1
-                )
-              ],
-              1
-            )
-          })
+                    ],
+                    1
+                  )
+                }),
+                1
+              )
+            : _vm._e()
         ],
-        2
+        1
       )
     ],
     1
@@ -40415,12 +40469,15 @@ var render = function() {
                             "v-card-title",
                             [
                               _vm._v(
-                                "\n                        " +
+                                "\n            " +
                                   _vm._s(_vm.project.data.attributes.name) +
-                                  "\n                        "
+                                  "\n            "
                               ),
                               _c("BtnEditProject", {
-                                attrs: { hasSession: _vm.hasSession }
+                                attrs: {
+                                  hasSession: _vm.hasSession,
+                                  item: _vm.project
+                                }
                               })
                             ],
                             1
@@ -100903,61 +100960,49 @@ var getters = {
   }
 };
 var actions = {
-  fetchProjects: function fetchProjects(_ref) {
-    var commit = _ref.commit;
-    commit("setLoadingProjects", true);
-    commit("setProjects", [{
-      data: {
-        type: "projects",
-        id: 1,
-        attributes: {
-          name: "Projeto 1",
-          description: "Este é o projeto 1",
-          workflow: [{
-            data: {
-              type: "step",
-              id: 1,
-              attributes: {
-                order: 1,
-                old_status: "Nova",
-                new_status: 2,
-                completed: "Em Andamento"
-              }
-            }
-          }, {
-            data: {
-              type: "step",
-              id: 2,
-              attributes: {
-                order: 2,
-                old_status: "Em Andamento",
-                new_status: "Concluído",
-                completed: true
-              }
-            }
-          }]
-        }
-      }
-    }, {
-      data: {
-        type: "projects",
-        id: 2,
-        attributes: {
-          name: "Projeto 2",
-          description: "Este é o projeto 2"
-        }
-      }
-    }]);
-    commit("setLoadingProjects", false);
+  createProject: function createProject(_ref, data) {
+    var dispatch = _ref.dispatch;
+    axios.post("/api/projects", data).then(function (res) {
+      return dispatch("fetchProjects");
+    })["catch"](function (err) {
+      return console.log(err.data);
+    });
   },
-  fetchProject: function fetchProject(_ref2, projectId) {
-    var commit = _ref2.commit,
-        getters = _ref2.getters;
-    commit("setLoadingProjects", true); //posterior axios
-
-    commit("setProject", getters.projects.find(function (item) {
-      return item.data.id == projectId;
-    }));
+  updateProject: function updateProject(_ref2, data) {
+    var getters = _ref2.getters,
+        dispatch = _ref2.dispatch;
+    axios.patch("/api/projects/" + getters.project.data.id, {
+      name: getters.project.data.attributes.name,
+      description: getters.project.data.attributes.description,
+      _method: "patch"
+    }).then(function (res) {
+      return dispatch("fetchProjects");
+    })["catch"](function (err) {
+      console.log(err.data);
+    });
+  },
+  fetchProjects: function fetchProjects(_ref3) {
+    var commit = _ref3.commit;
+    commit("setLoadingProjects", true);
+    axios.get("/api/projects").then(function (_ref4) {
+      var data = _ref4.data;
+      commit("setProjects", data);
+    })["catch"](function (err) {
+      return console.log(err.data);
+    })["finally"](function () {
+      return commit("setLoadingProjects", false);
+    });
+  },
+  fetchProject: function fetchProject(_ref5, projectId) {
+    var commit = _ref5.commit,
+        getters = _ref5.getters;
+    commit("setLoadingProjects", true);
+    axios.get("/api/projects/" + projectId).then(function (res) {
+      commit("setProject", res.data);
+      commit("setLoadingProjects", false);
+    })["catch"](function (err) {
+      return console.log(err.data);
+    });
     commit("setLoadingProjects", false);
   }
 };
@@ -100973,6 +101018,9 @@ var mutations = {
   },
   setSelectedProject: function setSelectedProject(state, value) {
     state.selectedProject = value;
+  },
+  editProject: function editProject(state, data) {
+    state.project.data.attributes = data;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -101071,8 +101119,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\git\sape\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\git\sape\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\git\epl\temp\sape\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\git\epl\temp\sape\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

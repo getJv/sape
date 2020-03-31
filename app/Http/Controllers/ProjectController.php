@@ -20,6 +20,17 @@ class ProjectController extends Controller
         return new ProjectResource($project);
     }
 
+    public function update(Project $project)
+    {
+        $data = request()->validate([
+            'name' => 'required',
+            'description' => 'required',
+        ]);
+
+        $project->update($data);
+        return new ProjectResource($project);
+    }
+
     public function index()
     {
         return new ProjectCollection(Project::all());

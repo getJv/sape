@@ -22,15 +22,19 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item v-for="item in projects" :key="item.data.id" link>
-        <v-list-item-content @click="$store.dispatch('fetchProject', item.data.id)">
-          <v-list-item-title>
-            {{
-            item.data.attributes.name
-            }}
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+
+      <span v-if="projects">
+        <v-list-item v-for="item in projects.data" :key="item.data.id" link>
+          <v-list-item-content @click="$store.dispatch('fetchProject', item.data.id)">
+            <v-list-item-title>
+              {{item.data.id}} -
+              {{
+              item.data.attributes.name
+              }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </span>
     </v-list>
   </v-navigation-drawer>
 </template>
