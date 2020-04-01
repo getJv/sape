@@ -10,5 +10,6 @@ $factory->define(Project::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'description' => Str::random(10),
+        'active' => true
     ];
 });

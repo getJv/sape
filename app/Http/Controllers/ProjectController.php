@@ -16,7 +16,7 @@ class ProjectController extends Controller
             'name' => 'required',
             'description' => 'required',
         ]);
-        $project = Project::create($data);
+        $project = Project::create(array_merge($data, ['active' => true]));
         return new ProjectResource($project);
     }
 
@@ -25,6 +25,7 @@ class ProjectController extends Controller
         $data = request()->validate([
             'name' => 'required',
             'description' => 'required',
+            'active' => 'required'
         ]);
 
         $project->update($data);

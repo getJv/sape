@@ -17,6 +17,7 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

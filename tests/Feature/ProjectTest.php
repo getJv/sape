@@ -27,6 +27,7 @@ class ProjectTest extends TestCase
         $project = Project::find(1);
         $this->assertEquals('My first project', $project->name);
         $this->assertEquals('Description of my first project', $project->description);
+        $this->assertNotFalse($project->active);
         $response->assertJson([
             'data' => [
                 'type' => 'projects',
@@ -34,6 +35,7 @@ class ProjectTest extends TestCase
                 'attributes' => [
                     'name' => $project->name,
                     'description' => $project->description,
+                    'active' => $project->active,
                 ],
 
             ],
@@ -52,12 +54,14 @@ class ProjectTest extends TestCase
         $this->actingAs($user = factory(User::class)->create(), 'api');
         $response = $this->patch('/api/projects/' . $project->id, [
             'name' => 'My edited title',
-            'description' => 'Description of my first project'
+            'description' => 'Description of my first project',
+            'active' => false
         ])->assertStatus(200);
 
         $project = Project::find(1);
         $this->assertEquals('My edited title', $project->name);
         $this->assertEquals('Description of my first project', $project->description);
+        $this->assertNotTrue($project->description);
         $response->assertJson([
             'data' => [
                 'type' => 'projects',
@@ -65,6 +69,7 @@ class ProjectTest extends TestCase
                 'attributes' => [
                     'name' => $project->name,
                     'description' => $project->description,
+                    'active' => $project->active,
                 ],
 
             ],
@@ -89,6 +94,7 @@ class ProjectTest extends TestCase
                     'attributes' => [
                         'name' => $project->name,
                         'description' => $project->description,
+                        'active' => $project->active,
                     ],
 
                 ],
@@ -114,7 +120,8 @@ class ProjectTest extends TestCase
                         'id' => $projects->first()->id,
                         'attributes' => [
                             'name' => $projects->first()->name,
-                            'description' => $projects->first()->description
+                            'description' => $projects->first()->description,
+                            'active' => $projects->first()->active,
                         ]
                     ],
                     'links' => [
@@ -143,6 +150,22 @@ class ProjectTest extends TestCase
 
         $this->assertArrayHasKey('name', $responseString['errors']['meta']);
     }
+    /** @test */
+    public function name_is_required_to_edit_a_project()
+    {
+
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        factory(Project::class)->create();
+        $response = $this->patch('/api/projects/1', [
+            'name' => '',
+            'description' => 'Description of my first project',
+            'active' => true,
+        ])->assertStatus(422);
+
+        $responseString = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('name', $responseString['errors']['meta']);
+    }
 
     /** @test */
     public function description_is_required_to_create_a_project()
@@ -151,11 +174,44 @@ class ProjectTest extends TestCase
         $this->actingAs($user = factory(User::class)->create(), 'api');
         $response = $this->post('/api/projects', [
             'name' => 'Project Title',
-            'description' => ''
+            'description' => '',
+            'active' => true,
         ])->assertStatus(422);
 
         $responseString = json_decode($response->getContent(), true);
 
         $this->assertArrayHasKey('description', $responseString['errors']['meta']);
+    }
+    /** @test */
+    public function description_is_required_to_edit_a_project()
+    {
+
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        factory(Project::class)->create();
+        $response = $this->patch('/api/projects/1', [
+            'name' => 'eqw ewqe qw ',
+            'description' => '',
+            'active' => true,
+        ])->assertStatus(422);
+
+        $responseString = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('description', $responseString['errors']['meta']);
+    }
+    /** @test */
+    public function active_field_is_required_to_edit_a_project()
+    {
+
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        factory(Project::class)->create();
+        $response = $this->patch('/api/projects/1', [
+            'name' => 'eqw ewqe qw ',
+            'description' => ' asd sad as d',
+            'active' => '',
+        ])->assertStatus(422);
+
+        $responseString = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('active', $responseString['errors']['meta']);
     }
 }

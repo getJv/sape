@@ -21,6 +21,7 @@ class Project extends JsonResource
                 'attributes' => [
                     'name' => $this->name,
                     'description' => $this->description,
+                    'active' => $this->active,
                 ],
 
             ],
