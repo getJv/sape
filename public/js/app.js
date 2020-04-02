@@ -2916,6 +2916,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3005,49 +3012,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ProjectStatus",
-  props: ["items", "hasSession"],
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
     editedItem: {
       name: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
         minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
-        maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
+        maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(50)
       },
-      value: {
+      description: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
         minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
         maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
       }
     }
   },
+  created: function created() {
+    this.$store.dispatch("fetchProjectStatuses");
+  },
   data: function data() {
     return {
       dialog: false,
       editedIndex: -1,
       editedItem: {
+        id: "",
         name: "",
-        value: ""
+        description: "",
+        active: true
       },
       defaultItem: {
         name: "",
-        value: ""
+        description: "",
+        active: true
       }
     };
   },
-  computed: {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(["projectStatuses"]), {
     headers: function headers() {
       var headers = [{
-        text: "Item",
+        text: "Fase",
         align: "start",
         value: "name"
       }, {
-        text: "Valor",
-        value: "value"
+        text: "Descrição",
+        value: "description"
+      }, {
+        text: "Ativo",
+        value: "active"
+      }, {
+        text: "Ações",
+        value: "actions"
       }];
 
       if (this.hasSession) {
@@ -3063,23 +3092,22 @@ __webpack_require__.r(__webpack_exports__);
     formTitle: function formTitle() {
       return this.editedIndex === -1 ? "Novo Item" : "Edição de Item";
     },
-    itemErrors: function itemErrors() {
+    nameErrors: function nameErrors() {
       var errors = [];
       if (!this.$v.editedItem.name.$dirty) return errors;
-      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
       !this.$v.editedItem.name.minLength && errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.name.maxLength && errors.push("Máximo de 100 caracteres");
+      !this.$v.editedItem.name.maxLength && errors.push("Máximo de 50 caracteres");
       return errors;
     },
-    valueErrors: function valueErrors() {
+    descriptionErrors: function descriptionErrors() {
       var errors = [];
-      if (!this.$v.editedItem.value.$dirty) return errors;
-      !this.$v.editedItem.value.required && errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.value.minLength && errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.value.maxLength && errors.push("Máximo de 100 caracteres");
+      if (!this.$v.editedItem.description.$dirty) return errors;
+      !this.$v.editedItem.description.required && errors.push("Campo Obrigatório.");
+      !this.$v.editedItem.description.minLength && errors.push("Mínimo de 3 caracteres");
+      !this.$v.editedItem.description.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     }
-  },
+  }),
   watch: {
     dialog: function dialog(val) {
       val || this.close();
@@ -3087,18 +3115,26 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     editItem: function editItem(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.projectStatuses.data.indexOf(item);
+      this.editedItem = Object.assign({}, item.data.attributes);
+      this.editedItem.id = item.data.id;
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var index = this.items.indexOf(item);
-      confirm("Deseja realmente excluir este atributo?") && this.items.splice(index, 1);
+      if (confirm("Deseja realmente alterar o status este atributo?")) {
+        this.$store.dispatch("updateProjectStatus", {
+          id: item.data.id,
+          name: item.data.attributes.name,
+          description: item.data.attributes.description,
+          active: !item.data.attributes.active
+        });
+      }
     },
     close: function close() {
       var _this = this;
 
       this.dialog = false;
+      this.$v.$reset();
       setTimeout(function () {
         _this.editedItem = Object.assign({}, _this.defaultItem);
         _this.editedIndex = -1;
@@ -3106,9 +3142,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     save: function save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editedItem);
+        this.$store.dispatch("updateProjectStatus", {
+          id: this.editedItem.id,
+          name: this.editedItem.name,
+          description: this.editedItem.description,
+          active: this.editedItem.active
+        });
       } else {
-        this.items.push(this.editedItem);
+        this.$store.dispatch("createProjectStatus", {
+          name: this.editedItem.name,
+          description: this.editedItem.description
+        });
       }
 
       this.close();
@@ -40654,29 +40698,28 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "v-card",
-    [
-      _c("v-card-title", [_c("p", [_vm._v("Características do projeto")])]),
-      _vm._v(" "),
-      _c("v-divider"),
-      _vm._v(" "),
-      _c(
-        "v-card-text",
+  return _vm.projectStatuses
+    ? _c(
+        "v-card",
         [
-          _c("v-data-table", {
-            attrs: {
-              "disable-pagination": "",
-              "hide-default-footer": "",
-              "hide-default-header": "",
-              headers: _vm.headers,
-              items: _vm.items,
-              "sort-by": "name"
-            },
-            scopedSlots: _vm._u(
-              [
-                _vm.hasSession
-                  ? {
+          _c("v-card-title", [_c("p", [_vm._v("Fases de Projeto")])]),
+          _vm._v(" "),
+          _c("v-divider"),
+          _vm._v(" "),
+          _c(
+            "v-card-text",
+            [
+              _c("v-data-table", {
+                attrs: {
+                  "disable-pagination": "",
+                  "hide-default-footer": "",
+                  headers: _vm.headers,
+                  items: _vm.projectStatuses.data,
+                  "sort-by": "name"
+                },
+                scopedSlots: _vm._u(
+                  [
+                    {
                       key: "top",
                       fn: function() {
                         return [
@@ -40710,7 +40753,7 @@ var render = function() {
                                                 },
                                                 on
                                               ),
-                                              [_vm._v("Novo Item")]
+                                              [_vm._v("Incluir nova Fase")]
                                             )
                                           ]
                                         }
@@ -40718,7 +40761,7 @@ var render = function() {
                                     ],
                                     null,
                                     false,
-                                    3844099329
+                                    1471808077
                                   ),
                                   model: {
                                     value: _vm.dialog,
@@ -40737,13 +40780,7 @@ var render = function() {
                                         _c(
                                           "span",
                                           { staticClass: "headline" },
-                                          [
-                                            _vm._v(
-                                              "\n                  " +
-                                                _vm._s(_vm.formTitle) +
-                                                "\n                "
-                                            )
-                                          ]
+                                          [_vm._v(_vm._s(_vm.formTitle))]
                                         )
                                       ]),
                                       _vm._v(" "),
@@ -40773,11 +40810,9 @@ var render = function() {
                                                     [
                                                       _c("v-text-field", {
                                                         attrs: {
-                                                          value:
-                                                            _vm.editedItem.name,
-                                                          counter: 100,
+                                                          counter: 50,
                                                           "error-messages":
-                                                            _vm.itemErrors,
+                                                            _vm.nameErrors,
                                                           label: "Nome",
                                                           required: ""
                                                         },
@@ -40792,6 +40827,21 @@ var render = function() {
                                                           ) {
                                                             return _vm.$v.editedItem.name.$touch()
                                                           }
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.editedItem.name,
+                                                          callback: function(
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.editedItem,
+                                                              "name",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "editedItem.name"
                                                         }
                                                       })
                                                     ],
@@ -40807,45 +40857,87 @@ var render = function() {
                                                       }
                                                     },
                                                     [
-                                                      _c("v-text-field", {
+                                                      _c("v-textarea", {
                                                         attrs: {
+                                                          hint:
+                                                            "Informe uma breve descrição deste projeto",
                                                           "error-messages":
-                                                            _vm.valueErrors,
-                                                          counter: 100,
-                                                          label: "Valor"
+                                                            _vm.descriptionErrors,
+                                                          label:
+                                                            "Descrição do projeto",
+                                                          counter: 255,
+                                                          outlined: "",
+                                                          required: ""
                                                         },
                                                         on: {
                                                           input: function(
                                                             $event
                                                           ) {
-                                                            return _vm.$v.editedItem.value.$touch()
+                                                            return _vm.$v.editedItem.description.$touch()
                                                           },
                                                           blur: function(
                                                             $event
                                                           ) {
-                                                            return _vm.$v.editedItem.value.$touch()
+                                                            return _vm.$v.editedItem.description.$touch()
                                                           }
                                                         },
                                                         model: {
                                                           value:
                                                             _vm.editedItem
-                                                              .value,
+                                                              .description,
                                                           callback: function(
                                                             $$v
                                                           ) {
                                                             _vm.$set(
                                                               _vm.editedItem,
-                                                              "value",
+                                                              "description",
                                                               $$v
                                                             )
                                                           },
                                                           expression:
-                                                            "editedItem.value"
+                                                            "editedItem.description"
                                                         }
                                                       })
                                                     ],
                                                     1
-                                                  )
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _vm.editedIndex > -1
+                                                    ? _c(
+                                                        "v-col",
+                                                        {
+                                                          attrs: {
+                                                            cols: "12",
+                                                            sm: "10"
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("v-switch", {
+                                                            attrs: {
+                                                              label:
+                                                                "Habilitado"
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .action,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "action",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.action"
+                                                            }
+                                                          })
+                                                        ],
+                                                        1
+                                                      )
+                                                    : _vm._e()
                                                 ],
                                                 1
                                               )
@@ -40899,60 +40991,103 @@ var render = function() {
                         ]
                       },
                       proxy: true
+                    },
+                    {
+                      key: "item.name",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v(_vm._s(item.data.attributes.name))]
+                      }
+                    },
+                    {
+                      key: "item.description",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [
+                          _vm._v(_vm._s(item.data.attributes.description))
+                        ]
+                      }
+                    },
+                    {
+                      key: "item.active",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [
+                          item.data.attributes.active
+                            ? _c("span", [_vm._v("Sim")])
+                            : _c("span", [_vm._v("Não")])
+                        ]
+                      }
+                    },
+                    {
+                      key: "item.actions",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [
+                          _c(
+                            "v-icon",
+                            {
+                              staticClass: "mr-2",
+                              attrs: { small: "", color: "primary" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.editItem(item)
+                                }
+                              }
+                            },
+                            [_vm._v("mdi-pencil")]
+                          ),
+                          _vm._v(" "),
+                          item.data.attributes.active
+                            ? _c(
+                                "v-icon",
+                                {
+                                  attrs: { color: "red", small: "" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteItem(item)
+                                    }
+                                  }
+                                },
+                                [_vm._v("mdi-delete")]
+                              )
+                            : _c(
+                                "v-icon",
+                                {
+                                  attrs: { color: "green", small: "" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteItem(item)
+                                    }
+                                  }
+                                },
+                                [_vm._v("mdi-recycle")]
+                              )
+                        ]
+                      }
+                    },
+                    {
+                      key: "no-data",
+                      fn: function() {
+                        return [
+                          _c("p", [_vm._v("Sem informações cadastradas")])
+                        ]
+                      },
+                      proxy: true
                     }
-                  : null,
-                {
-                  key: "item.actions",
-                  fn: function(ref) {
-                    var item = ref.item
-                    return [
-                      _c(
-                        "v-icon",
-                        {
-                          staticClass: "mr-2",
-                          attrs: { small: "" },
-                          on: {
-                            click: function($event) {
-                              return _vm.editItem(item)
-                            }
-                          }
-                        },
-                        [_vm._v("mdi-pencil")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-icon",
-                        {
-                          attrs: { small: "" },
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteItem(item)
-                            }
-                          }
-                        },
-                        [_vm._v("mdi-delete")]
-                      )
-                    ]
-                  }
-                },
-                {
-                  key: "no-data",
-                  fn: function() {
-                    return [_c("p", [_vm._v("Sem informações cadastradas")])]
-                  },
-                  proxy: true
-                }
-              ],
-              null,
-              true
-            )
-          })
+                  ],
+                  null,
+                  false,
+                  178272293
+                )
+              })
+            ],
+            1
+          )
         ],
         1
       )
-    ],
-    1
-  )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -101462,15 +101597,118 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_projects__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/projects */ "./resources/js/store/modules/projects.js");
+/* harmony import */ var _modules_projectStatuses__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/projectStatuses */ "./resources/js/store/modules/projectStatuses.js");
+
 
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
-    Projects: _modules_projects__WEBPACK_IMPORTED_MODULE_2__["default"]
+    Projects: _modules_projects__WEBPACK_IMPORTED_MODULE_2__["default"],
+    ProjectStatuses: _modules_projectStatuses__WEBPACK_IMPORTED_MODULE_3__["default"]
   }
 }));
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/projectStatuses.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/store/modules/projectStatuses.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var state = {
+  loadingProjectStatus: false,
+  projectStatuses: null,
+  selectedProject: null,
+  project: null
+};
+var getters = {
+  projectStatus: function projectStatus(state) {
+    return state.projectStatus;
+  },
+  projectStatuses: function projectStatuses(state) {
+    return state.projectStatuses;
+  },
+  loadingProjectStatus: function loadingProjectStatus(state) {
+    return state.loadingProjectStatus;
+  }
+};
+var actions = {
+  createProjectStatus: function createProjectStatus(_ref, data) {
+    var dispatch = _ref.dispatch;
+    axios.post("/api/project-statuses", data).then(function (res) {
+      return dispatch("fetchProjectStatuses");
+    })["catch"](function (err) {
+      return console.log(err.data);
+    });
+  },
+  updateProjectStatus: function updateProjectStatus(_ref2, data) {
+    var getters = _ref2.getters,
+        dispatch = _ref2.dispatch;
+    axios.patch("/api/project-statuses/" + data.id, {
+      name: data.name,
+      description: data.description,
+      active: data.active,
+      _method: "patch"
+    }).then(function (res) {
+      return dispatch("fetchProjectStatuses");
+    })["catch"](function (err) {
+      console.log(err.data);
+    });
+  },
+  fetchProjectStatuses: function fetchProjectStatuses(_ref3) {
+    var commit = _ref3.commit;
+    commit("setLoadingProjectStatus", true);
+    axios.get("/api/project-statuses").then(function (_ref4) {
+      var data = _ref4.data;
+      commit("setProjectStatuses", data);
+    })["catch"](function (err) {
+      return console.log(err.data);
+    })["finally"](function () {
+      return commit("setLoadingProjectStatus", false);
+    });
+  },
+  fetchProjectStatus: function fetchProjectStatus(_ref5, id) {
+    var commit = _ref5.commit,
+        getters = _ref5.getters;
+    commit("setLoadingProjectStatus", true);
+    axios.get("/api/project-statuses/" + id).then(function (res) {
+      commit("setProjectStatus", res.data);
+      commit("setLoadingProjectStatus", false);
+    })["catch"](function (err) {
+      return console.log(err.data);
+    });
+    commit("setLoadingProjectStatus", false);
+  }
+};
+var mutations = {
+  setProjectStatuses: function setProjectStatuses(state, value) {
+    state.projectStatuses = value;
+  },
+  setProjectStatus: function setProjectStatus(state, value) {
+    state = value;
+  },
+  setLoadingProjectStatus: function setLoadingProjectStatus(state, value) {
+    state.loadingProjectStatus = value;
+  },
+  setSelectedProjectStatus: function setSelectedProjectStatus(state, value) {
+    state.selectedProjectStatus = value;
+  },
+  editProjectStatus: function editProjectStatus(state, data) {
+    state.projectStatus.data.attributes = data;
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
 
 /***/ }),
 
@@ -101799,8 +102037,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\git\sape\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\git\sape\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\git\epl\temp\sape\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\git\epl\temp\sape\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

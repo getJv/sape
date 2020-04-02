@@ -1,31 +1,34 @@
 <template>
-  <v-card>
+  <v-card v-if="projectStatuses">
     <v-card-title>
-      <p>Características do projeto</p>
+      <p>Fases de Projeto</p>
     </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
       <v-data-table
         disable-pagination
         hide-default-footer
-        hide-default-header
         :headers="headers"
-        :items="items"
+        :items="projectStatuses.data"
         sort-by="name"
       >
-        <template v-if="hasSession" v-slot:top>
+        <template v-slot:top>
           <v-toolbar flat color="transparent">
             <v-dialog v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on }">
-                <v-btn absolute right color="primary" outlined small dark v-on="on">Novo Item</v-btn>
+                <v-btn
+                  absolute
+                  right
+                  color="primary"
+                  outlined
+                  small
+                  dark
+                  v-on="on"
+                >Incluir nova Fase</v-btn>
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">
-                    {{
-                    formTitle
-                    }}
-                  </span>
+                  <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -33,39 +36,34 @@
                     <v-row justify="center" align="center">
                       <v-col cols="12" sm="10">
                         <v-text-field
-                          :value="editedItem.name"
-                          :counter="100"
-                          :error-messages="itemErrors"
+                          v-model="editedItem.name"
+                          :counter="50"
+                          :error-messages="nameErrors"
                           label="Nome"
                           required
-                          @input="
-                                                        $v.editedItem.name.$touch()
-                                                    "
-                          @blur="
-                                                        $v.editedItem.name.$touch()
-                                                    "
+                          @input="$v.editedItem.name.$touch()"
+                          @blur="$v.editedItem.name.$touch()"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="10">
-                        <v-text-field
-                          v-model="editedItem.value"
-                          :error-messages="
-                                                        valueErrors
-                                                    "
-                          :counter="100"
-                          label="Valor"
-                          @input="
-                                                        $v.editedItem.value.$touch()
-                                                    "
-                          @blur="
-                                                        $v.editedItem.value.$touch()
-                                                    "
-                        ></v-text-field>
+                        <v-textarea
+                          v-model="editedItem.description"
+                          hint="Informe uma breve descrição deste projeto"
+                          :error-messages="descriptionErrors"
+                          label="Descrição do projeto"
+                          :counter="255"
+                          outlined
+                          required
+                          @input="$v.editedItem.description.$touch()"
+                          @blur="$v.editedItem.description.$touch()"
+                        ></v-textarea>
+                      </v-col>
+                      <v-col v-if="editedIndex > -1" cols="12" sm="10">
+                        <v-switch v-model="editedItem.action" label="Habilitado"></v-switch>
                       </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
-
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
@@ -75,9 +73,21 @@
             </v-dialog>
           </v-toolbar>
         </template>
+        <template v-slot:item.name="{ item }">{{item.data.attributes.name}}</template>
+        <template v-slot:item.description="{ item }">{{item.data.attributes.description}}</template>
+        <template v-slot:item.active="{ item }">
+          <span v-if="item.data.attributes.active">Sim</span>
+          <span v-else>Não</span>
+        </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+          <v-icon small class="mr-2" @click="editItem(item)" color="primary">mdi-pencil</v-icon>
+          <v-icon
+            v-if="item.data.attributes.active"
+            color="red"
+            small
+            @click="deleteItem(item)"
+          >mdi-delete</v-icon>
+          <v-icon v-else color="green" small @click="deleteItem(item)">mdi-recycle</v-icon>
         </template>
         <template v-slot:no-data>
           <p>Sem informações cadastradas</p>
@@ -90,48 +100,64 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import { mapGetters } from "vuex";
+
 export default {
   name: "ProjectStatus",
-  props: ["items", "hasSession"],
   mixins: [validationMixin],
   validations: {
     editedItem: {
       name: {
         required,
         minLength: minLength(3),
-        maxLength: maxLength(100)
+        maxLength: maxLength(50)
       },
-      value: {
+      description: {
         required,
         minLength: minLength(3),
         maxLength: maxLength(100)
       }
     }
   },
+  created() {
+    this.$store.dispatch("fetchProjectStatuses");
+  },
   data: () => ({
     dialog: false,
     editedIndex: -1,
     editedItem: {
+      id: "",
       name: "",
-      value: ""
+      description: "",
+      active: true
     },
     defaultItem: {
       name: "",
-      value: ""
+      description: "",
+      active: true
     }
   }),
 
   computed: {
+    ...mapGetters(["projectStatuses"]),
     headers() {
       var headers = [
         {
-          text: "Item",
+          text: "Fase",
           align: "start",
           value: "name"
         },
         {
-          text: "Valor",
-          value: "value"
+          text: "Descrição",
+          value: "description"
+        },
+        {
+          text: "Ativo",
+          value: "active"
+        },
+        {
+          text: "Ações",
+          value: "actions"
         }
       ];
       if (this.hasSession) {
@@ -148,23 +174,23 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "Novo Item" : "Edição de Item";
     },
-    itemErrors() {
+    nameErrors() {
       const errors = [];
       if (!this.$v.editedItem.name.$dirty) return errors;
-      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
       !this.$v.editedItem.name.minLength &&
         errors.push("Mínimo de 3 caracteres");
       !this.$v.editedItem.name.maxLength &&
-        errors.push("Máximo de 100 caracteres");
+        errors.push("Máximo de 50 caracteres");
       return errors;
     },
-    valueErrors() {
+    descriptionErrors() {
       const errors = [];
-      if (!this.$v.editedItem.value.$dirty) return errors;
-      !this.$v.editedItem.value.required && errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.value.minLength &&
+      if (!this.$v.editedItem.description.$dirty) return errors;
+      !this.$v.editedItem.description.required &&
+        errors.push("Campo Obrigatório.");
+      !this.$v.editedItem.description.minLength &&
         errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.value.maxLength &&
+      !this.$v.editedItem.description.maxLength &&
         errors.push("Máximo de 100 caracteres");
       return errors;
     }
@@ -178,19 +204,26 @@ export default {
 
   methods: {
     editItem(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.projectStatuses.data.indexOf(item);
+      this.editedItem = Object.assign({}, item.data.attributes);
+      this.editedItem.id = item.data.id;
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.items.indexOf(item);
-      confirm("Deseja realmente excluir este atributo?") &&
-        this.items.splice(index, 1);
+      if (confirm("Deseja realmente alterar o status este atributo?")) {
+        this.$store.dispatch("updateProjectStatus", {
+          id: item.data.id,
+          name: item.data.attributes.name,
+          description: item.data.attributes.description,
+          active: !item.data.attributes.active
+        });
+      }
     },
 
     close() {
       this.dialog = false;
+      this.$v.$reset();
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -199,9 +232,17 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editedItem);
+        this.$store.dispatch("updateProjectStatus", {
+          id: this.editedItem.id,
+          name: this.editedItem.name,
+          description: this.editedItem.description,
+          active: this.editedItem.active
+        });
       } else {
-        this.items.push(this.editedItem);
+        this.$store.dispatch("createProjectStatus", {
+          name: this.editedItem.name,
+          description: this.editedItem.description
+        });
       }
       this.close();
     }
