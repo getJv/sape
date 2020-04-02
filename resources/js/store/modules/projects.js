@@ -23,6 +23,7 @@ const actions = {
             .patch("/api/projects/" + getters.project.data.id, {
                 name: getters.project.data.attributes.name,
                 description: getters.project.data.attributes.description,
+                active: getters.project.data.attributes.active,
                 _method: "patch"
             })
             .then(res => dispatch("fetchProjects"))

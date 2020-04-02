@@ -71,7 +71,6 @@ class ProjectTest extends TestCase
                     'description' => $project->description,
                     'active' => $project->active,
                 ],
-
             ],
             'links' => [
                 'self' => url('/projects/' . $project->id)

@@ -33,6 +33,9 @@
                   @blur="$v.projectDescription.$touch()"
                 ></v-textarea>
               </v-col>
+              <v-col cols="12" sm="10">
+                <v-switch v-model="projectActive" label="Projeto ativo" />
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -98,7 +101,8 @@ export default {
       set: function(value) {
         this.$store.commit("editProject", {
           name: this.project.data.attributes.name,
-          description: value
+          description: value,
+          active: this.project.data.attributes.active
         });
       }
     },
@@ -109,7 +113,20 @@ export default {
       set: function(value) {
         this.$store.commit("editProject", {
           name: value,
-          description: this.project.data.attributes.description
+          description: this.project.data.attributes.description,
+          active: this.project.data.attributes.active
+        });
+      }
+    },
+    projectActive: {
+      get: function() {
+        return this.project.data.attributes.active;
+      },
+      set: function(value) {
+        this.$store.commit("editProject", {
+          name: this.project.data.attributes.name,
+          description: this.project.data.attributes.description,
+          active: value
         });
       }
     },

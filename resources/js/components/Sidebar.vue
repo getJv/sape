@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer ref="navbar" @input="ocultar" :value="drawer" app clipped>
     <v-list dense>
-      <v-list-item link>
+      <v-list-item @click="$router.push('/')" link>
         <v-list-item-action>
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-action>
@@ -25,9 +25,10 @@
 
       <span v-if="projects">
         <v-list-item v-for="item in projects.data" :key="item.data.id" link>
-          <v-list-item-content @click="$store.dispatch('fetchProject', item.data.id)">
+          <v-list-item-content
+            @click="$store.dispatch('fetchProject', item.data.id); $router.push('/show-project') "
+          >
             <v-list-item-title>
-              {{item.data.id}} -
               {{
               item.data.attributes.name
               }}
