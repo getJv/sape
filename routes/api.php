@@ -15,5 +15,8 @@ Route::middleware('auth:api')->group(function () {
         '/projects' => "ProjectController",
         '/project-statuses' => "ProjectStatusController",
         '/project-workflows' => "ProjectWorkflowController",
+
     ]);
+
+    Route::get('/project-workflows/project/{project}', 'ProjectWorkflowController@projectWorkflow');
 });

@@ -8,6 +8,8 @@ use Tests\TestCase;
 use App\User;
 use App\Project;
 use App\ProjectStatus;
+use App\Http\Resources\Project as ProjectResource;
+use App\Http\Resources\ProjectStatus as ProjectStatusResource;
 use App\ProjectWorkflow;
 
 class ProjectWorkflowTest extends TestCase
@@ -35,21 +37,61 @@ class ProjectWorkflowTest extends TestCase
         $this->assertEquals($projectStatus1->id, $ProjectWorkflow->old_status_id);
         $this->assertEquals($projectStatus2->id, $ProjectWorkflow->new_status_id);
         $this->assertEquals($nextOrderStatus, $ProjectWorkflow->order);
-
         $response->assertJson([
             'data' => [
                 'type' => 'project-workflows',
                 'id' => $ProjectWorkflow->id,
                 'attributes' => [
-                    'project_id' => $ProjectWorkflow->project_id,
-                    'order'      => $ProjectWorkflow->order,
-                    'old_status' => $ProjectWorkflow->old_status,
-                    'new_status' => $ProjectWorkflow->new_status,
+                    'order'         => 1,
+                    'project_id'    => $ProjectWorkflow->project_id,
+                    'old_status_id' => $ProjectWorkflow->old_status_id,
+                    'new_status_id' => $ProjectWorkflow->new_status_id,
                 ],
-
             ],
             'links' => [
-                'self' => url('/project-workflows/' . $ProjectWorkflow->id)
+                'self' => url('/project-workflows/' . $ProjectWorkflow->id),
+                'project' => [
+                    'data'  => [
+                        'type' => 'projects',
+                        'id'   => $ProjectWorkflow->project->id,
+                        'attributes' => [
+                            'name' => $ProjectWorkflow->project->name,
+                            'description' => $ProjectWorkflow->project->description,
+                            'active' => $ProjectWorkflow->project->active,
+                        ]
+                    ],
+                    'links' => [
+                        'self' => url('/projects/' . $ProjectWorkflow->project->id)
+                    ]
+                ],
+                'old_status' => [
+                    'data'  => [
+                        'type' => 'project-statuses',
+                        'id'   => $ProjectWorkflow->old_status->id,
+                        'attributes' => [
+                            'name' => $ProjectWorkflow->old_status->name,
+                            'description' => $ProjectWorkflow->old_status->description,
+                            'active' => $ProjectWorkflow->old_status->active,
+                        ]
+                    ],
+                    'links' => [
+                        'self' => url('/project-statuses/' . $ProjectWorkflow->old_status->id)
+                    ]
+                ],
+                'new_status' => [
+                    'data'  => [
+                        'type' => 'project-statuses',
+                        'id'   => $ProjectWorkflow->new_status->id,
+                        'attributes' => [
+                            'name' => $ProjectWorkflow->new_status->name,
+                            'description' => $ProjectWorkflow->new_status->description,
+                            'active' => $ProjectWorkflow->new_status->active,
+                        ]
+                    ],
+                    'links' => [
+                        'self' => url('/project-statuses/' . $ProjectWorkflow->new_status->id)
+                    ]
+                ]
             ]
         ]);
     }
@@ -160,6 +202,48 @@ class ProjectWorkflowTest extends TestCase
         $response->assertJson([
             'meta' => [
                 'message' => 'A exclusão realizada com sucesso'
+            ]
+        ]);
+    }
+
+    /** @test */
+    public function retrieve_the_project_workflow()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        $project = factory(Project::class)->create();
+        $projectStatus1  = factory(ProjectStatus::class)->create();
+        $projectStatus2  = factory(ProjectStatus::class)->create();
+        $projectWorkflow = factory(ProjectWorkflow::class)->create([
+            'order' => 1,
+            'project_id' => $project->id,
+            'old_status_id' => $projectStatus1->id,
+            'new_status_id' => $projectStatus2->id,
+        ]);
+
+        $response = $this->get('/api/project-workflows/project/1')->assertStatus(200);
+
+
+        $response->assertJson([
+            'data' => [
+                [
+
+                    'data' => [
+                        'type' => 'project-workflows',
+                        'id' => $projectWorkflow->id,
+                        'attributes' => [
+                            'order'         => 1,
+                            'project_id'    => $projectWorkflow->project_id,
+                            'old_status_id' => $projectWorkflow->old_status_id,
+                            'new_status_id' => $projectWorkflow->new_status_id,
+                        ],
+                    ],
+
+                ]
+            ],
+            'workflow_steps' => 1,
+            'links' => [
+                'self' => url('/project-workflows/project/' . $project->id)
             ]
         ]);
     }

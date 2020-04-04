@@ -9,6 +9,7 @@ use App\Http\Resources\ProjectWorkflow as ProjectWorkflowResource;
 use App\Exceptions\ProjectNotFoundException;
 use App\Exceptions\ProjectStatusNotFoundException;
 use App\Exceptions\DuplicatedWorkflowStepExcetion;
+use App\Http\Resources\ProjectWorkflowCollection;
 use Illuminate\Http\Request;
 
 
@@ -56,5 +57,10 @@ class ProjectWorkflowController extends Controller
                 'message' => 'A exclusão realizada com sucesso'
             ]
         ], 200);
+    }
+
+    public function projectWorkflow(Project $project)
+    {
+        return new ProjectWorkflowCollection($project->workflow);
     }
 }
