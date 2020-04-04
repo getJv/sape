@@ -3019,9 +3019,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
 
 
 
@@ -40900,44 +40897,7 @@ var render = function() {
                                                       })
                                                     ],
                                                     1
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _vm.editedIndex > -1
-                                                    ? _c(
-                                                        "v-col",
-                                                        {
-                                                          attrs: {
-                                                            cols: "12",
-                                                            sm: "10"
-                                                          }
-                                                        },
-                                                        [
-                                                          _c("v-switch", {
-                                                            attrs: {
-                                                              label:
-                                                                "Habilitado"
-                                                            },
-                                                            model: {
-                                                              value:
-                                                                _vm.editedItem
-                                                                  .action,
-                                                              callback: function(
-                                                                $$v
-                                                              ) {
-                                                                _vm.$set(
-                                                                  _vm.editedItem,
-                                                                  "action",
-                                                                  $$v
-                                                                )
-                                                              },
-                                                              expression:
-                                                                "editedItem.action"
-                                                            }
-                                                          })
-                                                        ],
-                                                        1
-                                                      )
-                                                    : _vm._e()
+                                                  )
                                                 ],
                                                 1
                                               )
@@ -41078,7 +41038,7 @@ var render = function() {
                   ],
                   null,
                   false,
-                  178272293
+                  3994703984
                 )
               })
             ],
@@ -102037,8 +101997,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\git\epl\temp\sape\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\git\epl\temp\sape\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\git\sape\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\git\sape\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

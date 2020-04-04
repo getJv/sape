@@ -58,9 +58,6 @@
                           @blur="$v.editedItem.description.$touch()"
                         ></v-textarea>
                       </v-col>
-                      <v-col v-if="editedIndex > -1" cols="12" sm="10">
-                        <v-switch v-model="editedItem.action" label="Habilitado"></v-switch>
-                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>

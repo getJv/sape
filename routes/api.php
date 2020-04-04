@@ -14,5 +14,6 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResources([
         '/projects' => "ProjectController",
         '/project-statuses' => "ProjectStatusController",
+        '/project-workflows' => "ProjectWorkflowController",
     ]);
 });
