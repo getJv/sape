@@ -18,7 +18,7 @@
 
     <v-tooltip left>
       <template v-slot:activator="{ on }">
-        <v-btn fab dark small color="indigo" v-on="on">
+        <v-btn to="project-workflow" fab dark small color="indigo" v-on="on">
           <v-icon>mdi-debug-step-over</v-icon>
         </v-btn>
       </template>

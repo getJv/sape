@@ -49,9 +49,7 @@ class ProjectWorkflowController extends Controller
 
     public function destroy(ProjectWorkflow $projectWorkflow)
     {
-
         $projectWorkflow->delete();
-
         return response()->json([
             'meta' => [
                 'message' => 'A exclusão realizada com sucesso'
@@ -61,6 +59,18 @@ class ProjectWorkflowController extends Controller
 
     public function projectWorkflow(Project $project)
     {
-        return new ProjectWorkflowCollection($project->workflow);
+        $list = $project->workflow;
+        //TODO fazer um este disso
+        if ($list->count() < 1) {
+            return response()->json([
+
+                'data' => [],
+                'links' => [
+                    'self' => url('/project-workflows/project/' . $project->id),
+                ],
+            ], 200);
+        }
+
+        return new ProjectWorkflowCollection($list);
     }
 }
