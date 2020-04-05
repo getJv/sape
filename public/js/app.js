@@ -2308,6 +2308,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "BtnConfiguration",
   data: function data() {
@@ -2757,6 +2765,32 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BtnAddEvent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/BtnAddEvent */ "./resources/js/components/BtnAddEvent.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2788,10 +2822,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ProjecStepper",
   components: {
     BtnAddEvent: _components_BtnAddEvent__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(["projectWorkflow"])),
+  methods: {
+    teste: function teste() {
+      console.log(this.projectWorkflow.data);
+    }
   },
   data: function data() {
     return {
@@ -2859,8 +2900,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2874,6 +2913,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (!this.$refs.navbar.isActive) {
         this.$emit("update:drawer", false);
       }
+    },
+    showProject: function showProject(item) {
+      this.$store.dispatch("fetchProject", item.data.id);
+      this.$router.push("/show-project");
     }
   },
   created: function created() {
@@ -40058,7 +40101,7 @@ var render = function() {
                       },
                       on
                     ),
-                    [_c("v-icon", [_vm._v("mdi-bookmark-multiple-outline")])],
+                    [_c("v-icon", [_vm._v("mdi-bookmark-outline")])],
                     1
                   )
                 ]
@@ -40093,7 +40136,7 @@ var render = function() {
                       },
                       on
                     ),
-                    [_c("v-icon", [_vm._v("mdi-debug-step-over")])],
+                    [_c("v-icon", [_vm._v("mdi-bookmark-multiple-outline")])],
                     1
                   )
                 ]
@@ -40102,6 +40145,41 @@ var render = function() {
           ])
         },
         [_vm._v(" "), _c("span", [_vm._v("Gerenciar Workflow")])]
+      ),
+      _vm._v(" "),
+      _c(
+        "v-tooltip",
+        {
+          attrs: { left: "" },
+          scopedSlots: _vm._u([
+            {
+              key: "activator",
+              fn: function(ref) {
+                var on = ref.on
+                return [
+                  _c(
+                    "v-btn",
+                    _vm._g(
+                      {
+                        attrs: {
+                          to: "field",
+                          fab: "",
+                          dark: "",
+                          small: "",
+                          color: "pink"
+                        }
+                      },
+                      on
+                    ),
+                    [_c("v-icon", [_vm._v("mdi-focus-field-horizontal")])],
+                    1
+                  )
+                ]
+              }
+            }
+          ])
+        },
+        [_vm._v(" "), _c("span", [_vm._v("Campos de Projeto")])]
       )
     ],
     1
@@ -40738,60 +40816,117 @@ var render = function() {
                 expression: "e13"
               }
             },
-            _vm._l([1, 2, 3], function(phase) {
-              return _c(
-                "span",
-                { key: phase },
-                [
-                  _c(
-                    "v-stepper-step",
-                    {
-                      attrs: { step: phase, complete: _vm.e13 < 1 },
-                      on: {
-                        click: function($event) {
-                          _vm.e13 = phase
-                        }
-                      }
-                    },
-                    [
-                      _c(
-                        "span",
-                        [
-                          _vm._v(
-                            "\n            Prospecções de Serviços\n            "
-                          ),
-                          _c("BtnAddEvent", {
-                            attrs: { hasSession: true, step_id: phase }
-                          })
-                        ],
-                        1
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("v-stepper-content", { attrs: { step: phase } }, [
+            [
+              _vm._l(_vm.projectWorkflow.data, function(phase, index) {
+                return _c(
+                  "span",
+                  { key: index + 1 },
+                  [
                     _c(
-                      "ul",
-                      _vm._l([1, 2, 3], function(event) {
-                        return _c("li", { key: event, staticClass: "mb-3" }, [
-                          _vm._v(
-                            "Fase: " +
-                              _vm._s(phase) +
-                              ", Evento: " +
-                              _vm._s(event)
+                      "v-stepper-step",
+                      {
+                        attrs: { step: index + 1, complete: _vm.e13 < 1 },
+                        on: {
+                          click: function($event) {
+                            _vm.e13 = index + 1
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "span",
+                          [
+                            _vm._v(
+                              "\n            " +
+                                _vm._s(
+                                  phase.links.old_status.data.attributes.name
+                                ) +
+                                "\n            "
+                            ),
+                            _c("BtnAddEvent", {
+                              attrs: { hasSession: true, step_id: index + 1 }
+                            })
+                          ],
+                          1
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("v-stepper-content", { attrs: { step: index + 1 } }, [
+                      _c(
+                        "ul",
+                        _vm._l([1, 2, 3], function(event) {
+                          return _c("li", { key: event, staticClass: "mb-3" }, [
+                            _vm._v(
+                              "Fase: " +
+                                _vm._s(index + 1) +
+                                ", Evento: " +
+                                _vm._s(event)
+                            )
+                          ])
+                        }),
+                        0
+                      )
+                    ])
+                  ],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "span",
+                [
+                  _vm.projectWorkflow
+                    ? _c(
+                        "v-stepper-step",
+                        {
+                          attrs: {
+                            step: _vm.projectWorkflow.workflow_steps + 1,
+                            complete: _vm.e13 < 2
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.e13 = _vm.projectWorkflow.workflow_steps + 1
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "span",
+                            [
+                              _vm._v(
+                                "\n            " +
+                                  _vm._s(
+                                    _vm.projectWorkflow.data[
+                                      _vm.projectWorkflow.workflow_steps - 1
+                                    ].links.new_status.data.attributes.name
+                                  ) +
+                                  "\n            "
+                              ),
+                              _c("BtnAddEvent", {
+                                attrs: {
+                                  hasSession: true,
+                                  step_id:
+                                    _vm.projectWorkflow.workflow_steps + 1
+                                }
+                              })
+                            ],
+                            1
                           )
-                        ])
-                      }),
-                      0
-                    )
-                  ]),
+                        ]
+                      )
+                    : _vm._e(),
                   _vm._v(" "),
-                  _c("div")
+                  _c(
+                    "v-stepper-content",
+                    { attrs: { step: _vm.projectWorkflow.workflow_steps + 1 } },
+                    [_c("ul", [_c("li", [_vm._v("teste")])])]
+                  )
                 ],
                 1
               )
-            }),
-            0
+            ],
+            2
           )
         ],
         1
@@ -40903,8 +41038,7 @@ var render = function() {
                         {
                           on: {
                             click: function($event) {
-                              _vm.$store.dispatch("fetchProject", item.data.id)
-                              _vm.$router.push("/show-project")
+                              return _vm.showProject(item)
                             }
                           }
                         },
@@ -41831,13 +41965,6 @@ var render = function() {
               _c(
                 "v-row",
                 [
-                  _c(
-                    "v-col",
-                    { attrs: { cols: "12" } },
-                    [_c("ProjectMapLayers")],
-                    1
-                  ),
-                  _vm._v(" "),
                   _c(
                     "v-col",
                     { attrs: { cols: "12" } },
@@ -102245,7 +102372,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_projects__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/projects */ "./resources/js/store/modules/projects.js");
 /* harmony import */ var _modules_projectStatuses__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/projectStatuses */ "./resources/js/store/modules/projectStatuses.js");
-/* harmony import */ var _modules_projectWorkflows__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/projectWorkflows */ "./resources/js/store/modules/projectWorkflows.js");
+/* harmony import */ var _modules_projectWorkflows__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/projectWorkflows */ "./resources/js/store/modules/projectWorkflows.js");
 
 
 
@@ -102256,7 +102383,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
   modules: {
     Projects: _modules_projects__WEBPACK_IMPORTED_MODULE_2__["default"],
     ProjectStatuses: _modules_projectStatuses__WEBPACK_IMPORTED_MODULE_3__["default"],
-    ProjectWorkflows: _modules_projectWorkflows__WEBPACK_IMPORTED_MODULE_5__["default"]
+    ProjectWorkflows: _modules_projectWorkflows__WEBPACK_IMPORTED_MODULE_4__["default"]
   }
 }));
 
@@ -102493,10 +102620,11 @@ var actions = {
   },
   fetchProject: function fetchProject(_ref5, projectId) {
     var commit = _ref5.commit,
-        getters = _ref5.getters;
+        dispatch = _ref5.dispatch;
     commit("setLoadingProjects", true);
     axios.get("/api/projects/" + projectId).then(function (res) {
       commit("setProject", res.data);
+      dispatch("fetchProjectWorkflow", projectId);
       commit("setLoadingProjects", false);
     })["catch"](function (err) {
       return console.log(err.data);

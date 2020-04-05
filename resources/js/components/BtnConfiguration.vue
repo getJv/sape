@@ -10,7 +10,7 @@
     <v-tooltip left>
       <template v-slot:activator="{ on }">
         <v-btn to="project-status" fab dark small color="green" v-on="on">
-          <v-icon>mdi-bookmark-multiple-outline</v-icon>
+          <v-icon>mdi-bookmark-outline</v-icon>
         </v-btn>
       </template>
       <span>Gerenciar Status</span>
@@ -19,10 +19,18 @@
     <v-tooltip left>
       <template v-slot:activator="{ on }">
         <v-btn to="project-workflow" fab dark small color="indigo" v-on="on">
-          <v-icon>mdi-debug-step-over</v-icon>
+          <v-icon>mdi-bookmark-multiple-outline</v-icon>
         </v-btn>
       </template>
       <span>Gerenciar Workflow</span>
+    </v-tooltip>
+    <v-tooltip left>
+      <template v-slot:activator="{ on }">
+        <v-btn to="field" fab dark small color="pink" v-on="on">
+          <v-icon>mdi-focus-field-horizontal</v-icon>
+        </v-btn>
+      </template>
+      <span>Campos de Projeto</span>
     </v-tooltip>
   </v-speed-dial>
 </template>

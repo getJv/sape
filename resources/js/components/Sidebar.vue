@@ -25,9 +25,7 @@
 
       <span v-if="projects">
         <v-list-item v-for="item in projects.data" :key="item.data.id" link>
-          <v-list-item-content
-            @click="$store.dispatch('fetchProject', item.data.id); $router.push('/show-project') "
-          >
+          <v-list-item-content @click="showProject(item)">
             <v-list-item-title>
               {{
               item.data.attributes.name
@@ -55,6 +53,10 @@ export default {
       if (!this.$refs.navbar.isActive) {
         this.$emit("update:drawer", false);
       }
+    },
+    showProject(item) {
+      this.$store.dispatch("fetchProject", item.data.id);
+      this.$router.push("/show-project");
     }
   },
   created() {

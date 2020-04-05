@@ -2,21 +2,21 @@ const state = {
     loadingProjects: false,
     projects: null,
     selectedProject: null,
-    project: null
+    project: null,
 };
 
 const getters = {
-    project: state => state.project,
-    projects: state => state.projects,
-    loadingProjects: state => state.loadingProjects
+    project: (state) => state.project,
+    projects: (state) => state.projects,
+    loadingProjects: (state) => state.loadingProjects,
 };
 
 const actions = {
     createProject({ dispatch }, data) {
         axios
             .post("/api/projects", data)
-            .then(res => dispatch("fetchProjects"))
-            .catch(err => console.log(err.data));
+            .then((res) => dispatch("fetchProjects"))
+            .catch((err) => console.log(err.data));
     },
     updateProject({ getters, dispatch }, data) {
         axios
@@ -24,10 +24,10 @@ const actions = {
                 name: getters.project.data.attributes.name,
                 description: getters.project.data.attributes.description,
                 active: getters.project.data.attributes.active,
-                _method: "patch"
+                _method: "patch",
             })
-            .then(res => dispatch("fetchProjects"))
-            .catch(err => {
+            .then((res) => dispatch("fetchProjects"))
+            .catch((err) => {
                 console.log(err.data);
             });
     },
@@ -38,20 +38,21 @@ const actions = {
             .then(({ data }) => {
                 commit("setProjects", data);
             })
-            .catch(err => console.log(err.data))
+            .catch((err) => console.log(err.data))
             .finally(() => commit("setLoadingProjects", false));
     },
-    fetchProject: ({ commit, getters }, projectId) => {
+    fetchProject: ({ commit, dispatch }, projectId) => {
         commit("setLoadingProjects", true);
         axios
             .get("/api/projects/" + projectId)
-            .then(res => {
+            .then((res) => {
                 commit("setProject", res.data);
+                dispatch("fetchProjectWorkflow", projectId);
                 commit("setLoadingProjects", false);
             })
-            .catch(err => console.log(err.data));
+            .catch((err) => console.log(err.data));
         commit("setLoadingProjects", false);
-    }
+    },
 };
 
 const mutations = {
@@ -69,12 +70,12 @@ const mutations = {
     },
     editProject(state, data) {
         state.project.data.attributes = data;
-    }
+    },
 };
 
 export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
 };
