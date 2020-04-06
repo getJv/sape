@@ -13,4 +13,8 @@ class Project extends Model
     {
         return $this->hasMany('App\ProjectWorkflow');
     }
+    public function fields()
+    {
+        return $this->hasMany('App\ProjectField');
+    }
 }
