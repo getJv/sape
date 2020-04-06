@@ -3,7 +3,11 @@
     <v-card-title>Fases do Projeto</v-card-title>
     <v-divider></v-divider>
     <v-card-text>
-      <v-stepper v-model="e13" vertical>
+      <p
+        class="text-center"
+        v-if="!projectWorkflow"
+      >Este projeto ainda não possui um workflow. Crie um no menu Gerenciar de workflow.</p>
+      <v-stepper v-else v-model="e13" vertical>
         <span v-for="(phase,index) in projectWorkflow.data" :key="index+1">
           <v-stepper-step :step="index+1" @click="e13 = index+1" :complete="e13 < 1">
             <span>

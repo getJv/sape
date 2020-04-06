@@ -113,7 +113,10 @@
           </v-toolbar>
         </template>
         <template v-slot:item.name="{ item }">{{item.links.field.data.attributes.name}}</template>
-        <template v-slot:item.value="{ item }">{{item.data.attributes.value}}</template>
+        <template v-slot:item.value="{ item }">
+          <span v-if="item.data.attributes.value">{{ item.data.attributes.value }}</span>
+          <span v-else>- sem informação -</span>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
         </template>
@@ -135,13 +138,8 @@ export default {
   mixins: [validationMixin],
   validations: {
     editedItem: {
-      name: {
-        required,
-        maxLength: maxLength(100)
-      },
       value: {
-        required,
-        maxLength: maxLength(100)
+        required
       }
     }
   },
@@ -198,24 +196,10 @@ export default {
         ? "Gerenciar campos vinculados"
         : "Alteração do campo: " + this.editedItem.fieldName;
     },
-    itemErrors() {
-      const errors = [];
-      if (!this.$v.editedItem.name.$dirty) return errors;
-      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.name.minLength &&
-        errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.name.maxLength &&
-        errors.push("Máximo de 100 caracteres");
-      return errors;
-    },
     valueErrors() {
       const errors = [];
       if (!this.$v.editedItem.value.$dirty) return errors;
       !this.$v.editedItem.value.required && errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.value.minLength &&
-        errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.value.maxLength &&
-        errors.push("Máximo de 100 caracteres");
       return errors;
     }
   },
@@ -264,6 +248,7 @@ export default {
 
     close() {
       this.dialog = false;
+      this.$v.$reset();
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;

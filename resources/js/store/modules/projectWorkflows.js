@@ -23,6 +23,7 @@ const actions = {
     },
     fetchProjectWorkflow: ({ commit }, projectId) => {
         commit("setLoadingProjectWorkflow", true);
+
         axios
             .get("/api/project-workflows/project/" + projectId)
             .then(({ data }) => {

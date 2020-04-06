@@ -35,7 +35,7 @@ class ProjectWorkflowController extends Controller
 
 
         if (ProjectWorkFlow::where([
-            'id' => $data['project_id'],
+            'project_id' => $data['project_id'],
             'old_status_id' =>  $data['old_status_id'],
             'new_status_id' => $data['new_status_id'],
         ])->exists()) {

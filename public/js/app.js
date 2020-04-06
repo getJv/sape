@@ -2219,12 +2219,12 @@ __webpack_require__.r(__webpack_exports__);
   validations: {
     projectDescription: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(21),
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
       maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(255)
     },
     projectName: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(21),
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
       maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
     }
   },
@@ -2253,7 +2253,7 @@ __webpack_require__.r(__webpack_exports__);
       var errors = [];
       if (!this.$v.projectName.$dirty) return errors;
       !this.$v.projectName.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectName.minLength && errors.push("Mínimo de 21 caracteres");
+      !this.$v.projectName.minLength && errors.push("Mínimo de 3 caracteres");
       !this.$v.projectName.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     },
@@ -2261,7 +2261,7 @@ __webpack_require__.r(__webpack_exports__);
       var errors = [];
       if (!this.$v.projectDescription.$dirty) return errors;
       !this.$v.projectDescription.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectDescription.minLength && errors.push("Mínimo de 21 caracteres");
+      !this.$v.projectDescription.minLength && errors.push("Mínimo de 3 caracteres");
       !this.$v.projectDescription.maxLength && errors.push("Máximo de 255 caracteres");
       return errors;
     }
@@ -2407,12 +2407,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   validations: {
     projectDescription: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(21),
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
       maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(255)
     },
     projectName: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(21),
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
       maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
     }
   },
@@ -2478,7 +2478,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var errors = [];
       if (!this.$v.projectName.$dirty) return errors;
       !this.$v.projectName.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectName.minLength && errors.push("Mínimo de 21 caracteres");
+      !this.$v.projectName.minLength && errors.push("Mínimo de 3 caracteres");
       !this.$v.projectName.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     },
@@ -2486,7 +2486,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var errors = [];
       if (!this.$v.projectDescription.$dirty) return errors;
       !this.$v.projectDescription.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectDescription.minLength && errors.push("Mínimo de 21 caracteres");
+      !this.$v.projectDescription.minLength && errors.push("Mínimo de 3 caracteres");
       !this.$v.projectDescription.maxLength && errors.push("Máximo de 255 caracteres");
       return errors;
     }
@@ -2642,6 +2642,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2651,13 +2654,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
     editedItem: {
-      name: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-        maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
-      },
       value: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-        maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"]
       }
     }
   },
@@ -2710,20 +2708,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     formTitle: function formTitle() {
       return this.editedIndex === -1 ? "Gerenciar campos vinculados" : "Alteração do campo: " + this.editedItem.fieldName;
     },
-    itemErrors: function itemErrors() {
-      var errors = [];
-      if (!this.$v.editedItem.name.$dirty) return errors;
-      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.name.minLength && errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.name.maxLength && errors.push("Máximo de 100 caracteres");
-      return errors;
-    },
     valueErrors: function valueErrors() {
       var errors = [];
       if (!this.$v.editedItem.value.$dirty) return errors;
       !this.$v.editedItem.value.required && errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.value.minLength && errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.value.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     }
   }),
@@ -2766,6 +2754,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       this.dialog = false;
+      this.$v.$reset();
       setTimeout(function () {
         _this2.editedItem = Object.assign({}, _this2.defaultItem);
         _this2.editedIndex = -1;
@@ -2829,6 +2818,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -3834,6 +3827,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
       var project = this.projects.data.find(function (item) {
         return item.data.attributes.name == _this4.selectedProject;
+      });
+      console.log({
+        project_id: project.data.id,
+        old_status_id: origin.data.id,
+        new_status_id: destiny.data.id
       });
       this.$store.dispatch("createProjectWorkflow", {
         project_id: project.data.id,
@@ -41260,7 +41258,13 @@ var render = function() {
                   key: "item.value",
                   fn: function(ref) {
                     var item = ref.item
-                    return [_vm._v(_vm._s(item.data.attributes.value))]
+                    return [
+                      item.data.attributes.value
+                        ? _c("span", [
+                            _vm._v(_vm._s(item.data.attributes.value))
+                          ])
+                        : _c("span", [_vm._v("- sem informação -")])
+                    ]
                   }
                 },
                 {
@@ -41370,130 +41374,153 @@ var render = function() {
       _c(
         "v-card-text",
         [
-          _c(
-            "v-stepper",
-            {
-              attrs: { vertical: "" },
-              model: {
-                value: _vm.e13,
-                callback: function($$v) {
-                  _vm.e13 = $$v
+          !_vm.projectWorkflow
+            ? _c("p", { staticClass: "text-center" }, [
+                _vm._v(
+                  "Este projeto ainda não possui um workflow. Crie um no menu Gerenciar de workflow."
+                )
+              ])
+            : _c(
+                "v-stepper",
+                {
+                  attrs: { vertical: "" },
+                  model: {
+                    value: _vm.e13,
+                    callback: function($$v) {
+                      _vm.e13 = $$v
+                    },
+                    expression: "e13"
+                  }
                 },
-                expression: "e13"
-              }
-            },
-            [
-              _vm._l(_vm.projectWorkflow.data, function(phase, index) {
-                return _c(
-                  "span",
-                  { key: index + 1 },
-                  [
-                    _c(
-                      "v-stepper-step",
-                      {
-                        attrs: { step: index + 1, complete: _vm.e13 < 1 },
-                        on: {
-                          click: function($event) {
-                            _vm.e13 = index + 1
-                          }
-                        }
-                      },
+                [
+                  _vm._l(_vm.projectWorkflow.data, function(phase, index) {
+                    return _c(
+                      "span",
+                      { key: index + 1 },
                       [
                         _c(
-                          "span",
-                          [
-                            _vm._v(
-                              "\n            " +
-                                _vm._s(
-                                  phase.links.old_status.data.attributes.name
-                                ) +
-                                "\n            "
-                            ),
-                            _c("BtnAddEvent", {
-                              attrs: { hasSession: true, step_id: index + 1 }
-                            })
-                          ],
-                          1
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("v-stepper-content", { attrs: { step: index + 1 } }, [
-                      _c(
-                        "ul",
-                        _vm._l([1, 2, 3], function(event) {
-                          return _c("li", { key: event, staticClass: "mb-3" }, [
-                            _vm._v(
-                              "Fase: " +
-                                _vm._s(index + 1) +
-                                ", Evento: " +
-                                _vm._s(event)
-                            )
-                          ])
-                        }),
-                        0
-                      )
-                    ])
-                  ],
-                  1
-                )
-              }),
-              _vm._v(" "),
-              _c(
-                "span",
-                [
-                  _vm.projectWorkflow
-                    ? _c(
-                        "v-stepper-step",
-                        {
-                          attrs: {
-                            step: _vm.projectWorkflow.workflow_steps + 1,
-                            complete: _vm.e13 < 2
-                          },
-                          on: {
-                            click: function($event) {
-                              _vm.e13 = _vm.projectWorkflow.workflow_steps + 1
+                          "v-stepper-step",
+                          {
+                            attrs: { step: index + 1, complete: _vm.e13 < 1 },
+                            on: {
+                              click: function($event) {
+                                _vm.e13 = index + 1
+                              }
                             }
-                          }
-                        },
-                        [
-                          _c(
-                            "span",
-                            [
-                              _vm._v(
-                                "\n            " +
-                                  _vm._s(
-                                    _vm.projectWorkflow.data[
-                                      _vm.projectWorkflow.workflow_steps - 1
-                                    ].links.new_status.data.attributes.name
-                                  ) +
-                                  "\n            "
-                              ),
-                              _c("BtnAddEvent", {
-                                attrs: {
-                                  hasSession: true,
-                                  step_id:
-                                    _vm.projectWorkflow.workflow_steps + 1
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ]
-                      )
-                    : _vm._e(),
+                          },
+                          [
+                            _c(
+                              "span",
+                              [
+                                _vm._v(
+                                  "\n            " +
+                                    _vm._s(
+                                      phase.links.old_status.data.attributes
+                                        .name
+                                    ) +
+                                    "\n            "
+                                ),
+                                _c("BtnAddEvent", {
+                                  attrs: {
+                                    hasSession: true,
+                                    step_id: index + 1
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-stepper-content",
+                          { attrs: { step: index + 1 } },
+                          [
+                            _c(
+                              "ul",
+                              _vm._l([1, 2, 3], function(event) {
+                                return _c(
+                                  "li",
+                                  { key: event, staticClass: "mb-3" },
+                                  [
+                                    _vm._v(
+                                      "Fase: " +
+                                        _vm._s(index + 1) +
+                                        ", Evento: " +
+                                        _vm._s(event)
+                                    )
+                                  ]
+                                )
+                              }),
+                              0
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  }),
                   _vm._v(" "),
                   _c(
-                    "v-stepper-content",
-                    { attrs: { step: _vm.projectWorkflow.workflow_steps + 1 } },
-                    [_c("ul", [_c("li", [_vm._v("teste")])])]
+                    "span",
+                    [
+                      _vm.projectWorkflow
+                        ? _c(
+                            "v-stepper-step",
+                            {
+                              attrs: {
+                                step: _vm.projectWorkflow.workflow_steps + 1,
+                                complete: _vm.e13 < 2
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.e13 =
+                                    _vm.projectWorkflow.workflow_steps + 1
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "span",
+                                [
+                                  _vm._v(
+                                    "\n            " +
+                                      _vm._s(
+                                        _vm.projectWorkflow.data[
+                                          _vm.projectWorkflow.workflow_steps - 1
+                                        ].links.new_status.data.attributes.name
+                                      ) +
+                                      "\n            "
+                                  ),
+                                  _c("BtnAddEvent", {
+                                    attrs: {
+                                      hasSession: true,
+                                      step_id:
+                                        _vm.projectWorkflow.workflow_steps + 1
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "v-stepper-content",
+                        {
+                          attrs: {
+                            step: _vm.projectWorkflow.workflow_steps + 1
+                          }
+                        },
+                        [_c("ul", [_c("li", [_vm._v("teste")])])]
+                      )
+                    ],
+                    1
                   )
                 ],
-                1
+                2
               )
-            ],
-            2
-          )
         ],
         1
       )

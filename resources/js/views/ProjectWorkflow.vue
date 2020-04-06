@@ -251,6 +251,12 @@ export default {
         item => item.data.attributes.name == this.selectedProject
       );
 
+      console.log({
+        project_id: project.data.id,
+        old_status_id: origin.data.id,
+        new_status_id: destiny.data.id
+      });
+
       this.$store.dispatch("createProjectWorkflow", {
         project_id: project.data.id,
         old_status_id: origin.data.id,

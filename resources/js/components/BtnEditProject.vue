@@ -60,12 +60,12 @@ export default {
   validations: {
     projectDescription: {
       required,
-      minLength: minLength(21),
+      minLength: minLength(3),
       maxLength: maxLength(255)
     },
     projectName: {
       required,
-      minLength: minLength(21),
+      minLength: minLength(3),
       maxLength: maxLength(100)
     }
   },
@@ -135,7 +135,7 @@ export default {
       const errors = [];
       if (!this.$v.projectName.$dirty) return errors;
       !this.$v.projectName.required && errors.push("Campo Obrigatório.");
-      !this.$v.projectName.minLength && errors.push("Mínimo de 21 caracteres");
+      !this.$v.projectName.minLength && errors.push("Mínimo de 3 caracteres");
       !this.$v.projectName.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     },
@@ -145,7 +145,7 @@ export default {
       if (!this.$v.projectDescription.$dirty) return errors;
       !this.$v.projectDescription.required && errors.push("Campo Obrigatório.");
       !this.$v.projectDescription.minLength &&
-        errors.push("Mínimo de 21 caracteres");
+        errors.push("Mínimo de 3 caracteres");
       !this.$v.projectDescription.maxLength &&
         errors.push("Máximo de 255 caracteres");
       return errors;
