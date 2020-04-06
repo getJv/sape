@@ -29,13 +29,11 @@ class FieldController extends Controller
         $data = request()->validate([
             'name' => 'required',
             'description' => 'required',
-            'type' => 'string | required',
             'min'  => 'integer',
             'max'  => 'integer',
             'mask' => 'string',
             'active' => 'required | boolean'
         ]);
-
         $field->update($data);
         return new FieldResource($field);
     }

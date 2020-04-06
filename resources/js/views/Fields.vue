@@ -35,6 +35,9 @@
                           placeholder="Selecione um dos formatos"
                           outlined
                           required
+                          :error-messages="typeErrors"
+                          @input="$v.editedItem.type.$touch()"
+                          @blur="$v.editedItem.type.$touch()"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="10">
@@ -116,6 +119,9 @@ export default {
         required,
         minLength: minLength(3),
         maxLength: maxLength(255)
+      },
+      type: {
+        required
       }
     }
   },
@@ -215,6 +221,7 @@ export default {
     nameErrors() {
       const errors = [];
       if (!this.$v.editedItem.name.$dirty) return errors;
+      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
       !this.$v.editedItem.name.minLength &&
         errors.push("Mínimo de 3 caracteres");
       !this.$v.editedItem.name.maxLength &&
@@ -230,6 +237,12 @@ export default {
         errors.push("Mínimo de 3 caracteres");
       !this.$v.editedItem.description.maxLength &&
         errors.push("Máximo de 255 caracteres");
+      return errors;
+    },
+    typeErrors() {
+      const errors = [];
+      if (!this.$v.editedItem.type.$dirty) return errors;
+      !this.$v.editedItem.type.required && errors.push("Campo Obrigatório.");
       return errors;
     }
   },
@@ -254,7 +267,6 @@ export default {
           id: item.data.id,
           name: item.data.attributes.name,
           description: item.data.attributes.description,
-          type: item.data.attributes.type,
           active: !item.data.attributes.active
         });
       }
@@ -274,10 +286,7 @@ export default {
         this.$store.dispatch("updateField", {
           id: this.editedItem.id,
           name: this.editedItem.name,
-          type: this.editedItem.description,
-
-          /* No controler do backend forçar a retirada desse campo
-           description: this.editedItem.description, */
+          description: this.editedItem.description,
           active: this.editedItem.active
         });
       } else {

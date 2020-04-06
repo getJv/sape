@@ -3065,6 +3065,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -3082,6 +3085,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
         minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
         maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(255)
+      },
+      type: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"]
       }
     }
   },
@@ -3175,6 +3181,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     nameErrors: function nameErrors() {
       var errors = [];
       if (!this.$v.editedItem.name.$dirty) return errors;
+      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
       !this.$v.editedItem.name.minLength && errors.push("Mínimo de 3 caracteres");
       !this.$v.editedItem.name.maxLength && errors.push("Máximo de 50 caracteres");
       return errors;
@@ -3185,6 +3192,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       !this.$v.editedItem.description.required && errors.push("Campo Obrigatório.");
       !this.$v.editedItem.description.minLength && errors.push("Mínimo de 3 caracteres");
       !this.$v.editedItem.description.maxLength && errors.push("Máximo de 255 caracteres");
+      return errors;
+    },
+    typeErrors: function typeErrors() {
+      var errors = [];
+      if (!this.$v.editedItem.type.$dirty) return errors;
+      !this.$v.editedItem.type.required && errors.push("Campo Obrigatório.");
       return errors;
     }
   }),
@@ -3206,7 +3219,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           id: item.data.id,
           name: item.data.attributes.name,
           description: item.data.attributes.description,
-          type: item.data.attributes.type,
           active: !item.data.attributes.active
         });
       }
@@ -3226,10 +3238,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.$store.dispatch("updateField", {
           id: this.editedItem.id,
           name: this.editedItem.name,
-          type: this.editedItem.description,
-
-          /* No controler do backend forçar a retirada desse campo
-           description: this.editedItem.description, */
+          description: this.editedItem.description,
           active: this.editedItem.active
         });
       } else {
@@ -41536,7 +41545,21 @@ var render = function() {
                                                               placeholder:
                                                                 "Selecione um dos formatos",
                                                               outlined: "",
-                                                              required: ""
+                                                              required: "",
+                                                              "error-messages":
+                                                                _vm.typeErrors
+                                                            },
+                                                            on: {
+                                                              input: function(
+                                                                $event
+                                                              ) {
+                                                                return _vm.$v.editedItem.type.$touch()
+                                                              },
+                                                              blur: function(
+                                                                $event
+                                                              ) {
+                                                                return _vm.$v.editedItem.type.$touch()
+                                                              }
                                                             },
                                                             model: {
                                                               value:
@@ -41802,7 +41825,7 @@ var render = function() {
                   ],
                   null,
                   false,
-                  3811747621
+                  743379023
                 )
               })
             ],
@@ -103563,15 +103586,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************!*\
   !*** ./resources/js/views/Fields.vue ***!
   \***************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Fields_vue_vue_type_template_id_4c2b97d0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Fields.vue?vue&type=template&id=4c2b97d0& */ "./resources/js/views/Fields.vue?vue&type=template&id=4c2b97d0&");
 /* harmony import */ var _Fields_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Fields.vue?vue&type=script&lang=js& */ "./resources/js/views/Fields.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Fields_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Fields_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -103601,7 +103623,7 @@ component.options.__file = "resources/js/views/Fields.vue"
 /*!****************************************************************!*\
   !*** ./resources/js/views/Fields.vue?vue&type=script&lang=js& ***!
   \****************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

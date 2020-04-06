@@ -61,7 +61,6 @@ class FieldTest extends TestCase
         $response = $this->patch('/api/fields/' . $field->id, [
             'name' => 'My edited title',
             'description' => 'Description of my field 2',
-            'type' => 'double',
             'max' => 3,
             'mask' => 'data',
             'active' => false
@@ -71,7 +70,6 @@ class FieldTest extends TestCase
         $field = Field::find(1);
         $this->assertEquals('My edited title', $field->name);
         $this->assertEquals('Description of my field 2', $field->description);
-        $this->assertEquals('double', $field->type);
         $this->assertEquals(3, $field->max);
         $this->assertEquals('data', $field->mask);
         $this->assertNotTrue($field->description);
