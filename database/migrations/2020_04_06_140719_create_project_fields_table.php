@@ -17,6 +17,7 @@ class CreateProjectFieldsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('field_id');
+            $table->text('value')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

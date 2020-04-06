@@ -201,7 +201,7 @@ export default {
 
   methods: {
     editItem(item) {
-      this.editedIndex = this.projectStatuses.data.indexOf(item);
+      this.editedIndex = this.projectFields.data.indexOf(item);
       this.editedItem = Object.assign({}, item.data.attributes);
       this.editedItem.id = item.data.id;
       this.dialog = true;

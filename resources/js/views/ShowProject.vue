@@ -15,7 +15,7 @@
           </v-card>
         </v-col>
         <v-col cols="12">
-          <projectDetails :items="desserts" :hasSession="hasSession" />
+          <projectDetails :hasSession="hasSession" />
         </v-col>
       </v-row>
     </v-col>
@@ -52,25 +52,7 @@ export default {
   },
   data() {
     return {
-      hasSession: true,
-      desserts: [
-        {
-          name: "Valor do Investimento",
-          value: "R$ 123.123.123,00"
-        },
-        {
-          name: "Tipo",
-          value: "Ferroviário"
-        },
-        {
-          name: "Contato",
-          value: "Governador: 3333-3333"
-        },
-        {
-          name: "Territorio",
-          value: "33000 KM²"
-        }
-      ]
+      hasSession: true
     };
   }
 };

@@ -4,6 +4,7 @@ import Projects from "./modules/projects";
 import ProjectStatuses from "./modules/projectStatuses";
 import ProjectWorkflows from "./modules/projectWorkflows";
 import Fields from "./modules/field";
+import ProjectFields from "./modules/projectFields";
 
 Vue.use(Vuex);
 
@@ -13,5 +14,6 @@ export default new Vuex.Store({
         ProjectStatuses,
         ProjectWorkflows,
         Fields,
+        ProjectFields,
     },
 });

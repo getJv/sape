@@ -34,6 +34,7 @@ class ProjectFieldController extends Controller
     public function update(ProjectField $projectField)
     {
         $data = request()->validate([
+            'value' => '',
             'active' => 'required'
         ]);
         $projectField->update($data);

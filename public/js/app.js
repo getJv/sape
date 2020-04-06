@@ -2508,6 +2508,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2618,22 +2625,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ProjectDetails",
-  props: ["items", "hasSession"],
+  props: ["hasSession"],
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
     editedItem: {
       name: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-        minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
         maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
       },
       value: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
-        minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(3),
         maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(100)
       }
     }
@@ -2643,16 +2666,27 @@ __webpack_require__.r(__webpack_exports__);
       dialog: false,
       editedIndex: -1,
       editedItem: {
-        name: "",
+        id: "",
+        fieldName: "",
         value: ""
       },
       defaultItem: {
-        name: "",
+        fieldName: "",
         value: ""
       }
     };
   },
-  computed: {
+  created: function created() {
+    this.$store.dispatch("fetchFields");
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(["project", "projectFields", "fields"]), {
+    fieldsList: function fieldsList() {
+      var list = [];
+      this.fields.data.forEach(function (item) {
+        return list.push(item.data.attributes.name);
+      });
+      return list;
+    },
     headers: function headers() {
       var headers = [{
         text: "Item",
@@ -2674,7 +2708,7 @@ __webpack_require__.r(__webpack_exports__);
       return headers;
     },
     formTitle: function formTitle() {
-      return this.editedIndex === -1 ? "Novo Item" : "Edição de Item";
+      return this.editedIndex === -1 ? "Gerenciar campos vinculados" : "Alteração do campo: " + this.editedItem.fieldName;
     },
     itemErrors: function itemErrors() {
       var errors = [];
@@ -2692,36 +2726,59 @@ __webpack_require__.r(__webpack_exports__);
       !this.$v.editedItem.value.maxLength && errors.push("Máximo de 100 caracteres");
       return errors;
     }
-  },
+  }),
   watch: {
     dialog: function dialog(val) {
       val || this.close();
     }
   },
   methods: {
+    addField: function addField() {
+      var _this = this;
+
+      var field = this.fields.data.find(function (item) {
+        return item.data.attributes.name == _this.editedItem.fieldName;
+      });
+      this.$store.dispatch("createProjectField", {
+        project_id: this.project.data.id,
+        field_id: field.data.id
+      });
+      this.close();
+    },
     editItem: function editItem(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.projectFields.data.indexOf(item);
+      this.editedItem = Object.assign({}, item.data.attributes);
+      this.editedItem.id = item.data.id;
+      this.editedItem.fieldName = item.links.field.data.attributes.name;
+      this.editedItem.project_field_id = item.data.id;
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var index = this.items.indexOf(item);
-      confirm("Deseja realmente excluir este atributo?") && this.items.splice(index, 1);
+      if (confirm("Deseja realmente alterar o vínculo deste atributo com o projeto?")) {
+        this.$store.dispatch("updateProjectField", {
+          project_field_id: item.data.id,
+          project_id: item.data.attributes.project_id,
+          active: !item.data.attributes.active
+        });
+      }
     },
     close: function close() {
-      var _this = this;
+      var _this2 = this;
 
       this.dialog = false;
       setTimeout(function () {
-        _this.editedItem = Object.assign({}, _this.defaultItem);
-        _this.editedIndex = -1;
+        _this2.editedItem = Object.assign({}, _this2.defaultItem);
+        _this2.editedIndex = -1;
       }, 300);
     },
     save: function save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editedItem);
-      } else {
-        this.items.push(this.editedItem);
+        this.$store.dispatch("updateProjectField", {
+          project_field_id: this.editedItem.project_field_id,
+          project_id: this.editedItem.project_id,
+          value: this.editedItem.value,
+          active: this.editedItem.active
+        });
       }
 
       this.close();
@@ -3465,7 +3522,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     editItem: function editItem(item) {
-      this.editedIndex = this.projectStatuses.data.indexOf(item);
+      this.editedIndex = this.projectFields.data.indexOf(item);
       this.editedItem = Object.assign({}, item.data.attributes);
       this.editedItem.id = item.data.id;
       this.dialog = true;
@@ -3860,20 +3917,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["project"])),
   data: function data() {
     return {
-      hasSession: true,
-      desserts: [{
-        name: "Valor do Investimento",
-        value: "R$ 123.123.123,00"
-      }, {
-        name: "Tipo",
-        value: "Ferroviário"
-      }, {
-        name: "Contato",
-        value: "Governador: 3333-3333"
-      }, {
-        name: "Territorio",
-        value: "33000 KM²"
-      }]
+      hasSession: true
     };
   }
 });
@@ -40747,6 +40791,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-card",
+    { attrs: { if: "project" } },
     [
       _c("v-card-title", [_c("p", [_vm._v("Características do projeto")])]),
       _vm._v(" "),
@@ -40761,7 +40806,7 @@ var render = function() {
               "hide-default-footer": "",
               "hide-default-header": "",
               headers: _vm.headers,
-              items: _vm.items,
+              items: _vm.projectFields.data,
               "sort-by": "name"
             },
             scopedSlots: _vm._u(
@@ -40778,7 +40823,7 @@ var render = function() {
                               _c(
                                 "v-dialog",
                                 {
-                                  attrs: { "max-width": "500px" },
+                                  attrs: { "max-width": "700px" },
                                   scopedSlots: _vm._u(
                                     [
                                       {
@@ -40801,7 +40846,7 @@ var render = function() {
                                                 },
                                                 on
                                               ),
-                                              [_vm._v("Novo Item")]
+                                              [_vm._v("Campos Vinculados")]
                                             )
                                           ]
                                         }
@@ -40809,7 +40854,7 @@ var render = function() {
                                     ],
                                     null,
                                     false,
-                                    3844099329
+                                    2887572221
                                   ),
                                   model: {
                                     value: _vm.dialog,
@@ -40838,102 +40883,316 @@ var render = function() {
                                           _c(
                                             "v-container",
                                             [
-                                              _c(
-                                                "v-row",
-                                                {
-                                                  attrs: {
-                                                    justify: "center",
-                                                    align: "center"
-                                                  }
-                                                },
-                                                [
-                                                  _c(
-                                                    "v-col",
+                                              _vm.editedIndex < 0
+                                                ? _c(
+                                                    "v-row",
                                                     {
                                                       attrs: {
-                                                        cols: "12",
-                                                        sm: "10"
+                                                        justify: "center",
+                                                        align: "center"
                                                       }
                                                     },
                                                     [
-                                                      _c("v-text-field", {
-                                                        attrs: {
-                                                          value:
-                                                            _vm.editedItem.name,
-                                                          counter: 100,
-                                                          "error-messages":
-                                                            _vm.itemErrors,
-                                                          label: "Nome",
-                                                          required: ""
+                                                      _c(
+                                                        "v-col",
+                                                        {
+                                                          attrs: { cols: "12" }
                                                         },
-                                                        on: {
-                                                          input: function(
-                                                            $event
-                                                          ) {
-                                                            return _vm.$v.editedItem.name.$touch()
-                                                          },
-                                                          blur: function(
-                                                            $event
-                                                          ) {
-                                                            return _vm.$v.editedItem.name.$touch()
-                                                          }
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "v-col",
-                                                    {
-                                                      attrs: {
-                                                        cols: "12",
-                                                        sm: "10"
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("v-text-field", {
-                                                        attrs: {
-                                                          "error-messages":
-                                                            _vm.valueErrors,
-                                                          counter: 100,
-                                                          label: "Valor"
+                                                        [
+                                                          _vm.fields
+                                                            ? _c("v-select", {
+                                                                attrs: {
+                                                                  items:
+                                                                    _vm.fieldsList,
+                                                                  label:
+                                                                    "Selecione um Campo",
+                                                                  placeholder:
+                                                                    "Lista de campos disponíveis",
+                                                                  outlined: "",
+                                                                  required: ""
+                                                                },
+                                                                model: {
+                                                                  value:
+                                                                    _vm
+                                                                      .editedItem
+                                                                      .fieldName,
+                                                                  callback: function(
+                                                                    $$v
+                                                                  ) {
+                                                                    _vm.$set(
+                                                                      _vm.editedItem,
+                                                                      "fieldName",
+                                                                      $$v
+                                                                    )
+                                                                  },
+                                                                  expression:
+                                                                    "editedItem.fieldName"
+                                                                }
+                                                              })
+                                                            : _vm._e(),
+                                                          _vm._v(" "),
+                                                          _c("v-spacer"),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "v-btn",
+                                                            {
+                                                              attrs: {
+                                                                right: "",
+                                                                absolute: "",
+                                                                outlined: "",
+                                                                small: "",
+                                                                color:
+                                                                  "blue darken-1"
+                                                              },
+                                                              on: {
+                                                                click: function(
+                                                                  $event
+                                                                ) {
+                                                                  return _vm.addField()
+                                                                }
+                                                              }
+                                                            },
+                                                            [
+                                                              _vm._v(
+                                                                "Vincular Campo"
+                                                              )
+                                                            ]
+                                                          )
+                                                        ],
+                                                        1
+                                                      ),
+                                                      _vm._v(" "),
+                                                      _c(
+                                                        "v-col",
+                                                        {
+                                                          attrs: { cols: "12" }
                                                         },
-                                                        on: {
-                                                          input: function(
-                                                            $event
-                                                          ) {
-                                                            return _vm.$v.editedItem.value.$touch()
-                                                          },
-                                                          blur: function(
-                                                            $event
-                                                          ) {
-                                                            return _vm.$v.editedItem.value.$touch()
-                                                          }
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.editedItem
-                                                              .value,
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              _vm.editedItem,
-                                                              "value",
-                                                              $$v
+                                                        [
+                                                          _c("v-data-table", {
+                                                            attrs: {
+                                                              "disable-pagination":
+                                                                "",
+                                                              "hide-default-footer":
+                                                                "",
+                                                              headers:
+                                                                _vm.headers,
+                                                              items:
+                                                                _vm
+                                                                  .projectFields
+                                                                  .data,
+                                                              "sort-by": "name"
+                                                            },
+                                                            scopedSlots: _vm._u(
+                                                              [
+                                                                {
+                                                                  key:
+                                                                    "item.name",
+                                                                  fn: function(
+                                                                    ref
+                                                                  ) {
+                                                                    var item =
+                                                                      ref.item
+                                                                    return [
+                                                                      _vm._v(
+                                                                        _vm._s(
+                                                                          item
+                                                                            .links
+                                                                            .field
+                                                                            .data
+                                                                            .attributes
+                                                                            .name
+                                                                        )
+                                                                      )
+                                                                    ]
+                                                                  }
+                                                                },
+                                                                {
+                                                                  key:
+                                                                    "item.value",
+                                                                  fn: function(
+                                                                    ref
+                                                                  ) {
+                                                                    var item =
+                                                                      ref.item
+                                                                    return [
+                                                                      item.links
+                                                                        .field
+                                                                        .data
+                                                                        .attributes
+                                                                        .active
+                                                                        ? _c(
+                                                                            "span",
+                                                                            [
+                                                                              _vm._v(
+                                                                                "Vínculo ativo"
+                                                                              )
+                                                                            ]
+                                                                          )
+                                                                        : _c(
+                                                                            "span",
+                                                                            [
+                                                                              _vm._v(
+                                                                                "Vínculo inativo"
+                                                                              )
+                                                                            ]
+                                                                          )
+                                                                    ]
+                                                                  }
+                                                                },
+                                                                {
+                                                                  key:
+                                                                    "item.actions",
+                                                                  fn: function(
+                                                                    ref
+                                                                  ) {
+                                                                    var item =
+                                                                      ref.item
+                                                                    return [
+                                                                      item.data
+                                                                        .attributes
+                                                                        .active
+                                                                        ? _c(
+                                                                            "v-icon",
+                                                                            {
+                                                                              attrs: {
+                                                                                color:
+                                                                                  "red",
+                                                                                small:
+                                                                                  ""
+                                                                              },
+                                                                              on: {
+                                                                                click: function(
+                                                                                  $event
+                                                                                ) {
+                                                                                  return _vm.deleteItem(
+                                                                                    item
+                                                                                  )
+                                                                                }
+                                                                              }
+                                                                            },
+                                                                            [
+                                                                              _vm._v(
+                                                                                "mdi-delete"
+                                                                              )
+                                                                            ]
+                                                                          )
+                                                                        : _c(
+                                                                            "v-icon",
+                                                                            {
+                                                                              attrs: {
+                                                                                color:
+                                                                                  "green",
+                                                                                small:
+                                                                                  ""
+                                                                              },
+                                                                              on: {
+                                                                                click: function(
+                                                                                  $event
+                                                                                ) {
+                                                                                  return _vm.deleteItem(
+                                                                                    item
+                                                                                  )
+                                                                                }
+                                                                              }
+                                                                            },
+                                                                            [
+                                                                              _vm._v(
+                                                                                "mdi-recycle"
+                                                                              )
+                                                                            ]
+                                                                          )
+                                                                    ]
+                                                                  }
+                                                                },
+                                                                {
+                                                                  key:
+                                                                    "no-data",
+                                                                  fn: function() {
+                                                                    return [
+                                                                      _c("p", [
+                                                                        _vm._v(
+                                                                          "Sem informações cadastradas"
+                                                                        )
+                                                                      ])
+                                                                    ]
+                                                                  },
+                                                                  proxy: true
+                                                                }
+                                                              ],
+                                                              null,
+                                                              false,
+                                                              2976455938
                                                             )
-                                                          },
-                                                          expression:
-                                                            "editedItem.value"
-                                                        }
-                                                      })
+                                                          })
+                                                        ],
+                                                        1
+                                                      )
                                                     ],
                                                     1
                                                   )
-                                                ],
-                                                1
-                                              )
+                                                : _c(
+                                                    "v-row",
+                                                    {
+                                                      attrs: {
+                                                        justify: "center",
+                                                        align: "center"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "v-col",
+                                                        {
+                                                          attrs: {
+                                                            cols: "12",
+                                                            sm: "10"
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("v-text-field", {
+                                                            attrs: {
+                                                              "error-messages":
+                                                                _vm.valueErrors,
+                                                              label:
+                                                                _vm.editedItem
+                                                                  .fieldName,
+                                                              required: "",
+                                                              outlined: ""
+                                                            },
+                                                            on: {
+                                                              input: function(
+                                                                $event
+                                                              ) {
+                                                                return _vm.$v.editedItem.value.$touch()
+                                                              },
+                                                              blur: function(
+                                                                $event
+                                                              ) {
+                                                                return _vm.$v.editedItem.value.$touch()
+                                                              }
+                                                            },
+                                                            model: {
+                                                              value:
+                                                                _vm.editedItem
+                                                                  .value,
+                                                              callback: function(
+                                                                $$v
+                                                              ) {
+                                                                _vm.$set(
+                                                                  _vm.editedItem,
+                                                                  "value",
+                                                                  $$v
+                                                                )
+                                                              },
+                                                              expression:
+                                                                "editedItem.value"
+                                                            }
+                                                          })
+                                                        ],
+                                                        1
+                                                      )
+                                                    ],
+                                                    1
+                                                  )
                                             ],
                                             1
                                           )
@@ -40958,17 +41217,19 @@ var render = function() {
                                             [_vm._v("Cancelar")]
                                           ),
                                           _vm._v(" "),
-                                          _c(
-                                            "v-btn",
-                                            {
-                                              attrs: {
-                                                color: "blue darken-1",
-                                                text: ""
-                                              },
-                                              on: { click: _vm.save }
-                                            },
-                                            [_vm._v("Salvar")]
-                                          )
+                                          _vm.editedIndex > -1
+                                            ? _c(
+                                                "v-btn",
+                                                {
+                                                  attrs: {
+                                                    color: "blue darken-1",
+                                                    text: ""
+                                                  },
+                                                  on: { click: _vm.save }
+                                                },
+                                                [_vm._v("Salvar")]
+                                              )
+                                            : _vm._e()
                                         ],
                                         1
                                       )
@@ -40987,6 +41248,22 @@ var render = function() {
                     }
                   : null,
                 {
+                  key: "item.name",
+                  fn: function(ref) {
+                    var item = ref.item
+                    return [
+                      _vm._v(_vm._s(item.links.field.data.attributes.name))
+                    ]
+                  }
+                },
+                {
+                  key: "item.value",
+                  fn: function(ref) {
+                    var item = ref.item
+                    return [_vm._v(_vm._s(item.data.attributes.value))]
+                  }
+                },
+                {
                   key: "item.actions",
                   fn: function(ref) {
                     var item = ref.item
@@ -41002,28 +41279,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                    mdi-pencil\n                "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-icon",
-                        {
-                          attrs: { small: "" },
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteItem(item)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                    mdi-delete\n                "
-                          )
-                        ]
+                        [_vm._v("mdi-pencil")]
                       )
                     ]
                   }
@@ -42688,10 +42944,7 @@ var render = function() {
                     { attrs: { cols: "12" } },
                     [
                       _c("projectDetails", {
-                        attrs: {
-                          items: _vm.desserts,
-                          hasSession: _vm.hasSession
-                        }
+                        attrs: { hasSession: _vm.hasSession }
                       })
                     ],
                     1
@@ -103125,6 +103378,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_projectStatuses__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/projectStatuses */ "./resources/js/store/modules/projectStatuses.js");
 /* harmony import */ var _modules_projectWorkflows__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/projectWorkflows */ "./resources/js/store/modules/projectWorkflows.js");
 /* harmony import */ var _modules_field__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/field */ "./resources/js/store/modules/field.js");
+/* harmony import */ var _modules_projectFields__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/projectFields */ "./resources/js/store/modules/projectFields.js");
+
 
 
 
@@ -103137,7 +103392,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     Projects: _modules_projects__WEBPACK_IMPORTED_MODULE_2__["default"],
     ProjectStatuses: _modules_projectStatuses__WEBPACK_IMPORTED_MODULE_3__["default"],
     ProjectWorkflows: _modules_projectWorkflows__WEBPACK_IMPORTED_MODULE_4__["default"],
-    Fields: _modules_field__WEBPACK_IMPORTED_MODULE_5__["default"]
+    Fields: _modules_field__WEBPACK_IMPORTED_MODULE_5__["default"],
+    ProjectFields: _modules_projectFields__WEBPACK_IMPORTED_MODULE_6__["default"]
   }
 }));
 
@@ -103233,6 +103489,77 @@ var mutations = {
   },
   editField: function editField(state, data) {
     state.field.data.attributes = data;
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/projectFields.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/store/modules/projectFields.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var state = {
+  loadingProjectField: false,
+  projectFields: ""
+};
+var getters = {
+  projectFields: function projectFields(state) {
+    return state.projectFields;
+  },
+  loadingProjectField: function loadingProjectField(state) {
+    return state.loadingProjectField;
+  }
+};
+var actions = {
+  createProjectField: function createProjectField(_ref, data) {
+    var dispatch = _ref.dispatch;
+    axios.post("/api/project-fields", data).then(function (res) {
+      return dispatch("fetchProjectFields", data.project_id);
+    })["catch"](function (err) {
+      return console.log(err.data);
+    });
+  },
+  updateProjectField: function updateProjectField(_ref2, data) {
+    var dispatch = _ref2.dispatch;
+    data._method = "patch";
+    axios.patch("/api/project-fields/" + data.project_field_id, data).then(function (res) {
+      return dispatch("fetchProjectFields", data.project_id);
+    })["catch"](function (err) {
+      return console.log(err.data);
+    })["finally"](function () {
+      return dispatch("fetchProjectFields", data.project_id);
+    });
+  },
+  fetchProjectFields: function fetchProjectFields(_ref3, projectId) {
+    var commit = _ref3.commit;
+    commit("setLoadingProjectField", true);
+    axios.get("/api/project-fields/project/" + projectId).then(function (_ref4) {
+      var data = _ref4.data;
+      commit("setProjectFields", data);
+    })["catch"](function (err) {
+      return console.log(err.data);
+    })["finally"](function () {
+      return commit("setLoadingProjectField", false);
+    });
+  }
+};
+var mutations = {
+  setProjectFields: function setProjectFields(state, value) {
+    state.projectFields = value;
+  },
+  setLoadingProjectField: function setLoadingProjectField(state, value) {
+    state.loadingProjectField = value;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -103480,6 +103807,7 @@ var actions = {
     axios.get("/api/projects/" + projectId).then(function (res) {
       commit("setProject", res.data);
       dispatch("fetchProjectWorkflow", projectId);
+      dispatch("fetchProjectFields", projectId);
       commit("setLoadingProjects", false);
     })["catch"](function (err) {
       return console.log(err.data);

@@ -10,6 +10,7 @@ $factory->define(ProjectField::class, function (Faker $faker) {
     return [
         'project_id' => $faker->unique()->randomNumber(),
         'field_id' => $faker->unique()->randomNumber(),
+        'value' => Str::random(10),
         'active' => true
     ];
 });

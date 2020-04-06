@@ -102,6 +102,7 @@ class projectFieldTest extends TestCase
                         'attributes' => [
                             'project_id'    => $projectFields->project_id,
                             'field_id' => $projectFields->field_id,
+                            'value' => $projectFields->value,
                             'active' => $projectFields->active,
                         ],
                     ],
@@ -143,10 +144,12 @@ class projectFieldTest extends TestCase
 
         $this->actingAs($user = factory(User::class)->create(), 'api');
         $response = $this->patch('/api/project-fields/' . $projectField->id, [
+            'value' => 'kkkkk',
             'active' => false
         ])->assertStatus(200);
 
         $projectField = ProjectField::find(1);
+        $this->assertEquals('kkkkk', $projectField->value);
         $this->assertNotTrue($projectField->active);
 
         $response->assertJson([
@@ -156,6 +159,7 @@ class projectFieldTest extends TestCase
                 'attributes' => [
                     'project_id' => $projectField->project_id,
                     'field_id'   => $projectField->field_id,
+                    'value'      => $projectField->value,
                     'active'     => $projectField->active,
                 ],
 

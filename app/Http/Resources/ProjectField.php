@@ -23,6 +23,7 @@ class ProjectField extends JsonResource
                 'attributes' => [
                     'project_id' => $this->project_id,
                     'field_id'   => $this->field_id,
+                    'value'   => $this->value,
                     'active'     => $this->active,
                 ],
 
