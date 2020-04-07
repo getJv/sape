@@ -45,7 +45,11 @@
                           placeholder="Lista de campos disponíveis"
                           outlined
                           required
-                        ></v-select>
+                        >
+                        <template v-slot:no-data>
+                            <p>Sem informações cadastradas</p>
+                          </template>
+                        </v-select>
                         <v-spacer></v-spacer>
                         <v-btn
                           right
