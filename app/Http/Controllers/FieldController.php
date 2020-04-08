@@ -32,6 +32,7 @@ class FieldController extends Controller
             'min'  => 'integer',
             'max'  => 'integer',
             'mask' => 'string',
+            'required' => 'boolean',
             'active' => 'required | boolean'
         ]);
         $field->update($data);

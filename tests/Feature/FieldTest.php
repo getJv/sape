@@ -63,6 +63,7 @@ class FieldTest extends TestCase
             'description' => 'Description of my field 2',
             'max' => 3,
             'mask' => 'data',
+            'required' => true,
             'active' => false
         ])->assertStatus(200);
 
@@ -73,6 +74,7 @@ class FieldTest extends TestCase
         $this->assertEquals(3, $field->max);
         $this->assertEquals('data', $field->mask);
         $this->assertNotTrue($field->description);
+        $this->assertNotFalse($field->required);
 
         $response->assertJson([
             'data' => [
@@ -85,6 +87,7 @@ class FieldTest extends TestCase
                     'min' => $field->min,
                     'max' => $field->max,
                     'mask' => $field->mask,
+                    'required' => $field->required,
                     'active' => $field->active,
                 ],
 
