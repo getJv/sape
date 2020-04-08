@@ -21,6 +21,7 @@ class CreateFieldsTable extends Migration
             $table->integer('min')->nullable();
             $table->integer('max')->nullable();
             $table->string('mask')->nullable();
+            $table->boolean('required')->default(false);
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
