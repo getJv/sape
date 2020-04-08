@@ -133,27 +133,27 @@ export default {
     editedIndex: -1,
     fieldTypes: [
       {
-        type: "integer",
+        type: "integerField",
         name: "Número inteiro",
         description: "Recebe apenas números inteiros. ex: 10"
       },
       {
-        type: "number",
+        type: "numberField",
         name: "Número decimal",
         description: "Recebe apenas números com parte de fração. ex: 10,00"
       },
       {
-        type: "date",
+        type: "dateField",
         name: "Data",
         description: "Recebe datas no formato brasieiro. ex: 10/04/2020"
       },
       {
-        type: "string",
+        type: "stringField",
         name: "Texto pequeno",
         description: "Útil para textos com no máximo 255 caracteres"
       },
       {
-        type: "text",
+        type: "textField",
         name: "Texto grande",
         description: "Útil para textos com mais 255 caracteres"
       }

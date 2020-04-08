@@ -46,7 +46,7 @@
                           outlined
                           required
                         >
-                        <template v-slot:no-data>
+                          <template v-slot:no-data>
                             <p>Sem informações cadastradas</p>
                           </template>
                         </v-select>
@@ -93,15 +93,15 @@
                     <!-- Edicaçõ do valor dos campos -->
                     <v-row v-else justify="center" align="center">
                       <v-col cols="12" sm="10">
-                        <v-text-field
-                          v-model="editedItem.value"
-                          :error-messages="valueErrors"
+                        <!-- :required="editedItem.required" CRIAR NO SISTEMA/TABELA -->
+                        <component
+                          :is="editedItem.type"
+                          :ref="editedItem.hashName"
                           :label="editedItem.fieldName"
-                          required
-                          outlined
-                          @input="$v.editedItem.value.$touch()"
-                          @blur="$v.editedItem.value.$touch()"
-                        ></v-text-field>
+                          :min="editedItem.min"
+                          :max="editedItem.max"
+                          :value.sync="editedItem.value"
+                        />
                       </v-col>
                     </v-row>
                   </v-container>
@@ -110,7 +110,14 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-                  <v-btn v-if="editedIndex > -1" color="blue darken-1" text @click="save">Salvar</v-btn>
+                  <div v-if="$refs[editedItem.hashName]">
+                    <v-btn
+                      v-if="editedIndex > -1 && !$refs[editedItem.hashName].$v.$invalid"
+                      color="blue darken-1"
+                      text
+                      @click="save"
+                    >Salvar</v-btn>
+                  </div>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -136,9 +143,14 @@
 import { validationMixin } from "vuelidate";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
+import integerField from "./formInputs/IntegerField";
+
 export default {
   name: "ProjectDetails",
   props: ["hasSession"],
+  components: {
+    integerField
+  },
   mixins: [validationMixin],
   validations: {
     editedItem: {
@@ -233,6 +245,13 @@ export default {
       this.editedItem.id = item.data.id;
       this.editedItem.fieldName = item.links.field.data.attributes.name;
       this.editedItem.project_field_id = item.data.id;
+      this.editedItem.type = item.links.field.data.attributes.type;
+      this.editedItem.min = item.links.field.data.attributes.min;
+      this.editedItem.max = item.links.field.data.attributes.max;
+      this.editedItem.hashName = this.editedItem.fieldName
+        .replace(/ /g, "_")
+        .toLowerCase();
+      console.log(item);
       this.dialog = true;
     },
 

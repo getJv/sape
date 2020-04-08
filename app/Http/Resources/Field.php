@@ -24,7 +24,7 @@ class Field extends JsonResource
                     'description' => $this->description,
                     'min' => $this->min,
                     'max' => $this->max,
-                    'max' => $this->mask,
+                    'mask' => $this->mask,
                     'active' => $this->active,
                 ],
             ],

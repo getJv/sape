@@ -84,7 +84,7 @@ class FieldTest extends TestCase
                     'description' => $field->description,
                     'min' => $field->min,
                     'max' => $field->max,
-                    'max' => $field->mask,
+                    'mask' => $field->mask,
                     'active' => $field->active,
                 ],
 
@@ -113,7 +113,7 @@ class FieldTest extends TestCase
                         'description' => $field->description,
                         'min' => $field->min,
                         'max' => $field->max,
-                        'max' => $field->mask,
+                        'mask' => $field->mask,
                         'active' => $field->active,
                     ],
 
@@ -144,7 +144,7 @@ class FieldTest extends TestCase
                             'description' => $fields->first()->description,
                             'min' => $fields->first()->min,
                             'max' => $fields->first()->max,
-                            'max' => $fields->first()->mask,
+                            'mask' => $fields->first()->mask,
                             'active' => $fields->first()->active,
                         ],
 
