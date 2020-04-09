@@ -2665,6 +2665,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -2766,6 +2767,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.editedItem.type = item.links.field.data.attributes.type;
       this.editedItem.min = item.links.field.data.attributes.min;
       this.editedItem.max = item.links.field.data.attributes.max;
+      this.editedItem.mask = item.links.field.data.attributes.mask;
       this.editedItem.hashName = this.editedItem.fieldName.replace(/ /g, "_").toLowerCase();
       console.log(item);
       this.dialog = true;
@@ -3035,7 +3037,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -3043,11 +3044,6 @@ __webpack_require__.r(__webpack_exports__);
   name: "IntegerField",
   directives: {
     mask: vue_the_mask__WEBPACK_IMPORTED_MODULE_2__["mask"]
-  },
-  data: function data() {
-    return {
-      mask: "########,##"
-    };
   },
   props: {
     required: {
@@ -3065,6 +3061,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     max: {
       type: Number
+    },
+    mask: {
+      type: String
     }
   },
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
@@ -3078,6 +3077,13 @@ __webpack_require__.r(__webpack_exports__);
     return validations;
   },
   computed: {
+    fieldMask: function fieldMask() {
+      if (!this.mask) {
+        return "####################";
+      }
+
+      return this.mask;
+    },
     fieldValue: {
       get: function get() {
         return this.value;
@@ -3160,6 +3166,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/formInputs/IntegerField */ "./resources/js/components/formInputs/IntegerField.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3268,11 +3275,51 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Fields",
+  components: {
+    minField: _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__["default"],
+    maxField: _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
     editedItem: {
@@ -3298,6 +3345,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       dialog: false,
       editedIndex: -1,
+      maskTypes: [{
+        name: "Data simples",
+        format: "##/##/####"
+      }, {
+        name: "CEP",
+        format: "#####-###"
+      }, {
+        name: "CPF",
+        format: "###.###.###-##"
+      }, {
+        name: "CNPJ",
+        format: "###.###.###/####-##"
+      }, {
+        name: "Hora",
+        format: "##:##:##"
+      }, {
+        name: "Personalizado",
+        format: ""
+      }],
       fieldTypes: [{
         type: "integerField",
         name: "Número inteiro",
@@ -3335,6 +3401,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(["fields"]), {
+    fieldMaskList: function fieldMaskList() {
+      var list = [];
+      this.maskTypes.forEach(function (item) {
+        return list.push(item.name);
+      });
+      return list;
+    },
     fieldTypesList: function fieldTypesList() {
       var list = [];
       this.fieldTypes.forEach(function (item) {
@@ -3349,6 +3422,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return item.name == _this.editedItem.type;
       }).type;
     },
+    fieldMaskSelected: function fieldMaskSelected() {
+      var _this2 = this;
+
+      return this.maskTypes.find(function (item) {
+        return item.name == _this2.editedItem.mask;
+      }).format;
+    },
     headers: function headers() {
       var headers = [{
         text: "Campo",
@@ -3357,6 +3437,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }, {
         text: "Descrição",
         value: "description"
+      }, {
+        text: "Tamanho mínimo",
+        value: "min"
+      }, {
+        text: "Tamanho máximo",
+        value: "max"
+      }, {
+        text: "Máscara",
+        value: "mask"
       }, {
         text: "Ativo",
         value: "active"
@@ -3424,13 +3513,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     close: function close() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.dialog = false;
       this.$v.$reset();
       setTimeout(function () {
-        _this2.editedItem = Object.assign({}, _this2.defaultItem);
-        _this2.editedIndex = -1;
+        _this3.editedItem = Object.assign({}, _this3.defaultItem);
+        _this3.editedIndex = -1;
       }, 300);
     },
     save: function save() {
@@ -3439,12 +3528,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           id: this.editedItem.id,
           name: this.editedItem.name,
           description: this.editedItem.description,
+          max: this.editedItem.max,
+          min: this.editedItem.min,
+          mask: this.fieldMaskSelected,
           active: this.editedItem.active
         });
       } else {
         this.$store.dispatch("createField", {
           name: this.editedItem.name,
           description: this.editedItem.description,
+          max: this.editedItem.max,
+          min: this.editedItem.min,
+          mask: this.fieldMaskSelected,
           type: this.fieldTypeSelected
         });
       }
@@ -41349,6 +41444,9 @@ var render = function() {
                                                                 max:
                                                                   _vm.editedItem
                                                                     .max,
+                                                                mask:
+                                                                  _vm.editedItem
+                                                                    .mask,
                                                                 value:
                                                                   _vm.editedItem
                                                                     .value
@@ -41885,8 +41983,8 @@ var render = function() {
           {
             name: "mask",
             rawName: "v-mask",
-            value: _vm.mask,
-            expression: "mask"
+            value: _vm.fieldMask,
+            expression: "fieldMask"
           }
         ],
         attrs: {
@@ -41909,8 +42007,7 @@ var render = function() {
           },
           expression: "fieldValue"
         }
-      }),
-      _vm._v("\n    " + _vm._s(_vm.fieldValue) + "\n")
+      })
     ],
     1
   )
@@ -42018,7 +42115,10 @@ var render = function() {
                               _c(
                                 "v-dialog",
                                 {
-                                  attrs: { "max-width": "500px" },
+                                  attrs: {
+                                    scrollable: "",
+                                    "max-width": "700px"
+                                  },
                                   scopedSlots: _vm._u(
                                     [
                                       {
@@ -42245,6 +42345,134 @@ var render = function() {
                                                       })
                                                     ],
                                                     1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        sm: "10"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("v-select", {
+                                                        attrs: {
+                                                          items:
+                                                            _vm.fieldMaskList,
+                                                          label:
+                                                            "Máscara para numero numero",
+                                                          placeholder:
+                                                            "Selecione um formato de máscara",
+                                                          outlined: "",
+                                                          required: ""
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.editedItem.mask,
+                                                          callback: function(
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.editedItem,
+                                                              "mask",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "editedItem.mask"
+                                                        }
+                                                      })
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        sm: "10"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "v-row",
+                                                        [
+                                                          _c(
+                                                            "v-col",
+                                                            {
+                                                              attrs: {
+                                                                cols: "6"
+                                                              }
+                                                            },
+                                                            [
+                                                              _c("minField", {
+                                                                attrs: {
+                                                                  label:
+                                                                    "Quantidade mínima de caracteres",
+                                                                  min: 5,
+                                                                  max: 20,
+                                                                  value:
+                                                                    _vm
+                                                                      .editedItem
+                                                                      .min
+                                                                },
+                                                                on: {
+                                                                  "update:value": function(
+                                                                    $event
+                                                                  ) {
+                                                                    return _vm.$set(
+                                                                      _vm.editedItem,
+                                                                      "min",
+                                                                      $event
+                                                                    )
+                                                                  }
+                                                                }
+                                                              })
+                                                            ],
+                                                            1
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "v-col",
+                                                            {
+                                                              attrs: {
+                                                                cols: "6"
+                                                              }
+                                                            },
+                                                            [
+                                                              _c("maxField", {
+                                                                attrs: {
+                                                                  label:
+                                                                    "Quantidade máxima de caracteres",
+                                                                  min: 5,
+                                                                  max: 20,
+                                                                  value:
+                                                                    _vm
+                                                                      .editedItem
+                                                                      .max
+                                                                },
+                                                                on: {
+                                                                  "update:value": function(
+                                                                    $event
+                                                                  ) {
+                                                                    return _vm.$set(
+                                                                      _vm.editedItem,
+                                                                      "max",
+                                                                      $event
+                                                                    )
+                                                                  }
+                                                                }
+                                                              })
+                                                            ],
+                                                            1
+                                                          )
+                                                        ],
+                                                        1
+                                                      )
+                                                    ],
+                                                    1
                                                   )
                                                 ],
                                                 1
@@ -42317,6 +42545,27 @@ var render = function() {
                       }
                     },
                     {
+                      key: "item.min",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v(_vm._s(item.data.attributes.min))]
+                      }
+                    },
+                    {
+                      key: "item.max",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v(_vm._s(item.data.attributes.max))]
+                      }
+                    },
+                    {
+                      key: "item.mask",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v(_vm._s(item.data.attributes.mask))]
+                      }
+                    },
+                    {
                       key: "item.active",
                       fn: function(ref) {
                         var item = ref.item
@@ -42386,7 +42635,7 @@ var render = function() {
                   ],
                   null,
                   false,
-                  743379023
+                  958422918
                 )
               })
             ],
@@ -103836,6 +104085,9 @@ var actions = {
     axios.patch("/api/fields/" + data.id, {
       name: data.name,
       description: data.description,
+      max: data.max,
+      min: data.min,
+      mask: data.mask,
       type: data.type,
       active: data.active,
       _method: "patch"
@@ -104600,8 +104852,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\git\sape\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\git\sape\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\git\epl\temp\sape\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\git\epl\temp\sape\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
