@@ -100,6 +100,7 @@
                           :label="editedItem.fieldName"
                           :min="editedItem.min"
                           :max="editedItem.max"
+                          :mask="editedItem.mask"
                           :value.sync="editedItem.value"
                         />
                       </v-col>
@@ -248,6 +249,7 @@ export default {
       this.editedItem.type = item.links.field.data.attributes.type;
       this.editedItem.min = item.links.field.data.attributes.min;
       this.editedItem.max = item.links.field.data.attributes.max;
+      this.editedItem.mask = item.links.field.data.attributes.mask;
       this.editedItem.hashName = this.editedItem.fieldName
         .replace(/ /g, "_")
         .toLowerCase();

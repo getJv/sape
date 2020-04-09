@@ -16,10 +16,12 @@ class FieldController extends Controller
             'description' => 'required',
             'type' => 'string | required',
             'min'  => 'integer',
-            'min'  => 'integer',
+            'max'  => 'integer',
             'mask' => 'string',
+            'required' => 'boolean',
 
         ]);
+
         $field = Field::create(array_merge($data, ['active' => true]));
         return new FieldResource($field);
     }

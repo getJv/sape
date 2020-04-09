@@ -14,7 +14,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat color="transparent">
-            <v-dialog v-model="dialog" max-width="500px">
+            <v-dialog v-model="dialog" scrollable max-width="700px">
               <template v-slot:activator="{ on }">
                 <v-btn absolute right color="primary" outlined small dark v-on="on">Criar novo campo</v-btn>
               </template>
@@ -64,6 +64,37 @@
                           @blur="$v.editedItem.description.$touch()"
                         ></v-textarea>
                       </v-col>
+
+                      <v-col cols="12" sm="10">
+                        <v-select
+                          v-model="editedItem.mask"
+                          :items="fieldMaskList"
+                          label="Máscara para numero numero"
+                          placeholder="Selecione um formato de máscara"
+                          outlined
+                          required
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="10">
+                        <v-row>
+                          <v-col cols="6">
+                            <minField
+                              label="Quantidade mínima de caracteres"
+                              :min="5"
+                              :max="20"
+                              :value.sync="editedItem.min"
+                            />
+                          </v-col>
+                          <v-col cols="6">
+                            <maxField
+                              label="Quantidade máxima de caracteres"
+                              :min="5"
+                              :max="20"
+                              :value.sync="editedItem.max"
+                            />
+                          </v-col>
+                        </v-row>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -78,6 +109,9 @@
         </template>
         <template v-slot:item.name="{ item }">{{item.data.attributes.name}}</template>
         <template v-slot:item.description="{ item }">{{item.data.attributes.description}}</template>
+        <template v-slot:item.min="{ item }">{{item.data.attributes.min}}</template>
+        <template v-slot:item.max="{ item }">{{item.data.attributes.max}}</template>
+        <template v-slot:item.mask="{ item }">{{item.data.attributes.mask}}</template>
         <template v-slot:item.active="{ item }">
           <span v-if="item.data.attributes.active">Sim</span>
           <span v-else>Não</span>
@@ -104,9 +138,15 @@
 import { validationMixin } from "vuelidate";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
+import minField from "../components/formInputs/IntegerField";
+import maxField from "../components/formInputs/IntegerField";
 
 export default {
   name: "Fields",
+  components: {
+    minField,
+    maxField
+  },
   mixins: [validationMixin],
   validations: {
     editedItem: {
@@ -131,6 +171,32 @@ export default {
   data: () => ({
     dialog: false,
     editedIndex: -1,
+    maskTypes: [
+      {
+        name: "Data simples",
+        format: "##/##/####"
+      },
+      {
+        name: "CEP",
+        format: "#####-###"
+      },
+      {
+        name: "CPF",
+        format: "###.###.###-##"
+      },
+      {
+        name: "CNPJ",
+        format: "###.###.###/####-##"
+      },
+      {
+        name: "Hora",
+        format: "##:##:##"
+      },
+      {
+        name: "Personalizado",
+        format: ""
+      }
+    ],
     fieldTypes: [
       {
         type: "integerField",
@@ -175,6 +241,11 @@ export default {
 
   computed: {
     ...mapGetters(["fields"]),
+    fieldMaskList() {
+      var list = [];
+      this.maskTypes.forEach(item => list.push(item.name));
+      return list;
+    },
     fieldTypesList() {
       var list = [];
       this.fieldTypes.forEach(item => list.push(item.name));
@@ -183,6 +254,10 @@ export default {
     fieldTypeSelected() {
       return this.fieldTypes.find(item => item.name == this.editedItem.type)
         .type;
+    },
+    fieldMaskSelected() {
+      return this.maskTypes.find(item => item.name == this.editedItem.mask)
+        .format;
     },
     headers() {
       var headers = [
@@ -194,6 +269,18 @@ export default {
         {
           text: "Descrição",
           value: "description"
+        },
+        {
+          text: "Tamanho mínimo",
+          value: "min"
+        },
+        {
+          text: "Tamanho máximo",
+          value: "max"
+        },
+        {
+          text: "Máscara",
+          value: "mask"
         },
         {
           text: "Ativo",
@@ -287,12 +374,18 @@ export default {
           id: this.editedItem.id,
           name: this.editedItem.name,
           description: this.editedItem.description,
+          max: this.editedItem.max,
+          min: this.editedItem.min,
+          mask: this.fieldMaskSelected,
           active: this.editedItem.active
         });
       } else {
         this.$store.dispatch("createField", {
           name: this.editedItem.name,
           description: this.editedItem.description,
+          max: this.editedItem.max,
+          min: this.editedItem.min,
+          mask: this.fieldMaskSelected,
           type: this.fieldTypeSelected
         });
       }

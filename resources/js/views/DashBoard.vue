@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>Dashboard View</p>
-    <!-- <component
+    <component
       :is="type"
       ref="campo_do_nome"
       :label="label"
@@ -9,23 +9,23 @@
       :min="min"
       :max="max"
       :value.sync="value"
-    />-->
+    />
   </div>
   <!-- $refs[hashName].$v.$invalid -->
 </template>
 
 <script>
-import integer from "../components/formInputs/IntegerField";
+import integerField from "../components/formInputs/IntegerField";
 export default {
   name: "DashBoard",
   components: {
-    integer
+    integerField
   },
   computed: {},
   data() {
     return {
       value: 123,
-      type: "integer",
+      type: "integerField",
       label: "Campo do nome",
       min: 3,
       max: 7,
@@ -35,5 +35,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -2665,6 +2665,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -2766,6 +2767,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.editedItem.type = item.links.field.data.attributes.type;
       this.editedItem.min = item.links.field.data.attributes.min;
       this.editedItem.max = item.links.field.data.attributes.max;
+      this.editedItem.mask = item.links.field.data.attributes.mask;
       this.editedItem.hashName = this.editedItem.fieldName.replace(/ /g, "_").toLowerCase();
       console.log(item);
       this.dialog = true;
@@ -3019,6 +3021,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -3030,10 +3034,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "IntegerField",
+  directives: {
+    mask: vue_the_mask__WEBPACK_IMPORTED_MODULE_2__["mask"]
+  },
   props: {
     required: {
       type: Boolean
@@ -3050,6 +3061,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     max: {
       type: Number
+    },
+    mask: {
+      type: String
     }
   },
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
@@ -3063,6 +3077,13 @@ __webpack_require__.r(__webpack_exports__);
     return validations;
   },
   computed: {
+    fieldMask: function fieldMask() {
+      if (!this.mask) {
+        return "####################";
+      }
+
+      return this.mask;
+    },
     fieldValue: {
       get: function get() {
         return this.value;
@@ -3114,13 +3135,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "DashBoard",
   components: {
-    integer: _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_0__["default"]
+    integerField: _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   computed: {},
   data: function data() {
     return {
       value: 123,
-      type: "integer",
+      type: "integerField",
       label: "Campo do nome",
       min: 3,
       max: 7,
@@ -3145,6 +3166,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/formInputs/IntegerField */ "./resources/js/components/formInputs/IntegerField.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3253,11 +3275,51 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Fields",
+  components: {
+    minField: _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__["default"],
+    maxField: _components_formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
     editedItem: {
@@ -3283,6 +3345,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       dialog: false,
       editedIndex: -1,
+      maskTypes: [{
+        name: "Data simples",
+        format: "##/##/####"
+      }, {
+        name: "CEP",
+        format: "#####-###"
+      }, {
+        name: "CPF",
+        format: "###.###.###-##"
+      }, {
+        name: "CNPJ",
+        format: "###.###.###/####-##"
+      }, {
+        name: "Hora",
+        format: "##:##:##"
+      }, {
+        name: "Personalizado",
+        format: ""
+      }],
       fieldTypes: [{
         type: "integerField",
         name: "Número inteiro",
@@ -3320,6 +3401,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])(["fields"]), {
+    fieldMaskList: function fieldMaskList() {
+      var list = [];
+      this.maskTypes.forEach(function (item) {
+        return list.push(item.name);
+      });
+      return list;
+    },
     fieldTypesList: function fieldTypesList() {
       var list = [];
       this.fieldTypes.forEach(function (item) {
@@ -3334,6 +3422,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return item.name == _this.editedItem.type;
       }).type;
     },
+    fieldMaskSelected: function fieldMaskSelected() {
+      var _this2 = this;
+
+      return this.maskTypes.find(function (item) {
+        return item.name == _this2.editedItem.mask;
+      }).format;
+    },
     headers: function headers() {
       var headers = [{
         text: "Campo",
@@ -3342,6 +3437,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }, {
         text: "Descrição",
         value: "description"
+      }, {
+        text: "Tamanho mínimo",
+        value: "min"
+      }, {
+        text: "Tamanho máximo",
+        value: "max"
+      }, {
+        text: "Máscara",
+        value: "mask"
       }, {
         text: "Ativo",
         value: "active"
@@ -3409,13 +3513,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     close: function close() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.dialog = false;
       this.$v.$reset();
       setTimeout(function () {
-        _this2.editedItem = Object.assign({}, _this2.defaultItem);
-        _this2.editedIndex = -1;
+        _this3.editedItem = Object.assign({}, _this3.defaultItem);
+        _this3.editedIndex = -1;
       }, 300);
     },
     save: function save() {
@@ -3424,12 +3528,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           id: this.editedItem.id,
           name: this.editedItem.name,
           description: this.editedItem.description,
+          max: this.editedItem.max,
+          min: this.editedItem.min,
+          mask: this.fieldMaskSelected,
           active: this.editedItem.active
         });
       } else {
         this.$store.dispatch("createField", {
           name: this.editedItem.name,
           description: this.editedItem.description,
+          max: this.editedItem.max,
+          min: this.editedItem.min,
+          mask: this.fieldMaskSelected,
           type: this.fieldTypeSelected
         });
       }
@@ -41334,6 +41444,9 @@ var render = function() {
                                                                 max:
                                                                   _vm.editedItem
                                                                     .max,
+                                                                mask:
+                                                                  _vm.editedItem
+                                                                    .mask,
                                                                 value:
                                                                   _vm.editedItem
                                                                     .value
@@ -41862,28 +41975,42 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("v-text-field", {
-    attrs: {
-      label: _vm.label,
-      outlined: "",
-      "error-messages": _vm.fieldValueErrors
-    },
-    on: {
-      input: function($event) {
-        return _vm.$v.fieldValue.$touch()
-      },
-      blur: function($event) {
-        return _vm.$v.fieldValue.$touch()
-      }
-    },
-    model: {
-      value: _vm.fieldValue,
-      callback: function($$v) {
-        _vm.fieldValue = $$v
-      },
-      expression: "fieldValue"
-    }
-  })
+  return _c(
+    "div",
+    [
+      _c("v-text-field", {
+        directives: [
+          {
+            name: "mask",
+            rawName: "v-mask",
+            value: _vm.fieldMask,
+            expression: "fieldMask"
+          }
+        ],
+        attrs: {
+          label: _vm.label,
+          outlined: "",
+          "error-messages": _vm.fieldValueErrors
+        },
+        on: {
+          input: function($event) {
+            return _vm.$v.fieldValue.$touch()
+          },
+          blur: function($event) {
+            return _vm.$v.fieldValue.$touch()
+          }
+        },
+        model: {
+          value: _vm.fieldValue,
+          callback: function($$v) {
+            _vm.fieldValue = $$v
+          },
+          expression: "fieldValue"
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -41907,16 +42034,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    [
+      _c("p", [_vm._v("Dashboard View")]),
+      _vm._v(" "),
+      _c(_vm.type, {
+        ref: "campo_do_nome",
+        tag: "component",
+        attrs: {
+          label: _vm.label,
+          required: _vm.required,
+          min: _vm.min,
+          max: _vm.max,
+          value: _vm.value
+        },
+        on: {
+          "update:value": function($event) {
+            _vm.value = $event
+          }
+        }
+      })
+    ],
+    1
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("p", [_vm._v("Dashboard View")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -41972,7 +42115,10 @@ var render = function() {
                               _c(
                                 "v-dialog",
                                 {
-                                  attrs: { "max-width": "500px" },
+                                  attrs: {
+                                    scrollable: "",
+                                    "max-width": "700px"
+                                  },
                                   scopedSlots: _vm._u(
                                     [
                                       {
@@ -42199,6 +42345,134 @@ var render = function() {
                                                       })
                                                     ],
                                                     1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        sm: "10"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("v-select", {
+                                                        attrs: {
+                                                          items:
+                                                            _vm.fieldMaskList,
+                                                          label:
+                                                            "Máscara para numero numero",
+                                                          placeholder:
+                                                            "Selecione um formato de máscara",
+                                                          outlined: "",
+                                                          required: ""
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.editedItem.mask,
+                                                          callback: function(
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.editedItem,
+                                                              "mask",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "editedItem.mask"
+                                                        }
+                                                      })
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        sm: "10"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "v-row",
+                                                        [
+                                                          _c(
+                                                            "v-col",
+                                                            {
+                                                              attrs: {
+                                                                cols: "6"
+                                                              }
+                                                            },
+                                                            [
+                                                              _c("minField", {
+                                                                attrs: {
+                                                                  label:
+                                                                    "Quantidade mínima de caracteres",
+                                                                  min: 5,
+                                                                  max: 20,
+                                                                  value:
+                                                                    _vm
+                                                                      .editedItem
+                                                                      .min
+                                                                },
+                                                                on: {
+                                                                  "update:value": function(
+                                                                    $event
+                                                                  ) {
+                                                                    return _vm.$set(
+                                                                      _vm.editedItem,
+                                                                      "min",
+                                                                      $event
+                                                                    )
+                                                                  }
+                                                                }
+                                                              })
+                                                            ],
+                                                            1
+                                                          ),
+                                                          _vm._v(" "),
+                                                          _c(
+                                                            "v-col",
+                                                            {
+                                                              attrs: {
+                                                                cols: "6"
+                                                              }
+                                                            },
+                                                            [
+                                                              _c("maxField", {
+                                                                attrs: {
+                                                                  label:
+                                                                    "Quantidade máxima de caracteres",
+                                                                  min: 5,
+                                                                  max: 20,
+                                                                  value:
+                                                                    _vm
+                                                                      .editedItem
+                                                                      .max
+                                                                },
+                                                                on: {
+                                                                  "update:value": function(
+                                                                    $event
+                                                                  ) {
+                                                                    return _vm.$set(
+                                                                      _vm.editedItem,
+                                                                      "max",
+                                                                      $event
+                                                                    )
+                                                                  }
+                                                                }
+                                                              })
+                                                            ],
+                                                            1
+                                                          )
+                                                        ],
+                                                        1
+                                                      )
+                                                    ],
+                                                    1
                                                   )
                                                 ],
                                                 1
@@ -42271,6 +42545,27 @@ var render = function() {
                       }
                     },
                     {
+                      key: "item.min",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v(_vm._s(item.data.attributes.min))]
+                      }
+                    },
+                    {
+                      key: "item.max",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v(_vm._s(item.data.attributes.max))]
+                      }
+                    },
+                    {
+                      key: "item.mask",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [_vm._v(_vm._s(item.data.attributes.mask))]
+                      }
+                    },
+                    {
                       key: "item.active",
                       fn: function(ref) {
                         var item = ref.item
@@ -42340,7 +42635,7 @@ var render = function() {
                   ],
                   null,
                   false,
-                  743379023
+                  958422918
                 )
               })
             ],
@@ -46281,6 +46576,17 @@ if (inBrowser && window.Vue) {
 
 /* harmony default export */ __webpack_exports__["default"] = (VueRouter);
 
+
+/***/ }),
+
+/***/ "./node_modules/vue-the-mask/dist/vue-the-mask.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vue-the-mask/dist/vue-the-mask.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(e,t){ true?module.exports=t():undefined})(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var a=n[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,t),a.l=!0,a.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p=".",t(t.s=10)}([function(e,t){e.exports={"#":{pattern:/\d/},X:{pattern:/[0-9a-zA-Z]/},S:{pattern:/[a-zA-Z]/},A:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleUpperCase()}},a:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleLowerCase()}},"!":{escape:!0}}},function(e,t,n){"use strict";function r(e){var t=document.createEvent("Event");return t.initEvent(e,!0,!0),t}var a=n(2),o=n(0),i=n.n(o);t.a=function(e,t){var o=t.value;if((Array.isArray(o)||"string"==typeof o)&&(o={mask:o,tokens:i.a}),"INPUT"!==e.tagName.toLocaleUpperCase()){var u=e.getElementsByTagName("input");if(1!==u.length)throw new Error("v-mask directive requires 1 input, found "+u.length);e=u[0]}e.oninput=function(t){if(t.isTrusted){var i=e.selectionEnd,u=e.value[i-1];for(e.value=n.i(a.a)(e.value,o.mask,!0,o.tokens);i<e.value.length&&e.value.charAt(i-1)!==u;)i++;e===document.activeElement&&(e.setSelectionRange(i,i),setTimeout(function(){e.setSelectionRange(i,i)},0)),e.dispatchEvent(r("input"))}};var s=n.i(a.a)(e.value,o.mask,!0,o.tokens);s!==e.value&&(e.value=s,e.dispatchEvent(r("input")))}},function(e,t,n){"use strict";var r=n(6),a=n(5);t.a=function(e,t){var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=arguments[3];return Array.isArray(t)?n.i(a.a)(r.a,t,i)(e,t,o,i):n.i(r.a)(e,t,o,i)}},function(e,t,n){"use strict";function r(e){e.component(s.a.name,s.a),e.directive("mask",i.a)}Object.defineProperty(t,"__esModule",{value:!0});var a=n(0),o=n.n(a),i=n(1),u=n(7),s=n.n(u);n.d(t,"TheMask",function(){return s.a}),n.d(t,"mask",function(){return i.a}),n.d(t,"tokens",function(){return o.a}),n.d(t,"version",function(){return c});var c="0.11.1";t.default=r,"undefined"!=typeof window&&window.Vue&&window.Vue.use(r)},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),a=n(0),o=n.n(a),i=n(2);t.default={name:"TheMask",props:{value:[String,Number],mask:{type:[String,Array],required:!0},masked:{type:Boolean,default:!1},tokens:{type:Object,default:function(){return o.a}}},directives:{mask:r.a},data:function(){return{lastValue:null,display:this.value}},watch:{value:function(e){e!==this.lastValue&&(this.display=e)},masked:function(){this.refresh(this.display)}},computed:{config:function(){return{mask:this.mask,tokens:this.tokens,masked:this.masked}}},methods:{onInput:function(e){e.isTrusted||this.refresh(e.target.value)},refresh:function(e){this.display=e;var e=n.i(i.a)(e,this.mask,this.masked,this.tokens);e!==this.lastValue&&(this.lastValue=e,this.$emit("input",e))}}}},function(e,t,n){"use strict";function r(e,t,n){return t=t.sort(function(e,t){return e.length-t.length}),function(r,a){for(var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=0;i<t.length;){var u=t[i];i++;var s=t[i];if(!(s&&e(r,s,!0,n).length>u.length))return e(r,u,o,n)}return""}}t.a=r},function(e,t,n){"use strict";function r(e,t){var n=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],r=arguments[3];e=e||"",t=t||"";for(var a=0,o=0,i="";a<t.length&&o<e.length;){var u=t[a],s=r[u],c=e[o];s&&!s.escape?(s.pattern.test(c)&&(i+=s.transform?s.transform(c):c,a++),o++):(s&&s.escape&&(a++,u=t[a]),n&&(i+=u),c===u&&o++,a++)}for(var f="";a<t.length&&n;){var u=t[a];if(r[u]){f="";break}f+=u,a++}return i+f}t.a=r},function(e,t,n){var r=n(8)(n(4),n(9),null,null);e.exports=r.exports},function(e,t){e.exports=function(e,t,n,r){var a,o=e=e||{},i=typeof e.default;"object"!==i&&"function"!==i||(a=e,o=e.default);var u="function"==typeof o?o.options:o;if(t&&(u.render=t.render,u.staticRenderFns=t.staticRenderFns),n&&(u._scopeId=n),r){var s=u.computed||(u.computed={});Object.keys(r).forEach(function(e){var t=r[e];s[e]=function(){return t}})}return{esModule:a,exports:o,options:u}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"mask",rawName:"v-mask",value:e.config,expression:"config"}],attrs:{type:"text"},domProps:{value:e.display},on:{input:e.onInput}})},staticRenderFns:[]}},function(e,t,n){e.exports=n(3)}])});
 
 /***/ }),
 
@@ -102862,7 +103168,7 @@ module.exports = function(module) {
 /*! exports provided: private, version, scripts, devDependencies, dependencies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"private\":true,\"version\":\"0.0.1\",\"scripts\":{\"dev\":\"npm run development\",\"development\":\"cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\",\"watch\":\"npm run development -- --watch\",\"watch-poll\":\"npm run watch -- --watch-poll\",\"hot\":\"cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js\",\"prod\":\"npm run production\",\"production\":\"cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\"},\"devDependencies\":{\"@mdi/font\":\"^5.0.45\",\"axios\":\"^0.19\",\"bootstrap\":\"^4.0.0\",\"cross-env\":\"^7.0\",\"jquery\":\"^3.2\",\"laravel-mix\":\"^5.0.1\",\"lodash\":\"^4.17.13\",\"popper.js\":\"^1.12\",\"resolve-url-loader\":\"^2.3.1\",\"sass\":\"^1.20.1\",\"sass-loader\":\"^8.0.0\",\"tailwindcss\":\"^1.2.0\",\"vue\":\"^2.5.17\",\"vue-router\":\"^3.1.6\",\"vue-template-compiler\":\"^2.6.10\",\"vuetify\":\"^2.2.19\",\"vuex\":\"^3.1.3\"},\"dependencies\":{\"vuelidate\":\"^0.7.5\"}}");
+module.exports = JSON.parse("{\"private\":true,\"version\":\"0.0.1\",\"scripts\":{\"dev\":\"npm run development\",\"development\":\"cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\",\"watch\":\"npm run development -- --watch\",\"watch-poll\":\"npm run watch -- --watch-poll\",\"hot\":\"cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js\",\"prod\":\"npm run production\",\"production\":\"cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\"},\"devDependencies\":{\"@mdi/font\":\"^5.0.45\",\"axios\":\"^0.19\",\"bootstrap\":\"^4.0.0\",\"cross-env\":\"^7.0\",\"jquery\":\"^3.2\",\"laravel-mix\":\"^5.0.1\",\"lodash\":\"^4.17.13\",\"popper.js\":\"^1.12\",\"resolve-url-loader\":\"^2.3.1\",\"sass\":\"^1.20.1\",\"sass-loader\":\"^8.0.0\",\"tailwindcss\":\"^1.2.0\",\"vue\":\"^2.5.17\",\"vue-router\":\"^3.1.6\",\"vue-template-compiler\":\"^2.6.10\",\"vuetify\":\"^2.2.19\",\"vuex\":\"^3.1.3\"},\"dependencies\":{\"vue-the-mask\":\"^0.11.1\",\"vuelidate\":\"^0.7.5\"}}");
 
 /***/ }),
 
@@ -103779,6 +104085,9 @@ var actions = {
     axios.patch("/api/fields/" + data.id, {
       name: data.name,
       description: data.description,
+      max: data.max,
+      min: data.min,
+      mask: data.mask,
       type: data.type,
       active: data.active,
       _method: "patch"

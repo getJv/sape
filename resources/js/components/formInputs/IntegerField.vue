@@ -1,19 +1,25 @@
 <template>
-  <v-text-field
-    v-model="fieldValue"
-    :label="label"
-    outlined
-    :error-messages="fieldValueErrors"
-    @input="$v.fieldValue.$touch()"
-    @blur="$v.fieldValue.$touch()"
-  ></v-text-field>
+  <div>
+    <v-text-field
+      v-model="fieldValue"
+      :label="label"
+      outlined
+      v-mask="fieldMask"
+      :error-messages="fieldValueErrors"
+      @input="$v.fieldValue.$touch()"
+      @blur="$v.fieldValue.$touch()"
+    ></v-text-field>
+  </div>
 </template>
 
 <script>
 import { validationMixin } from "vuelidate";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import { mask } from "vue-the-mask";
+
 export default {
   name: "IntegerField",
+  directives: { mask },
   props: {
     required: {
       type: Boolean
@@ -30,6 +36,9 @@ export default {
     },
     max: {
       type: Number
+    },
+    mask: {
+      type: String
     }
   },
   mixins: [validationMixin],
@@ -45,6 +54,12 @@ export default {
   },
 
   computed: {
+    fieldMask() {
+      if (!this.mask) {
+        return "####################";
+      }
+      return this.mask;
+    },
     fieldValue: {
       get() {
         return this.value;
@@ -71,5 +86,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
