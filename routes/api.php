@@ -23,3 +23,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/project-workflows/project/{project}', 'ProjectWorkflowController@projectWorkflow');
     Route::get('/project-fields/project/{project}', 'ProjectFieldController@projectFields');
 });
+
+Route::get('/ldap','LdapController@login');
