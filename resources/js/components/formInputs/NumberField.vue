@@ -4,7 +4,7 @@
             v-model="fieldValue"
             :label="label"
             outlined
-            v-mask="fieldMask"
+            v-money="money"
             :error-messages="fieldValueErrors"
             @input="$v.fieldValue.$touch()"
             @blur="$v.fieldValue.$touch()"
@@ -15,11 +15,23 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
-import { mask } from "vue-the-mask";
+import { VMoney } from "v-money";
 
 export default {
-    name: "IntegerField",
-    directives: { mask },
+    name: "NumberField",
+    directives: { money: VMoney },
+    data() {
+        return {
+            money: {
+                decimal: ",",
+                thousands: ""
+                //prefix: "R$ ",
+                //suffix: " #",
+                //precision: 2,
+                //masked: false /* doesn't work with directive */
+            }
+        };
+    },
     props: {
         required: {
             type: Boolean
@@ -36,9 +48,6 @@ export default {
         },
         max: {
             type: Number
-        },
-        mask: {
-            type: String
         }
     },
     mixins: [validationMixin],
@@ -47,21 +56,16 @@ export default {
             fieldValue: {}
         };
         if (this.required) validations.fieldValue.required = required;
-        if (this.min > 0)
+        if (this.min > 0) {
             validations.fieldValue.minLength = minLength(this.min);
-        if (this.max > 0)
+        }
+        if (this.max > 0) {
             validations.fieldValue.maxLength = maxLength(this.max);
-
+        }
         return validations;
     },
 
     computed: {
-        fieldMask() {
-            if (!this.mask) {
-                return "####################";
-            }
-            return this.mask;
-        },
         fieldValue: {
             get() {
                 return this.value;

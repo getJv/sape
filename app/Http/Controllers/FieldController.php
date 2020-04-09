@@ -17,7 +17,7 @@ class FieldController extends Controller
             'type' => 'string | required',
             'min'  => 'integer',
             'max'  => 'integer',
-            'mask' => 'string',
+            'mask' => '',
             'required' => 'boolean',
 
         ]);
@@ -33,7 +33,7 @@ class FieldController extends Controller
             'description' => 'required',
             'min'  => 'integer',
             'max'  => 'integer',
-            'mask' => 'string',
+            'mask' => '',
             'required' => 'boolean',
             'active' => 'required | boolean'
         ]);

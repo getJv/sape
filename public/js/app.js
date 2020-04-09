@@ -2518,6 +2518,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./formInputs/IntegerField */ "./resources/js/components/formInputs/IntegerField.vue");
+/* harmony import */ var _formInputs_NumberField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./formInputs/NumberField */ "./resources/js/components/formInputs/NumberField.vue");
+/* harmony import */ var _formInputs_TextField__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./formInputs/TextField */ "./resources/js/components/formInputs/TextField.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2666,6 +2668,89 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -2674,7 +2759,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   name: "ProjectDetails",
   props: ["hasSession"],
   components: {
-    integerField: _formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__["default"]
+    integerField: _formInputs_IntegerField__WEBPACK_IMPORTED_MODULE_3__["default"],
+    numberField: _formInputs_NumberField__WEBPACK_IMPORTED_MODULE_4__["default"],
+    textField: _formInputs_TextField__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
   validations: {
@@ -2769,7 +2856,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.editedItem.max = item.links.field.data.attributes.max;
       this.editedItem.mask = item.links.field.data.attributes.mask;
       this.editedItem.hashName = this.editedItem.fieldName.replace(/ /g, "_").toLowerCase();
-      console.log(item);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
@@ -3072,8 +3158,8 @@ __webpack_require__.r(__webpack_exports__);
       fieldValue: {}
     };
     if (this.required) validations.fieldValue.required = vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"];
-    validations.fieldValue.minLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(this.min);
-    validations.fieldValue.maxLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(this.max);
+    if (this.min > 0) validations.fieldValue.minLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(this.min);
+    if (this.max > 0) validations.fieldValue.maxLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(this.max);
     return validations;
   },
   computed: {
@@ -3084,6 +3170,192 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.mask;
     },
+    fieldValue: {
+      get: function get() {
+        return this.value;
+      },
+      set: function set(value) {
+        this.$emit("update:value", value);
+      }
+    },
+    fieldValueErrors: function fieldValueErrors() {
+      var errors = [];
+      if (!this.$v.fieldValue.$dirty) return errors;
+      this.required && !this.$v.fieldValue.required && errors.push("Campo Obrigatório.");
+      this.min && !this.$v.fieldValue.minLength && errors.push("Mínimo de " + this.min + " caracteres");
+      this.max && !this.$v.fieldValue.maxLength && errors.push("Máximo de " + this.max + " caracteres");
+      return errors;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/NumberField.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/formInputs/NumberField.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate */ "./node_modules/vuelidate/lib/index.js");
+/* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! v-money */ "./node_modules/v-money/dist/v-money.js");
+/* harmony import */ var v_money__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(v_money__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "NumberField",
+  directives: {
+    money: v_money__WEBPACK_IMPORTED_MODULE_2__["VMoney"]
+  },
+  data: function data() {
+    return {
+      money: {
+        decimal: ",",
+        thousands: "" //prefix: "R$ ",
+        //suffix: " #",
+        //precision: 2,
+        //masked: false /* doesn't work with directive */
+
+      }
+    };
+  },
+  props: {
+    required: {
+      type: Boolean
+    },
+    label: {
+      required: true,
+      type: String
+    },
+    value: {
+      required: true
+    },
+    min: {
+      type: Number
+    },
+    max: {
+      type: Number
+    }
+  },
+  mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
+  validations: function validations() {
+    var validations = {
+      fieldValue: {}
+    };
+    if (this.required) validations.fieldValue.required = vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"];
+
+    if (this.min > 0) {
+      validations.fieldValue.minLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(this.min);
+    }
+
+    if (this.max > 0) {
+      validations.fieldValue.maxLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(this.max);
+    }
+
+    return validations;
+  },
+  computed: {
+    fieldValue: {
+      get: function get() {
+        return this.value;
+      },
+      set: function set(value) {
+        this.$emit("update:value", value);
+      }
+    },
+    fieldValueErrors: function fieldValueErrors() {
+      var errors = [];
+      if (!this.$v.fieldValue.$dirty) return errors;
+      this.required && !this.$v.fieldValue.required && errors.push("Campo Obrigatório.");
+      this.min && !this.$v.fieldValue.minLength && errors.push("Mínimo de " + this.min + " caracteres");
+      this.max && !this.$v.fieldValue.maxLength && errors.push("Máximo de " + this.max + " caracteres");
+      return errors;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/TextField.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/formInputs/TextField.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate */ "./node_modules/vuelidate/lib/index.js");
+/* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "TextField",
+  props: {
+    required: {
+      type: Boolean
+    },
+    label: {
+      required: true,
+      type: String
+    },
+    value: {
+      required: true
+    },
+    min: {
+      type: Number
+    },
+    max: {
+      type: Number
+    }
+  },
+  mixins: [vuelidate__WEBPACK_IMPORTED_MODULE_0__["validationMixin"]],
+  validations: function validations() {
+    var validations = {
+      fieldValue: {}
+    };
+    if (this.required) validations.fieldValue.required = vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"];
+    if (this.min > 0) validations.fieldValue.minLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(this.min);
+    if (this.max > 0) validations.fieldValue.maxLength = Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["maxLength"])(this.max);
+    return validations;
+  },
+  computed: {
     fieldValue: {
       get: function get() {
         return this.value;
@@ -3309,6 +3581,62 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3377,11 +3705,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name: "Data",
         description: "Recebe datas no formato brasieiro. ex: 10/04/2020"
       }, {
-        type: "stringField",
+        type: "textField",
         name: "Texto pequeno",
         description: "Útil para textos com no máximo 255 caracteres"
       }, {
-        type: "textField",
+        type: "largeTextField",
         name: "Texto grande",
         description: "Útil para textos com mais 255 caracteres"
       }],
@@ -3425,6 +3753,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     fieldMaskSelected: function fieldMaskSelected() {
       var _this2 = this;
 
+      if (!this.editedItem.mask) return null;
       return this.maskTypes.find(function (item) {
         return item.name == _this2.editedItem.mask;
       }).format;
@@ -40165,6 +40494,17 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/v-money/dist/v-money.js":
+/*!**********************************************!*\
+  !*** ./node_modules/v-money/dist/v-money.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(e,t){ true?module.exports=t():undefined})(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return e[r].call(i.exports,i,i.exports,t),i.l=!0,i.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p=".",t(t.s=9)}([function(e,t,n){"use strict";t.a={prefix:"",suffix:"",thousands:",",decimal:".",precision:2}},function(e,t,n){"use strict";var r=n(2),i=n(5),u=n(0);t.a=function(e,t){if(t.value){var o=n.i(i.a)(u.a,t.value);if("INPUT"!==e.tagName.toLocaleUpperCase()){var a=e.getElementsByTagName("input");1!==a.length||(e=a[0])}e.oninput=function(){var t=e.value.length-e.selectionEnd;e.value=n.i(r.a)(e.value,o),t=Math.max(t,o.suffix.length),t=e.value.length-t,t=Math.max(t,o.prefix.length+1),n.i(r.b)(e,t),e.dispatchEvent(n.i(r.c)("change"))},e.onfocus=function(){n.i(r.b)(e,e.value.length-o.suffix.length)},e.oninput(),e.dispatchEvent(n.i(r.c)("input"))}}},function(e,t,n){"use strict";function r(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:m.a;"number"==typeof e&&(e=e.toFixed(o(t.precision)));var n=e.indexOf("-")>=0?"-":"",r=u(e),i=c(r,t.precision),a=d(i).split("."),p=a[0],l=a[1];return p=f(p,t.thousands),t.prefix+n+s(p,l,t.decimal)+t.suffix}function i(e,t){var n=e.indexOf("-")>=0?-1:1,r=u(e),i=c(r,t);return parseFloat(i)*n}function u(e){return d(e).replace(/\D+/g,"")||"0"}function o(e){return a(0,e,20)}function a(e,t,n){return Math.max(e,Math.min(t,n))}function c(e,t){var n=Math.pow(10,t);return(parseFloat(e)/n).toFixed(o(t))}function f(e,t){return e.replace(/(\d)(?=(?:\d{3})+\b)/gm,"$1"+t)}function s(e,t,n){return t?e+n+t:e}function d(e){return e?e.toString():""}function p(e,t){var n=function(){e.setSelectionRange(t,t)};e===document.activeElement&&(n(),setTimeout(n,1))}function l(e){var t=document.createEvent("Event");return t.initEvent(e,!0,!0),t}var m=n(0);n.d(t,"a",function(){return r}),n.d(t,"d",function(){return i}),n.d(t,"b",function(){return p}),n.d(t,"c",function(){return l})},function(e,t,n){"use strict";function r(e,t){t&&Object.keys(t).map(function(e){a.a[e]=t[e]}),e.directive("money",o.a),e.component("money",u.a)}Object.defineProperty(t,"__esModule",{value:!0});var i=n(6),u=n.n(i),o=n(1),a=n(0);n.d(t,"Money",function(){return u.a}),n.d(t,"VMoney",function(){return o.a}),n.d(t,"options",function(){return a.a}),n.d(t,"VERSION",function(){return c});var c="0.8.1";t.default=r,"undefined"!=typeof window&&window.Vue&&window.Vue.use(r)},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),i=n(0),u=n(2);t.default={name:"Money",props:{value:{required:!0,type:[Number,String],default:0},masked:{type:Boolean,default:!1},precision:{type:Number,default:function(){return i.a.precision}},decimal:{type:String,default:function(){return i.a.decimal}},thousands:{type:String,default:function(){return i.a.thousands}},prefix:{type:String,default:function(){return i.a.prefix}},suffix:{type:String,default:function(){return i.a.suffix}}},directives:{money:r.a},data:function(){return{formattedValue:""}},watch:{value:{immediate:!0,handler:function(e,t){var r=n.i(u.a)(e,this.$props);r!==this.formattedValue&&(this.formattedValue=r)}}},methods:{change:function(e){this.$emit("input",this.masked?e.target.value:n.i(u.d)(e.target.value,this.precision))}}}},function(e,t,n){"use strict";t.a=function(e,t){return e=e||{},t=t||{},Object.keys(e).concat(Object.keys(t)).reduce(function(n,r){return n[r]=void 0===t[r]?e[r]:t[r],n},{})}},function(e,t,n){var r=n(7)(n(4),n(8),null,null);e.exports=r.exports},function(e,t){e.exports=function(e,t,n,r){var i,u=e=e||{},o=typeof e.default;"object"!==o&&"function"!==o||(i=e,u=e.default);var a="function"==typeof u?u.options:u;if(t&&(a.render=t.render,a.staticRenderFns=t.staticRenderFns),n&&(a._scopeId=n),r){var c=a.computed||(a.computed={});Object.keys(r).forEach(function(e){var t=r[e];c[e]=function(){return t}})}return{esModule:i,exports:u,options:a}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"money",rawName:"v-money",value:{precision:e.precision,decimal:e.decimal,thousands:e.thousands,prefix:e.prefix,suffix:e.suffix},expression:"{precision, decimal, thousands, prefix, suffix}"}],staticClass:"v-money",attrs:{type:"tel"},domProps:{value:e.formattedValue},on:{change:e.change}})},staticRenderFns:[]}},function(e,t,n){e.exports=n(3)}])});
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/App.vue?vue&type=template&id=332fccf4&":
 /*!******************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/App.vue?vue&type=template&id=332fccf4& ***!
@@ -41177,7 +41517,7 @@ var render = function() {
                                                                             "p",
                                                                             [
                                                                               _vm._v(
-                                                                                "Sem informações cadastradas"
+                                                                                "\n                                                        Sem informações\n                                                        cadastradas\n                                                    "
                                                                               )
                                                                             ]
                                                                           )
@@ -41188,7 +41528,7 @@ var render = function() {
                                                                   ],
                                                                   null,
                                                                   false,
-                                                                  2242277324
+                                                                  3106189150
                                                                 ),
                                                                 model: {
                                                                   value:
@@ -41205,7 +41545,7 @@ var render = function() {
                                                                     )
                                                                   },
                                                                   expression:
-                                                                    "editedItem.fieldName"
+                                                                    "\n                                                    editedItem.fieldName\n                                                "
                                                                 }
                                                               })
                                                             : _vm._e(),
@@ -41311,7 +41651,7 @@ var render = function() {
                                                                             "span",
                                                                             [
                                                                               _vm._v(
-                                                                                "Vínculo inativo"
+                                                                                "Vínculo\n                                                        inativo"
                                                                               )
                                                                             ]
                                                                           )
@@ -41390,7 +41730,7 @@ var render = function() {
                                                                     return [
                                                                       _c("p", [
                                                                         _vm._v(
-                                                                          "Sem informações cadastradas"
+                                                                          "\n                                                        Sem informações\n                                                        cadastradas\n                                                    "
                                                                         )
                                                                       ])
                                                                     ]
@@ -41400,7 +41740,7 @@ var render = function() {
                                                               ],
                                                               null,
                                                               false,
-                                                              2976455938
+                                                              41886568
                                                             )
                                                           })
                                                         ],
@@ -42019,6 +42359,116 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/NumberField.vue?vue&type=template&id=ec858f4c&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/formInputs/NumberField.vue?vue&type=template&id=ec858f4c& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("v-text-field", {
+        directives: [
+          {
+            name: "money",
+            rawName: "v-money",
+            value: _vm.money,
+            expression: "money"
+          }
+        ],
+        attrs: {
+          label: _vm.label,
+          outlined: "",
+          "error-messages": _vm.fieldValueErrors
+        },
+        on: {
+          input: function($event) {
+            return _vm.$v.fieldValue.$touch()
+          },
+          blur: function($event) {
+            return _vm.$v.fieldValue.$touch()
+          }
+        },
+        model: {
+          value: _vm.fieldValue,
+          callback: function($$v) {
+            _vm.fieldValue = $$v
+          },
+          expression: "fieldValue"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/TextField.vue?vue&type=template&id=9b6f8194&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/formInputs/TextField.vue?vue&type=template&id=9b6f8194& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("v-text-field", {
+        attrs: {
+          label: _vm.label,
+          outlined: "",
+          "error-messages": _vm.fieldValueErrors
+        },
+        on: {
+          input: function($event) {
+            return _vm.$v.fieldValue.$touch()
+          },
+          blur: function($event) {
+            return _vm.$v.fieldValue.$touch()
+          }
+        },
+        model: {
+          value: _vm.fieldValue,
+          callback: function($$v) {
+            _vm.fieldValue = $$v
+          },
+          expression: "fieldValue"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/DashBoard.vue?vue&type=template&id=67b53265&":
 /*!*******************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/DashBoard.vue?vue&type=template&id=67b53265& ***!
@@ -42340,7 +42790,7 @@ var render = function() {
                                                             )
                                                           },
                                                           expression:
-                                                            "editedItem.description"
+                                                            "\n                                                    editedItem.description\n                                                "
                                                         }
                                                       })
                                                     ],
@@ -42411,8 +42861,6 @@ var render = function() {
                                                                 attrs: {
                                                                   label:
                                                                     "Quantidade mínima de caracteres",
-                                                                  min: 5,
-                                                                  max: 20,
                                                                   value:
                                                                     _vm
                                                                       .editedItem
@@ -42446,8 +42894,6 @@ var render = function() {
                                                                 attrs: {
                                                                   label:
                                                                     "Quantidade máxima de caracteres",
-                                                                  min: 5,
-                                                                  max: 20,
                                                                   value:
                                                                     _vm
                                                                       .editedItem
@@ -42635,7 +43081,7 @@ var render = function() {
                   ],
                   null,
                   false,
-                  958422918
+                  212742758
                 )
               })
             ],
@@ -103168,7 +103614,7 @@ module.exports = function(module) {
 /*! exports provided: private, version, scripts, devDependencies, dependencies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"private\":true,\"version\":\"0.0.1\",\"scripts\":{\"dev\":\"npm run development\",\"development\":\"cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\",\"watch\":\"npm run development -- --watch\",\"watch-poll\":\"npm run watch -- --watch-poll\",\"hot\":\"cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js\",\"prod\":\"npm run production\",\"production\":\"cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\"},\"devDependencies\":{\"@mdi/font\":\"^5.0.45\",\"axios\":\"^0.19\",\"bootstrap\":\"^4.0.0\",\"cross-env\":\"^7.0\",\"jquery\":\"^3.2\",\"laravel-mix\":\"^5.0.1\",\"lodash\":\"^4.17.13\",\"popper.js\":\"^1.12\",\"resolve-url-loader\":\"^2.3.1\",\"sass\":\"^1.20.1\",\"sass-loader\":\"^8.0.0\",\"tailwindcss\":\"^1.2.0\",\"vue\":\"^2.5.17\",\"vue-router\":\"^3.1.6\",\"vue-template-compiler\":\"^2.6.10\",\"vuetify\":\"^2.2.19\",\"vuex\":\"^3.1.3\"},\"dependencies\":{\"vue-the-mask\":\"^0.11.1\",\"vuelidate\":\"^0.7.5\"}}");
+module.exports = JSON.parse("{\"private\":true,\"version\":\"0.0.1\",\"scripts\":{\"dev\":\"npm run development\",\"development\":\"cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\",\"watch\":\"npm run development -- --watch\",\"watch-poll\":\"npm run watch -- --watch-poll\",\"hot\":\"cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js\",\"prod\":\"npm run production\",\"production\":\"cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js\"},\"devDependencies\":{\"@mdi/font\":\"^5.0.45\",\"axios\":\"^0.19\",\"bootstrap\":\"^4.0.0\",\"cross-env\":\"^7.0\",\"jquery\":\"^3.2\",\"laravel-mix\":\"^5.0.1\",\"lodash\":\"^4.17.13\",\"popper.js\":\"^1.12\",\"resolve-url-loader\":\"^2.3.1\",\"sass\":\"^1.20.1\",\"sass-loader\":\"^8.0.0\",\"tailwindcss\":\"^1.2.0\",\"vue\":\"^2.5.17\",\"vue-router\":\"^3.1.6\",\"vue-template-compiler\":\"^2.6.10\",\"vuetify\":\"^2.2.19\",\"vuex\":\"^3.1.3\"},\"dependencies\":{\"v-money\":\"^0.8.1\",\"vue-the-mask\":\"^0.11.1\",\"vuelidate\":\"^0.7.5\"}}");
 
 /***/ }),
 
@@ -103950,6 +104396,144 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_IntegerField_vue_vue_type_template_id_3e6cc203___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_IntegerField_vue_vue_type_template_id_3e6cc203___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/formInputs/NumberField.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/components/formInputs/NumberField.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _NumberField_vue_vue_type_template_id_ec858f4c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NumberField.vue?vue&type=template&id=ec858f4c& */ "./resources/js/components/formInputs/NumberField.vue?vue&type=template&id=ec858f4c&");
+/* harmony import */ var _NumberField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NumberField.vue?vue&type=script&lang=js& */ "./resources/js/components/formInputs/NumberField.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _NumberField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _NumberField_vue_vue_type_template_id_ec858f4c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _NumberField_vue_vue_type_template_id_ec858f4c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/formInputs/NumberField.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/formInputs/NumberField.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/formInputs/NumberField.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NumberField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./NumberField.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/NumberField.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NumberField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/formInputs/NumberField.vue?vue&type=template&id=ec858f4c&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/formInputs/NumberField.vue?vue&type=template&id=ec858f4c& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NumberField_vue_vue_type_template_id_ec858f4c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./NumberField.vue?vue&type=template&id=ec858f4c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/NumberField.vue?vue&type=template&id=ec858f4c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NumberField_vue_vue_type_template_id_ec858f4c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NumberField_vue_vue_type_template_id_ec858f4c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/formInputs/TextField.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/formInputs/TextField.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TextField_vue_vue_type_template_id_9b6f8194___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TextField.vue?vue&type=template&id=9b6f8194& */ "./resources/js/components/formInputs/TextField.vue?vue&type=template&id=9b6f8194&");
+/* harmony import */ var _TextField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TextField.vue?vue&type=script&lang=js& */ "./resources/js/components/formInputs/TextField.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TextField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TextField_vue_vue_type_template_id_9b6f8194___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TextField_vue_vue_type_template_id_9b6f8194___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/formInputs/TextField.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/formInputs/TextField.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/formInputs/TextField.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TextField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TextField.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/TextField.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TextField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/formInputs/TextField.vue?vue&type=template&id=9b6f8194&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/formInputs/TextField.vue?vue&type=template&id=9b6f8194& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextField_vue_vue_type_template_id_9b6f8194___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TextField.vue?vue&type=template&id=9b6f8194& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/formInputs/TextField.vue?vue&type=template&id=9b6f8194&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextField_vue_vue_type_template_id_9b6f8194___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextField_vue_vue_type_template_id_9b6f8194___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
