@@ -3,8 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Project as ProjectResource;
-use App\Http\Resources\ProjectStatus as ProjectStatusResource;
+use App\Http\Resources\ProjectWorkflow as ProjectWorkflowResource;
 
 class ProjectEvent extends JsonResource
 {
@@ -16,6 +15,8 @@ class ProjectEvent extends JsonResource
      */
     public function toArray($request)
     {
+
+
         return [
             'data' => [
                 'type' => 'project-events',
@@ -23,16 +24,14 @@ class ProjectEvent extends JsonResource
                 'attributes' => [
                     'name' => $this->name,
                     'description' => $this->description,
-                    'project_status_id' => $this->project_status_id,
-                    'project_id' => $this->project_id,
+                    'project_workflow_id' => $this->project_workflow_id,
                     'active' => $this->active,
                 ],
 
             ],
             'links' => [
                 'self' => url('/project-events/' . $this->id),
-                'project' => new ProjectResource($this->project),
-                'status' => new ProjectStatusResource($this->status),
+                'project_workflow' => new ProjectWorkflowResource($this->project_workflow),
             ]
         ];
     }

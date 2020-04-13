@@ -3,13 +3,12 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\User;
 use App\Project;
 use App\ProjectStatus;
-use App\Http\Resources\Project as ProjectResource;
-use App\Http\Resources\ProjectStatus as ProjectStatusResource;
+use App\ProjectEvent;
+
 use App\ProjectWorkflow;
 
 class ProjectWorkflowTest extends TestCase
@@ -221,8 +220,16 @@ class ProjectWorkflowTest extends TestCase
             'new_status_id' => $projectStatus2->id,
         ]);
 
-        $response = $this->get('/api/project-workflows/project/1')->assertStatus(200);
+        factory(ProjectEvent::class)->create([
+            'name' => 'evento 1',
+            'description' => 'event 1',
+            'project_workflow_id' => 1
+        ]);
 
+        dd($projectWorkflow->events);
+
+
+        $response = $this->get('/api/project-workflows/project/1')->assertStatus(200);
 
         $response->assertJson([
             'data' => [
@@ -242,8 +249,9 @@ class ProjectWorkflowTest extends TestCase
                 ]
             ],
             'workflow_steps' => 1,
+            /**TODO Colocar os relationships nos testes INDIVIDUALMENTE project,status,events  */
             'links' => [
-                'self' => url('/project-workflows/project/' . $project->id)
+                'self' => url('/project-workflows/project/' . $project->id),
             ]
         ]);
     }

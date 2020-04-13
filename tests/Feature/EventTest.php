@@ -9,6 +9,7 @@ use App\User;
 use App\Project;
 use App\ProjectStatus;
 use App\ProjectEvent;
+use App\ProjectWorkflow;
 
 class EventTest extends TestCase
 {
@@ -20,11 +21,19 @@ class EventTest extends TestCase
 
         $this->withoutExceptionHandling();
         $this->actingAs($user = factory(User::class)->create(), 'api');
-        factory(ProjectStatus::class)->create();
-        factory(Project::class)->create();
+        $projectStatus1 = factory(ProjectStatus::class)->create();
+        $projectStatus2 = factory(ProjectStatus::class)->create();
+        $project = factory(Project::class)->create();
+        $projectWorkflow = factory(ProjectWorkflow::class)->create([
+            'order' => 1,
+            'project_id' => $project->id,
+            'old_status_id' => $projectStatus1->id,
+            'new_status_id' => $projectStatus2->id,
+        ]);
+
+
         $response = $this->post('/api/project-events', [
-            'project_status_id' => 1,
-            'project_id' => 1,
+            'project_workflow_id' => $projectWorkflow->id,
             'name' => 'My first event',
             'description' => 'Description of my first event'
         ])->assertStatus(201);
@@ -33,9 +42,9 @@ class EventTest extends TestCase
         $event = ProjectEvent::find(1);
         $this->assertEquals('My first event', $event->name);
         $this->assertEquals('Description of my first event', $event->description);
-        $this->assertEquals(1, $event->project_status_id);
-        $this->assertEquals(1, $event->project_id);
+        $this->assertEquals(1, $event->project_workflow_id);
         $this->assertNotFalse($event->active);
+
         $response->assertJson([
             'data' => [
                 'type' => 'project-events',
@@ -43,8 +52,7 @@ class EventTest extends TestCase
                 'attributes' => [
                     'name' => $event->name,
                     'description' => $event->description,
-                    'project_status_id' => $event->project_status_id,
-                    'project_id' => $event->project_id,
+                    'project_workflow_id' => $event->project_workflow_id,
                     'active' => $event->active,
                 ],
 
@@ -66,15 +74,13 @@ class EventTest extends TestCase
         $projectEvent = factory(ProjectEvent::class)->create([
             'name' =>'teste',
             'description' => 'teste',
-            'project_status_id' => 1,
-            'project_id' => 1,
+            'project_workflow_id' => 1,
         ]);
         $this->actingAs($user = factory(User::class)->create(), 'api');
         $response = $this->patch('/api/project-events/' . $projectEvent->id, [
             'name' => 'My edited title 2',
             'description' => 'Description of my first project 2',
-            'project_status_id' => 2,
-            'project_id' => 2,
+            'project_workflow_id' => 2,
             'active' => false
         ])->assertStatus(200);
 
@@ -85,8 +91,7 @@ class EventTest extends TestCase
         $event = ProjectEvent::find(1);
         $this->assertEquals('My edited title 2', $event->name);
         $this->assertEquals('Description of my first project 2', $event->description);
-        $this->assertEquals(2, $event->project_status_id);
-        $this->assertEquals(2, $event->project_id);
+        $this->assertEquals(2, $event->project_workflow_id);
         $this->assertNotTrue($event->active);
         $response->assertJson([
             'data' => [
@@ -95,8 +100,7 @@ class EventTest extends TestCase
                 'attributes' => [
                     'name' => $event->name,
                     'description' => $event->description,
-                    'project_status_id' => $event->project_status_id,
-                    'project_id' => $event->project_id,
+                    'project_workflow_id' => $event->project_workflow_id,
                     'active' => $event->active,
                 ],
 
@@ -106,4 +110,30 @@ class EventTest extends TestCase
             ]
         ]);
     }
+
+     /** @test */
+     public function a_event_can_be_requested()
+     {
+         $this->withoutExceptionHandling();
+         $projectEvent = factory(ProjectEvent::class)->create();
+         $this->actingAs($user = factory(User::class)->create(), 'api');
+         $response = $this->get('/api/project-events/' . $projectEvent->id)
+             ->assertStatus(200)
+             ->assertJson([
+                 'data' => [
+                     'type' => 'project-events',
+                     'id' => $projectEvent->id,
+                     'attributes' => [
+                         'name' => $projectEvent->name,
+                         'description' => $projectEvent->description,
+                         'project_workflow_id' => $projectEvent->project_workflow_id,
+                         'active' => $projectEvent->active,
+                     ],
+
+                 ],
+                 'links' => [
+                     'self' => url('/project-events/' . $projectEvent->id)
+                 ]
+             ]);
+     }
 }

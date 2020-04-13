@@ -20,4 +20,8 @@ class ProjectWorkflow extends Model
     {
         return $this->belongsTo('App\ProjectStatus');
     }
+    public function events()
+    {
+        return $this->hasMany('App\ProjectEvent');
+    }
 }

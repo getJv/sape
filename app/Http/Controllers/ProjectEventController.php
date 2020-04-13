@@ -12,8 +12,7 @@ class ProjectEventController extends Controller
     public function store()
     {
         $data = request()->validate([
-            'project_id' => 'required',
-            'project_status_id' => 'required',
+            'project_workflow_id' => 'required',
             'name' => 'required',
             'description' => 'required',
         ]);
@@ -22,17 +21,23 @@ class ProjectEventController extends Controller
     }
     public function update(ProjectEvent $projectEvent)
     {
-
+        /**
+         * TODO: Colocar os outros tipos de validação, integer Boolean e fazer seus teste
+         */
         $data = request()->validate([
             'name' => 'required',
             'description' => 'required',
-            'project_id' => 'required',
-            'project_status_id' => 'required',
+            'project_workflow_id' => 'required',
             'active' => 'required'
         ]);
 
         $projectEvent->update($data);
 
+        return new ProjectEventResource($projectEvent);
+    }
+
+    public function show(ProjectEvent $projectEvent)
+    {
         return new ProjectEventResource($projectEvent);
     }
 }
