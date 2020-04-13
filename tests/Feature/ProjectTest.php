@@ -61,7 +61,7 @@ class ProjectTest extends TestCase
         $project = Project::find(1);
         $this->assertEquals('My edited title', $project->name);
         $this->assertEquals('Description of my first project', $project->description);
-        $this->assertNotTrue($project->description);
+        $this->assertNotTrue($project->active);
         $response->assertJson([
             'data' => [
                 'type' => 'projects',
