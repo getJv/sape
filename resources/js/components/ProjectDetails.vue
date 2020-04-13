@@ -228,6 +228,8 @@ import { mapGetters } from "vuex";
 import integerField from "./formInputs/IntegerField";
 import numberField from "./formInputs/NumberField";
 import textField from "./formInputs/TextField";
+import dateField from "./formInputs/DatePicker";
+import textAreaField from "./formInputs/TextAreaField";
 
 export default {
     name: "ProjectDetails",
@@ -235,7 +237,9 @@ export default {
     components: {
         integerField,
         numberField,
-        textField
+        textField,
+        dateField,
+        textAreaField
     },
     mixins: [validationMixin],
     validations: {

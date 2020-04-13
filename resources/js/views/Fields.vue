@@ -276,7 +276,7 @@ export default {
                 description: "Útil para textos com no máximo 255 caracteres"
             },
             {
-                type: "largeTextField",
+                type: "textAreaField",
                 name: "Texto grande",
                 description: "Útil para textos com mais 255 caracteres"
             }
