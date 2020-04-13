@@ -17,13 +17,12 @@
           </v-stepper-step>
 
           <v-stepper-content :step="index+1">
-            <ul>
-              <li
-                v-for="event in [1, 2, 3]"
-                :key="event"
-                class="mb-3"
-              >Fase: {{ index+1 }}, Evento: {{ event }}</li>
-            </ul>
+            <span v-for="event in phase.links.events.data" :key="event.data.id" class="mb-3">
+              <p
+                cols="12"
+                v-if="event.data.attributes.owner_id == phase.links.old_status.data.id"
+              >{{ event.data.attributes.name }}</p>
+            </span>
           </v-stepper-content>
         </span>
         <!-- Ultimo Step do pw -->
@@ -41,9 +40,16 @@
           </v-stepper-step>
 
           <v-stepper-content :step="projectWorkflow.workflow_steps +1">
-            <ul>
-              <li>teste</li>
-            </ul>
+            <span
+              v-for="event in projectWorkflow.data[projectWorkflow.workflow_steps - 1].links.events.data"
+              :key="event.data.id"
+              class="mb-3"
+            >
+              <p
+                cols="12"
+                v-if="event.data.attributes.owner_id == projectWorkflow.data[projectWorkflow.workflow_steps - 1].links.new_status.data.id"
+              >{{ event.data.attributes.name }}</p>
+            </span>
           </v-stepper-content>
         </span>
       </v-stepper>

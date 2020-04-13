@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Project as ProjectResource;
 use App\Http\Resources\ProjectStatus as ProjectStatusResource;
+use App\Http\Resources\ProjectEventCollection;
 
 class ProjectWorkflow extends JsonResource
 {
@@ -33,6 +34,7 @@ class ProjectWorkflow extends JsonResource
                 'project' => new ProjectResource($this->project),
                 'old_status' => new ProjectStatusResource($this->old_status),
                 'new_status' => new ProjectStatusResource($this->new_status),
+                'events'     => new ProjectEventCollection($this->events),
             ]
         ];
     }

@@ -15,6 +15,7 @@ class ProjectEventController extends Controller
             'project_workflow_id' => 'required',
             'name' => 'required',
             'description' => 'required',
+            'owner_id' => 'required',
         ]);
         $projectEvent = ProjectEvent::create(array_merge($data, ['active' => true]));
         return new ProjectEventResource($projectEvent);
@@ -27,6 +28,7 @@ class ProjectEventController extends Controller
         $data = request()->validate([
             'name' => 'required',
             'description' => 'required',
+            'owner_id' => 'required',
             'project_workflow_id' => 'required',
             'active' => 'required'
         ]);

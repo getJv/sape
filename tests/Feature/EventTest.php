@@ -34,6 +34,7 @@ class EventTest extends TestCase
 
         $response = $this->post('/api/project-events', [
             'project_workflow_id' => $projectWorkflow->id,
+            'owner_id' => $projectStatus1->id,
             'name' => 'My first event',
             'description' => 'Description of my first event'
         ])->assertStatus(201);
@@ -43,6 +44,7 @@ class EventTest extends TestCase
         $this->assertEquals('My first event', $event->name);
         $this->assertEquals('Description of my first event', $event->description);
         $this->assertEquals(1, $event->project_workflow_id);
+        $this->assertEquals(1, $event->owner_id);
         $this->assertNotFalse($event->active);
 
         $response->assertJson([
@@ -53,6 +55,7 @@ class EventTest extends TestCase
                     'name' => $event->name,
                     'description' => $event->description,
                     'project_workflow_id' => $event->project_workflow_id,
+                    'owner_id' => $event->owner_id,
                     'active' => $event->active,
                 ],
 
@@ -75,12 +78,14 @@ class EventTest extends TestCase
             'name' =>'teste',
             'description' => 'teste',
             'project_workflow_id' => 1,
+            'owner_id' => 1,
         ]);
         $this->actingAs($user = factory(User::class)->create(), 'api');
         $response = $this->patch('/api/project-events/' . $projectEvent->id, [
             'name' => 'My edited title 2',
             'description' => 'Description of my first project 2',
             'project_workflow_id' => 2,
+            'owner_id' => 2,
             'active' => false
         ])->assertStatus(200);
 
@@ -92,6 +97,7 @@ class EventTest extends TestCase
         $this->assertEquals('My edited title 2', $event->name);
         $this->assertEquals('Description of my first project 2', $event->description);
         $this->assertEquals(2, $event->project_workflow_id);
+        $this->assertEquals(2, $event->owner_id);
         $this->assertNotTrue($event->active);
         $response->assertJson([
             'data' => [
@@ -101,6 +107,7 @@ class EventTest extends TestCase
                     'name' => $event->name,
                     'description' => $event->description,
                     'project_workflow_id' => $event->project_workflow_id,
+                    'owner_id' => $event->owner_id,
                     'active' => $event->active,
                 ],
 
@@ -126,6 +133,7 @@ class EventTest extends TestCase
                      'attributes' => [
                          'name' => $projectEvent->name,
                          'description' => $projectEvent->description,
+                         'owner_id' => $projectEvent->owner_id,
                          'project_workflow_id' => $projectEvent->project_workflow_id,
                          'active' => $projectEvent->active,
                      ],

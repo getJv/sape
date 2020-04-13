@@ -24,6 +24,7 @@ class ProjectEvent extends JsonResource
                 'attributes' => [
                     'name' => $this->name,
                     'description' => $this->description,
+                    'owner_id' => $this->owner_id,
                     'project_workflow_id' => $this->project_workflow_id,
                     'active' => $this->active,
                 ],
@@ -31,7 +32,6 @@ class ProjectEvent extends JsonResource
             ],
             'links' => [
                 'self' => url('/project-events/' . $this->id),
-                'project_workflow' => new ProjectWorkflowResource($this->project_workflow),
             ]
         ];
     }

@@ -16,6 +16,7 @@ class CreateProjectEventsTable extends Migration
         Schema::create('project_events', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_workflow_id');
+            $table->unsignedBigInteger('owner_id');
             $table->string('name');
             $table->text('description');
             $table->boolean('active');
