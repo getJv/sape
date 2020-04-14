@@ -1,30 +1,33 @@
 <template>
     <v-row v-if="project">
-        <v-col cols="12" sm="6">
+        <v-col cols="12" md="5">
             <v-row justify="start" align="start">
                 <v-col cols="12">
                     <v-card outlined>
                         <v-card-title>
-                            {{ project.data.attributes.name }}
-                            <BtnEditProject
-                                :hasSession="hasSession"
-                                :item="project"
-                            />
+                            <span
+                                >{{ project.data.attributes.name }}
+                                <BtnEditProject
+                                    :hasSession="hasSession"
+                                    :item="project"
+                            /></span>
                         </v-card-title>
                         <v-divider></v-divider>
                         <v-card-text>
                             <p>{{ project.data.attributes.description }}</p>
 
-                            <projectDetails
-                                class="mt-3"
-                                :hasSession="hasSession"
-                            />
+                            <p>
+                                <projectDetails
+                                    class="mt-3"
+                                    :hasSession="hasSession"
+                                />
+                            </p>
                         </v-card-text>
                     </v-card>
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="12" sm="6">
+        <v-col cols="12" md="7">
             <v-row>
                 <!--  <v-col cols="12">
           <ProjectMapLayers />

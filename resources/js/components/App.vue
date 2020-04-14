@@ -1,10 +1,18 @@
 <template>
     <v-app id="inspire">
         <Sidebar :drawer.sync="drawer" />
-
-        <v-app-bar flat app clipped-left color="blue-grey darken-2">
-            <v-app-bar-nav-icon color="white" @click.stop="drawer = !drawer" />
-            <v-toolbar-title class="white--text"> SAPE</v-toolbar-title>
+        <v-app-bar :elevation="1" app clipped-left color="blue-grey lighten-5">
+            <v-app-bar-nav-icon
+                color="blue-grey darken-5"
+                @click.stop="drawer = !drawer"
+            />
+            <v-toolbar-title> SAPE</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-img
+                class="text--center"
+                :src="imageHeader"
+                max-width="250"
+            ></v-img>
         </v-app-bar>
 
         <v-content class="grey lighten-5">
@@ -18,7 +26,7 @@
             <BtnConfiguration />
         </v-content>
 
-        <v-footer app color="blue-grey darken-2">
+        <v-footer app color="blue-grey lighten-5">
             <span>
                 <small class="caption white--text">
                     &copy; {{ new Date().getFullYear() }} — EPL Sistema para
@@ -48,7 +56,8 @@ export default {
     data: () => ({
         numVersion: version.replace('"', "").replace('"', ""),
         bottomNav: "recent",
-        drawer: true
+        drawer: true,
+        imageHeader: "/imagens/epl_logo.png"
     }),
     created() {
         this.$vuetify.theme.dark = false;

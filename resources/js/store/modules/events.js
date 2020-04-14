@@ -32,7 +32,7 @@ const actions = {
                 console.log(err.data);
             });
     },
-    fetchProject: ({ commit, dispatch }, eventId) => {
+    fetchEvent: ({ commit, dispatch }, eventId) => {
         commit("setLoadingEvent", true);
         axios
             .get("/api/project-events/" + eventId)

@@ -1,7 +1,12 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="700px">
         <template v-slot:activator="{ on }">
-            <v-icon color="primary" hint="Adicionar atividade" dark v-on="on"
+            <v-icon
+                small
+                color="primary"
+                hint="Adicionar atividade"
+                dark
+                v-on="on"
                 >mdi-calendar-plus</v-icon
             >
         </template>

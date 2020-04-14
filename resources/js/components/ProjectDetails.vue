@@ -1,6 +1,5 @@
 <template>
     <div if="project">
-        <p class="body-1 font-weight-bold">Características do projeto</p>
         <v-data-table
             disable-pagination
             hide-default-footer
@@ -13,16 +12,19 @@
                 <v-toolbar flat color="transparent">
                     <v-dialog v-model="dialog" max-width="700px">
                         <template v-slot:activator="{ on }">
-                            <v-btn
-                                absolute
-                                right
-                                color="primary"
-                                outlined
-                                small
-                                dark
-                                v-on="on"
-                                >Campos Vinculados</v-btn
-                            >
+                            <p class="body-1 font-weight-bold">
+                                Características do projeto
+                                <v-icon
+                                    absolute
+                                    right
+                                    color="primary"
+                                    outlined
+                                    small
+                                    dark
+                                    v-on="on"
+                                    >mdi-table-column-plus-after</v-icon
+                                >
+                            </p>
                         </template>
                         <v-card>
                             <v-card-title>
