@@ -1,224 +1,204 @@
 <template>
-    <v-card if="project">
-        <v-card-title>
-            <p>Características do projeto</p>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text>
-            <v-data-table
-                disable-pagination
-                hide-default-footer
-                hide-default-header
-                :headers="headers"
-                :items="projectFields.data"
-                sort-by="name"
-            >
-                <template v-if="hasSession" v-slot:top>
-                    <v-toolbar flat color="transparent">
-                        <v-dialog v-model="dialog" max-width="700px">
-                            <template v-slot:activator="{ on }">
-                                <v-btn
-                                    absolute
-                                    right
-                                    color="primary"
-                                    outlined
-                                    small
-                                    dark
-                                    v-on="on"
-                                    >Campos Vinculados</v-btn
-                                >
-                            </template>
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">{{
-                                        formTitle
-                                    }}</span>
-                                </v-card-title>
+    <div if="project">
+        <p class="body-1 font-weight-bold">Características do projeto</p>
+        <v-data-table
+            disable-pagination
+            hide-default-footer
+            hide-default-header
+            :headers="headers"
+            :items="projectFields.data"
+            sort-by="name"
+        >
+            <template v-if="hasSession" v-slot:top>
+                <v-toolbar flat color="transparent">
+                    <v-dialog v-model="dialog" max-width="700px">
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                absolute
+                                right
+                                color="primary"
+                                outlined
+                                small
+                                dark
+                                v-on="on"
+                                >Campos Vinculados</v-btn
+                            >
+                        </template>
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">{{ formTitle }}</span>
+                            </v-card-title>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <!-- Vinculo de Campos -->
-                                        <v-row
-                                            v-if="editedIndex < 0"
-                                            justify="center"
-                                            align="center"
-                                        >
-                                            <v-col cols="12">
-                                                <v-select
-                                                    v-if="fields"
-                                                    v-model="
-                                                        editedItem.fieldName
-                                                    "
-                                                    :items="fieldsList"
-                                                    label="Selecione um Campo"
-                                                    placeholder="Lista de campos disponíveis"
-                                                    outlined
-                                                    required
+                            <v-card-text>
+                                <v-container>
+                                    <!-- Vinculo de Campos -->
+                                    <v-row
+                                        v-if="editedIndex < 0"
+                                        justify="center"
+                                        align="center"
+                                    >
+                                        <v-col cols="12">
+                                            <v-select
+                                                v-if="fields"
+                                                v-model="editedItem.fieldName"
+                                                :items="fieldsList"
+                                                label="Selecione um Campo"
+                                                placeholder="Lista de campos disponíveis"
+                                                outlined
+                                                required
+                                            >
+                                                <template v-slot:no-data>
+                                                    <p>
+                                                        Sem informações
+                                                        cadastradas
+                                                    </p>
+                                                </template>
+                                            </v-select>
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                                right
+                                                absolute
+                                                outlined
+                                                small
+                                                color="blue darken-1"
+                                                @click="addField()"
+                                                >Vincular Campo</v-btn
+                                            >
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-data-table
+                                                disable-pagination
+                                                hide-default-footer
+                                                :headers="headers"
+                                                :items="projectFields.data"
+                                                sort-by="name"
+                                            >
+                                                <template
+                                                    v-slot:item.name="{
+                                                        item
+                                                    }"
+                                                    >{{
+                                                        item.links.field.data
+                                                            .attributes.name
+                                                    }}</template
                                                 >
-                                                    <template v-slot:no-data>
-                                                        <p>
-                                                            Sem informações
-                                                            cadastradas
-                                                        </p>
-                                                    </template>
-                                                </v-select>
-                                                <v-spacer></v-spacer>
-                                                <v-btn
-                                                    right
-                                                    absolute
-                                                    outlined
-                                                    small
-                                                    color="blue darken-1"
-                                                    @click="addField()"
-                                                    >Vincular Campo</v-btn
+                                                <template
+                                                    v-slot:item.value="{
+                                                        item
+                                                    }"
                                                 >
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-data-table
-                                                    disable-pagination
-                                                    hide-default-footer
-                                                    :headers="headers"
-                                                    :items="projectFields.data"
-                                                    sort-by="name"
-                                                >
-                                                    <template
-                                                        v-slot:item.name="{
-                                                            item
-                                                        }"
-                                                        >{{
+                                                    <span
+                                                        v-if="
                                                             item.links.field
                                                                 .data.attributes
-                                                                .name
-                                                        }}</template
+                                                                .active
+                                                        "
+                                                        >Vínculo ativo</span
                                                     >
-                                                    <template
-                                                        v-slot:item.value="{
-                                                            item
-                                                        }"
+                                                    <span v-else
+                                                        >Vínculo inativo</span
                                                     >
-                                                        <span
-                                                            v-if="
-                                                                item.links.field
-                                                                    .data
-                                                                    .attributes
-                                                                    .active
-                                                            "
-                                                            >Vínculo ativo</span
-                                                        >
-                                                        <span v-else
-                                                            >Vínculo
-                                                            inativo</span
-                                                        >
-                                                    </template>
-                                                    <template
-                                                        v-slot:item.actions="{
-                                                            item
-                                                        }"
+                                                </template>
+                                                <template
+                                                    v-slot:item.actions="{
+                                                        item
+                                                    }"
+                                                >
+                                                    <v-icon
+                                                        v-if="
+                                                            item.data.attributes
+                                                                .active
+                                                        "
+                                                        color="red"
+                                                        small
+                                                        @click="
+                                                            deleteItem(item)
+                                                        "
+                                                        >mdi-delete</v-icon
                                                     >
-                                                        <v-icon
-                                                            v-if="
-                                                                item.data
-                                                                    .attributes
-                                                                    .active
-                                                            "
-                                                            color="red"
-                                                            small
-                                                            @click="
-                                                                deleteItem(item)
-                                                            "
-                                                            >mdi-delete</v-icon
-                                                        >
-                                                        <v-icon
-                                                            v-else
-                                                            color="green"
-                                                            small
-                                                            @click="
-                                                                deleteItem(item)
-                                                            "
-                                                            >mdi-recycle</v-icon
-                                                        >
-                                                    </template>
-                                                    <template v-slot:no-data>
-                                                        <p>
-                                                            Sem informações
-                                                            cadastradas
-                                                        </p>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-col>
-                                        </v-row>
-                                        <!-- Edicaçõ do valor dos campos -->
-                                        <v-row
-                                            v-else
-                                            justify="center"
-                                            align="center"
-                                        >
-                                            <v-col cols="12" sm="10">
-                                                <!-- :required="editedItem.required" CRIAR NO SISTEMA/TABELA -->
-                                                <component
-                                                    :is="editedItem.type"
-                                                    :ref="editedItem.hashName"
-                                                    :label="
-                                                        editedItem.fieldName
-                                                    "
-                                                    :min="editedItem.min"
-                                                    :max="editedItem.max"
-                                                    :mask="editedItem.mask"
-                                                    :value.sync="
-                                                        editedItem.value
-                                                    "
-                                                />
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
+                                                    <v-icon
+                                                        v-else
+                                                        color="green"
+                                                        small
+                                                        @click="
+                                                            deleteItem(item)
+                                                        "
+                                                        >mdi-recycle</v-icon
+                                                    >
+                                                </template>
+                                                <template v-slot:no-data>
+                                                    <p>
+                                                        Sem informações
+                                                        cadastradas
+                                                    </p>
+                                                </template>
+                                            </v-data-table>
+                                        </v-col>
+                                    </v-row>
+                                    <!-- Edicaçõ do valor dos campos -->
+                                    <v-row
+                                        v-else
+                                        justify="center"
+                                        align="center"
+                                    >
+                                        <v-col cols="12" sm="10">
+                                            <!-- :required="editedItem.required" CRIAR NO SISTEMA/TABELA -->
+                                            <component
+                                                :is="editedItem.type"
+                                                :ref="editedItem.hashName"
+                                                :label="editedItem.fieldName"
+                                                :min="editedItem.min"
+                                                :max="editedItem.max"
+                                                :mask="editedItem.mask"
+                                                :value.sync="editedItem.value"
+                                            />
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
 
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" text @click="close"
+                                    >Cancelar</v-btn
+                                >
+                                <div v-if="$refs[editedItem.hashName]">
                                     <v-btn
+                                        v-if="
+                                            editedIndex > -1 &&
+                                                !$refs[editedItem.hashName].$v
+                                                    .$invalid
+                                        "
                                         color="blue darken-1"
                                         text
-                                        @click="close"
-                                        >Cancelar</v-btn
+                                        @click="save"
+                                        >Salvar</v-btn
                                     >
-                                    <div v-if="$refs[editedItem.hashName]">
-                                        <v-btn
-                                            v-if="
-                                                editedIndex > -1 &&
-                                                    !$refs[editedItem.hashName]
-                                                        .$v.$invalid
-                                            "
-                                            color="blue darken-1"
-                                            text
-                                            @click="save"
-                                            >Salvar</v-btn
-                                        >
-                                    </div>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.name="{ item }">{{
-                    item.links.field.data.attributes.name
-                }}</template>
-                <template v-slot:item.value="{ item }">
-                    <span v-if="item.data.attributes.value">{{
-                        item.data.attributes.value
-                    }}</span>
-                    <span v-else>- sem informação -</span>
-                </template>
-                <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="editItem(item)"
-                        >mdi-pencil</v-icon
-                    >
-                </template>
-                <template v-slot:no-data>
-                    <p>Sem informações cadastradas</p>
-                </template>
-            </v-data-table>
-        </v-card-text>
-    </v-card>
+                                </div>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-toolbar>
+            </template>
+            <template v-slot:item.name="{ item }">{{
+                item.links.field.data.attributes.name
+            }}</template>
+            <template v-slot:item.value="{ item }">
+                <span v-if="item.data.attributes.value">{{
+                    item.data.attributes.value
+                }}</span>
+                <span v-else>- sem informação -</span>
+            </template>
+            <template v-slot:item.actions="{ item }">
+                <v-icon small class="mr-2" @click="editItem(item)"
+                    >mdi-pencil</v-icon
+                >
+            </template>
+            <template v-slot:no-data>
+                <p>Sem informações cadastradas</p>
+            </template>
+        </v-data-table>
+    </div>
 </template>
 
 <script>

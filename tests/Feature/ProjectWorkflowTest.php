@@ -2,31 +2,28 @@
 
 namespace Tests\Feature;
 
+use App\Project;
+use App\ProjectEvent;
+use App\ProjectStatus;
+use App\ProjectWorkflow;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\User;
-use App\Project;
-use App\ProjectStatus;
-use App\ProjectEvent;
 
-use App\ProjectWorkflow;
-
-class ProjectWorkflowTest extends TestCase
-{
+class ProjectWorkflowTest extends TestCase {
     use RefreshDatabase;
     // testar se o status que o projeto esta entranto realmente faz parte do seu workflow
 
     /** @test */
-    public function a_user_can_create_a_workflow_step()
-    {
+    public function a_user_can_create_a_workflow_step() {
         $this->withoutExceptionHandling();
         $this->actingAs($user = factory(User::class)->create(), 'api');
-        $project = factory(Project::class)->create();
+        $project         = factory(Project::class)->create();
         $projectStatus1  = factory(ProjectStatus::class)->create();
         $projectStatus2  = factory(ProjectStatus::class)->create();
         $nextOrderStatus = ProjectWorkflow::where('project_id', '=', $project->id)->get()->count() + 1;
-        $response = $this->post('/api/project-workflows', [
-            'project_id' => $project->id,
+        $response        = $this->post('/api/project-workflows', [
+            'project_id'    => $project->id,
             'old_status_id' => $projectStatus1->id,
             'new_status_id' => $projectStatus2->id,
         ])->assertStatus(201);
@@ -37,9 +34,9 @@ class ProjectWorkflowTest extends TestCase
         $this->assertEquals($projectStatus2->id, $ProjectWorkflow->new_status_id);
         $this->assertEquals($nextOrderStatus, $ProjectWorkflow->order);
         $response->assertJson([
-            'data' => [
-                'type' => 'project-workflows',
-                'id' => $ProjectWorkflow->id,
+            'data'  => [
+                'type'       => 'project-workflows',
+                'id'         => $ProjectWorkflow->id,
                 'attributes' => [
                     'order'         => 1,
                     'project_id'    => $ProjectWorkflow->project_id,
@@ -48,133 +45,129 @@ class ProjectWorkflowTest extends TestCase
                 ],
             ],
             'links' => [
-                'self' => url('/project-workflows/' . $ProjectWorkflow->id),
-                'project' => [
+                'self'       => url('/project-workflows/' . $ProjectWorkflow->id),
+                'project'    => [
                     'data'  => [
-                        'type' => 'projects',
-                        'id'   => $ProjectWorkflow->project->id,
+                        'type'       => 'projects',
+                        'id'         => $ProjectWorkflow->project->id,
                         'attributes' => [
-                            'name' => $ProjectWorkflow->project->name,
+                            'name'        => $ProjectWorkflow->project->name,
                             'description' => $ProjectWorkflow->project->description,
-                            'active' => $ProjectWorkflow->project->active,
-                        ]
+                            'active'      => $ProjectWorkflow->project->active,
+                        ],
                     ],
                     'links' => [
-                        'self' => url('/projects/' . $ProjectWorkflow->project->id)
-                    ]
+                        'self' => url('/projects/' . $ProjectWorkflow->project->id),
+                    ],
                 ],
                 'old_status' => [
                     'data'  => [
-                        'type' => 'project-statuses',
-                        'id'   => $ProjectWorkflow->old_status->id,
+                        'type'       => 'project-statuses',
+                        'id'         => $ProjectWorkflow->old_status->id,
                         'attributes' => [
-                            'name' => $ProjectWorkflow->old_status->name,
+                            'name'        => $ProjectWorkflow->old_status->name,
                             'description' => $ProjectWorkflow->old_status->description,
-                            'active' => $ProjectWorkflow->old_status->active,
-                        ]
+                            'active'      => $ProjectWorkflow->old_status->active,
+                        ],
                     ],
                     'links' => [
-                        'self' => url('/project-statuses/' . $ProjectWorkflow->old_status->id)
-                    ]
+                        'self' => url('/project-statuses/' . $ProjectWorkflow->old_status->id),
+                    ],
                 ],
                 'new_status' => [
                     'data'  => [
-                        'type' => 'project-statuses',
-                        'id'   => $ProjectWorkflow->new_status->id,
+                        'type'       => 'project-statuses',
+                        'id'         => $ProjectWorkflow->new_status->id,
                         'attributes' => [
-                            'name' => $ProjectWorkflow->new_status->name,
+                            'name'        => $ProjectWorkflow->new_status->name,
                             'description' => $ProjectWorkflow->new_status->description,
-                            'active' => $ProjectWorkflow->new_status->active,
-                        ]
+                            'active'      => $ProjectWorkflow->new_status->active,
+                        ],
                     ],
                     'links' => [
-                        'self' => url('/project-statuses/' . $ProjectWorkflow->new_status->id)
-                    ]
-                ]
-            ]
+                        'self' => url('/project-statuses/' . $ProjectWorkflow->new_status->id),
+                    ],
+                ],
+            ],
         ]);
     }
 
     /** @test */
-    public function workflow_step_aceita_apenas_old_status_existentes()
-    {
+    public function workflow_step_aceita_apenas_old_status_existentes() {
         $this->actingAs($user = factory(User::class)->create(), 'api');
-        $project = factory(Project::class)->create();
-        $projectStatus1  = factory(ProjectStatus::class)->create();
-        $projectStatus2  = factory(ProjectStatus::class)->create();
-        $response = $this->post('/api/project-workflows', [
-            'project_id' => $project->id,
+        $project        = factory(Project::class)->create();
+        $projectStatus1 = factory(ProjectStatus::class)->create();
+        $projectStatus2 = factory(ProjectStatus::class)->create();
+        $response       = $this->post('/api/project-workflows', [
+            'project_id'    => $project->id,
             'old_status_id' => 123,
             'new_status_id' => $projectStatus2->id,
         ])->assertStatus(404);
         $this->assertCount(0, ProjectWorkflow::all());
         $response->assertJson([
             'errors' => [
-                'code'  => 404,
-                'title' => 'O status de projeto não existe ou foi excluído',
-                'detail' => 'O sistema tentou utilizar status de projeto inexistente ou que já foi excluído'
-            ]
+                'code'   => 404,
+                'title'  => 'O status de projeto não existe ou foi excluído',
+                'detail' => 'O sistema tentou utilizar status de projeto inexistente ou que já foi excluído',
+            ],
         ]);
     }
     /** @test */
-    public function workflow_step_aceita_apenas_new_status_existentes()
-    {
+    public function workflow_step_aceita_apenas_new_status_existentes() {
         $this->actingAs($user = factory(User::class)->create(), 'api');
-        $project = factory(Project::class)->create();
-        $projectStatus1  = factory(ProjectStatus::class)->create();
-        $projectStatus2  = factory(ProjectStatus::class)->create();
-        $response = $this->post('/api/project-workflows', [
-            'project_id' => $project->id,
+        $project        = factory(Project::class)->create();
+        $projectStatus1 = factory(ProjectStatus::class)->create();
+        $projectStatus2 = factory(ProjectStatus::class)->create();
+        $response       = $this->post('/api/project-workflows', [
+            'project_id'    => $project->id,
             'old_status_id' => $projectStatus2->id,
             'new_status_id' => 123,
         ])->assertStatus(404);
         $this->assertCount(0, ProjectWorkflow::all());
         $response->assertJson([
             'errors' => [
-                'code'  => 404,
-                'title' => 'O status de projeto não existe ou foi excluído',
-                'detail' => 'O sistema tentou utilizar status de projeto inexistente ou que já foi excluído'
-            ]
+                'code'   => 404,
+                'title'  => 'O status de projeto não existe ou foi excluído',
+                'detail' => 'O sistema tentou utilizar status de projeto inexistente ou que já foi excluído',
+            ],
         ]);
     }
 
     /** @test */
-    public function workflow_step_aceita_apenas_projects_existentes()
-    {
+    public function workflow_step_aceita_apenas_projects_existentes() {
         $this->actingAs($user = factory(User::class)->create(), 'api');
-        $project = factory(Project::class)->create();
-        $projectStatus1  = factory(ProjectStatus::class)->create();
-        $projectStatus2  = factory(ProjectStatus::class)->create();
-        $response = $this->post('/api/project-workflows', [
-            'project_id' => 123,
+        $project        = factory(Project::class)->create();
+        $projectStatus1 = factory(ProjectStatus::class)->create();
+        $projectStatus2 = factory(ProjectStatus::class)->create();
+        $response       = $this->post('/api/project-workflows', [
+            'project_id'    => 123,
             'old_status_id' => $projectStatus1->id,
             'new_status_id' => $projectStatus2->id,
         ])->assertStatus(404);
         $this->assertCount(0, ProjectWorkflow::all());
         $response->assertJson([
             'errors' => [
-                'code'  => 404,
-                'title' => 'O projeto não existe ou foi excluído',
-                'detail' => 'O sistema tentou utilizar um projeto inexistente ou que já foi excluído'
-            ]
+                'code'   => 404,
+                'title'  => 'O projeto não existe ou foi excluído',
+                'detail' => 'O sistema tentou utilizar um projeto inexistente ou que já foi excluído',
+            ],
         ]);
     }
 
     /** @test */
-    public function duplicate_workflow_step_are_refused()
-    {
+    public function duplicate_workflow_step_are_refused() {
         //$this->withoutExceptionHandling();
         $this->actingAs($user = factory(User::class)->create(), 'api');
-        $project = factory(Project::class)->create();
-        $projectStatus1  = factory(ProjectStatus::class)->create();
-        $projectStatus2  = factory(ProjectStatus::class)->create();
+        $project        = factory(Project::class)->create();
+        $projectStatus1 = factory(ProjectStatus::class)->create();
+        $projectStatus2 = factory(ProjectStatus::class)->create();
         factory(ProjectWorkflow::class)->create([
-            'project_id' => $project->id,
+            'project_id'    => $project->id,
             'old_status_id' => $projectStatus1->id,
             'new_status_id' => $projectStatus2->id,
         ]);
         $response = $this->post('/api/project-workflows', [
-            'project_id' => $project->id,
+            'project_id'    => $project->id,
             'old_status_id' => $projectStatus1->id,
             'new_status_id' => $projectStatus2->id,
         ])->assertStatus(403);
@@ -182,16 +175,15 @@ class ProjectWorkflowTest extends TestCase
         $this->assertCount(1, ProjectWorkflow::all());
         $response->assertJson([
             'errors' => [
-                'code'  => 403,
-                'title' => 'Já existe um passo de workflow com esta origem e destino.',
-                'detail' => 'Não é possivel adicionar a mesma origem e destido duas vezes.'
-            ]
+                'code'   => 403,
+                'title'  => 'Já existe um passo de workflow com esta origem e destino.',
+                'detail' => 'Não é possivel adicionar a mesma origem e destido duas vezes.',
+            ],
         ]);
     }
 
     /** @test */
-    public function remove_a_workflow_step()
-    {
+    public function remove_a_workflow_step() {
         $this->withoutExceptionHandling();
         $this->actingAs($user = factory(User::class)->create(), 'api');
         factory(ProjectWorkflow::class)->create();
@@ -200,44 +192,40 @@ class ProjectWorkflowTest extends TestCase
         $this->assertCount(0, ProjectWorkflow::all());
         $response->assertJson([
             'meta' => [
-                'message' => 'A exclusão realizada com sucesso'
-            ]
+                'message' => 'A exclusão realizada com sucesso',
+            ],
         ]);
     }
 
     /** @test */
-    public function retrieve_the_project_workflow()
-    {
+    public function retrieve_the_project_workflow() {
         $this->withoutExceptionHandling();
         $this->actingAs($user = factory(User::class)->create(), 'api');
-        $project = factory(Project::class)->create();
+        $project         = factory(Project::class)->create();
         $projectStatus1  = factory(ProjectStatus::class)->create();
         $projectStatus2  = factory(ProjectStatus::class)->create();
         $projectWorkflow = factory(ProjectWorkflow::class)->create([
-            'order' => 1,
-            'project_id' => $project->id,
+            'order'         => 1,
+            'project_id'    => $project->id,
             'old_status_id' => $projectStatus1->id,
             'new_status_id' => $projectStatus2->id,
         ]);
 
         factory(ProjectEvent::class)->create([
-            'name' => 'evento 1',
-            'description' => 'event 1',
-            'project_workflow_id' => 1
+            'name'                => 'evento 1',
+            'description'         => 'event 1',
+            'project_workflow_id' => 1,
         ]);
-
-        dd($projectWorkflow->events);
-
 
         $response = $this->get('/api/project-workflows/project/1')->assertStatus(200);
 
         $response->assertJson([
-            'data' => [
+            'data'           => [
                 [
 
                     'data' => [
-                        'type' => 'project-workflows',
-                        'id' => $projectWorkflow->id,
+                        'type'       => 'project-workflows',
+                        'id'         => $projectWorkflow->id,
                         'attributes' => [
                             'order'         => 1,
                             'project_id'    => $projectWorkflow->project_id,
@@ -246,13 +234,57 @@ class ProjectWorkflowTest extends TestCase
                         ],
                     ],
 
-                ]
+                ],
             ],
             'workflow_steps' => 1,
             /**TODO Colocar os relationships nos testes INDIVIDUALMENTE project,status,events  */
-            'links' => [
+            'links'          => [
                 'self' => url('/project-workflows/project/' . $project->id),
-            ]
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function retrieve_events_of_one_project_workflow() {
+        $this->withoutExceptionHandling();
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        $project         = factory(Project::class)->create();
+        $projectStatus1  = factory(ProjectStatus::class)->create();
+        $projectStatus2  = factory(ProjectStatus::class)->create();
+        $projectWorkflow = factory(ProjectWorkflow::class)->create([
+            'order'         => 1,
+            'project_id'    => $project->id,
+            'old_status_id' => $projectStatus1->id,
+            'new_status_id' => $projectStatus2->id,
+        ]);
+        $event = factory(ProjectEvent::class)->create([
+            'owner_id'            => $projectStatus1->id,
+            'project_workflow_id' => $projectWorkflow->id,
+        ]);
+
+        $response = $this->get('/api/project-workflows/step-events/' . $projectWorkflow->id)->assertStatus(200);
+
+        $response->assertJson([
+            'data'  => [
+                [
+                    'data' => [
+                        'type'       => 'project-events',
+                        'id'         => $event->id,
+                        'attributes' => [
+                            'name'                => $event->name,
+                            'description'         => $event->description,
+                            'project_workflow_id' => $event->project_workflow_id,
+                            'owner_id'            => $event->owner_id,
+                            'active'              => $event->active,
+                        ],
+                    ],
+
+                ],
+            ],
+            /**TODO Colocar os relationships nos testes INDIVIDUALMENTE project,status,events  */
+            'links' => [
+                'self' => url('/project-events'),
+            ],
         ]);
     }
 }

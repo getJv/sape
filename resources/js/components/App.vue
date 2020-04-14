@@ -2,13 +2,13 @@
     <v-app id="inspire">
         <Sidebar :drawer.sync="drawer" />
 
-        <v-app-bar app clipped-left>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-            <v-toolbar-title>SAPE</v-toolbar-title>
+        <v-app-bar flat app clipped-left color="blue-grey darken-2">
+            <v-app-bar-nav-icon color="white" @click.stop="drawer = !drawer" />
+            <v-toolbar-title class="white--text"> SAPE</v-toolbar-title>
         </v-app-bar>
 
-        <v-content>
-            <v-container fluid>
+        <v-content class="grey lighten-5">
+            <v-container>
                 <v-row align="baseline" justify="start">
                     <v-col>
                         <router-view></router-view>
@@ -18,9 +18,9 @@
             <BtnConfiguration />
         </v-content>
 
-        <v-footer app>
+        <v-footer app color="blue-grey darken-2">
             <span>
-                <small class="caption">
+                <small class="caption white--text">
                     &copy; {{ new Date().getFullYear() }} — EPL Sistema para
                     acompanhamento de projetos estratégicos | Versão do sistema:
                     {{ numVersion }}
@@ -51,7 +51,7 @@ export default {
         drawer: true
     }),
     created() {
-        this.$vuetify.theme.dark = true;
+        this.$vuetify.theme.dark = false;
     }
 };
 </script>
