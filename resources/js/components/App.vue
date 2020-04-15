@@ -1,14 +1,22 @@
 <template>
     <v-app id="inspire">
         <Sidebar :drawer.sync="drawer" />
-
-        <v-app-bar app clipped-left>
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-            <v-toolbar-title>SAPE</v-toolbar-title>
+        <v-app-bar :elevation="1" app clipped-left color="blue-grey lighten-5">
+            <v-app-bar-nav-icon
+                color="blue-grey darken-5"
+                @click.stop="drawer = !drawer"
+            />
+            <v-toolbar-title> SAPE</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-img
+                class="text--center"
+                :src="imageHeader"
+                max-width="250"
+            ></v-img>
         </v-app-bar>
 
-        <v-content>
-            <v-container fluid>
+        <v-content class="grey lighten-5">
+            <v-container>
                 <v-row align="baseline" justify="start">
                     <v-col>
                         <router-view></router-view>
@@ -18,9 +26,9 @@
             <BtnConfiguration />
         </v-content>
 
-        <v-footer app>
+        <v-footer app color="blue-grey lighten-5">
             <span>
-                <small class="caption">
+                <small class="caption ">
                     &copy; {{ new Date().getFullYear() }} — EPL Sistema para
                     acompanhamento de projetos estratégicos | Versão do sistema:
                     {{ numVersion }}
@@ -48,10 +56,11 @@ export default {
     data: () => ({
         numVersion: version.replace('"', "").replace('"', ""),
         bottomNav: "recent",
-        drawer: true
+        drawer: true,
+        imageHeader: "/imagens/epl_logo.png"
     }),
     created() {
-        this.$vuetify.theme.dark = true;
+        this.$vuetify.theme.dark = false;
     }
 };
 </script>
