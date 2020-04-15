@@ -28,7 +28,7 @@
 
         <v-footer app color="blue-grey lighten-5">
             <span>
-                <small class="caption white--text">
+                <small class="caption ">
                     &copy; {{ new Date().getFullYear() }} — EPL Sistema para
                     acompanhamento de projetos estratégicos | Versão do sistema:
                     {{ numVersion }}

@@ -1,6 +1,5 @@
 <template>
     <div></div>
-    <!-- $refs[hashName].$v.$invalid -->
 </template>
 
 <script>
