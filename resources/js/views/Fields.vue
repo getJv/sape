@@ -149,171 +149,152 @@ import minField from "../components/formInputs/IntegerField";
 import maxField from "../components/formInputs/IntegerField";
 
 export default {
-    name: "Fields",
-    components: {
-        minField,
-        maxField
+  name: "Fields",
+  components: {
+    minField,
+    maxField
+  },
+  mixins: [validationMixin],
+  validations: {
+    editedItem: {
+      name: {
+        required,
+        minLength: minLength(3),
+        maxLength: maxLength(50)
+      },
+      description: {
+        required,
+        minLength: minLength(3),
+        maxLength: maxLength(255)
+      },
+      type: {
+        required
+      }
+    }
+  },
+  created() {
+    this.$store.dispatch("fetchFields");
+  },
+  data: () => ({
+    dialog: false,
+    editedIndex: -1,
+    maskTypes: [
+      {
+        name: "Data simples",
+        format: "##/##/####"
+      },
+      {
+        name: "CEP",
+        format: "#####-###"
+      },
+      {
+        name: "CPF",
+        format: "###.###.###-##"
+      },
+      {
+        name: "CNPJ",
+        format: "###.###.###/####-##"
+      },
+      {
+        name: "Hora",
+        format: "##:##:##"
+      },
+      {
+        name: "Personalizado",
+        format: ""
+      }
+    ],
+    fieldTypes: [
+      {
+        type: "integerField",
+        name: "Número inteiro",
+        description: "Recebe apenas números inteiros. ex: 10"
+      },
+      {
+        type: "numberField",
+        name: "Número decimal",
+        description: "Recebe apenas números com parte de fração. ex: 10,00"
+      },
+      {
+        type: "dateField",
+        name: "Data",
+        description: "Recebe datas no formato brasieiro. ex: 10/04/2020"
+      },
+      {
+        type: "textField",
+        name: "Texto pequeno",
+        description: "Útil para textos com no máximo 255 caracteres"
+      },
+      {
+        type: "textAreaField",
+        name: "Texto grande",
+        description: "Útil para textos com mais 255 caracteres"
+      }
+    ],
+    editedItem: {
+      id: "",
+      name: "",
+      type: "",
+      description: "",
+      active: true
     },
-    mixins: [validationMixin],
-    validations: {
-        editedItem: {
-            name: {
-                required,
-                minLength: minLength(3),
-                maxLength: maxLength(50)
-            },
-            description: {
-                required,
-                minLength: minLength(3),
-                maxLength: maxLength(255)
-            },
-            type: {
-                required
-            }
-        }
+    defaultItem: {
+      name: "",
+      type: "",
+      description: "",
+      active: true
+    }
+  }),
+
+  computed: {
+    ...mapGetters(["fields"]),
+    fieldMaskList() {
+      var list = [];
+      this.maskTypes.forEach(item => list.push(item.name));
+      return list;
     },
-    created() {
-        this.$store.dispatch("fetchFields");
+    fieldTypesList() {
+      var list = [];
+      this.fieldTypes.forEach(item => list.push(item.name));
+      return list;
     },
-    data: () => ({
-        dialog: false,
-        editedIndex: -1,
-        maskTypes: [
-            {
-                name: "Data simples",
-                format: "##/##/####"
-            },
-            {
-                name: "CEP",
-                format: "#####-###"
-            },
-            {
-                name: "CPF",
-                format: "###.###.###-##"
-            },
-            {
-                name: "CNPJ",
-                format: "###.###.###/####-##"
-            },
-            {
-                name: "Hora",
-                format: "##:##:##"
-            },
-            {
-                name: "Personalizado",
-                format: ""
-            }
-        ],
-        fieldTypes: [
-            {
-                type: "integerField",
-                name: "Número inteiro",
-                description: "Recebe apenas números inteiros. ex: 10"
-            },
-            {
-                type: "numberField",
-                name: "Número decimal",
-                description:
-                    "Recebe apenas números com parte de fração. ex: 10,00"
-            },
-            {
-                type: "dateField",
-                name: "Data",
-                description: "Recebe datas no formato brasieiro. ex: 10/04/2020"
-            },
-            {
-                type: "textField",
-                name: "Texto pequeno",
-                description: "Útil para textos com no máximo 255 caracteres"
-            },
-            {
-                type: "textAreaField",
-                name: "Texto grande",
-                description: "Útil para textos com mais 255 caracteres"
-            }
-        ],
-        editedItem: {
-            id: "",
-            name: "",
-            type: "",
-            description: "",
-            active: true
-        },
-        defaultItem: {
-            name: "",
-            type: "",
-            description: "",
-            active: true
-        }
-    }),
+    fieldTypeSelected() {
+      return this.fieldTypes.find(item => item.name == this.editedItem.type)
+        .type;
+    },
+    fieldMaskSelected() {
+      if (!this.editedItem.mask) return null;
 
-    computed: {
-        ...mapGetters(["fields"]),
-        fieldMaskList() {
-            var list = [];
-            this.maskTypes.forEach(item => list.push(item.name));
-            return list;
+      return this.maskTypes.find(item => item.name == this.editedItem.mask)
+        .format;
+    },
+    headers() {
+      var headers = [
+        {
+          text: "Campo",
+          align: "start",
+          value: "name"
         },
-        fieldTypesList() {
-            var list = [];
-            this.fieldTypes.forEach(item => list.push(item.name));
-            return list;
+        {
+          text: "Descrição",
+          value: "description"
         },
-        fieldTypeSelected() {
-            return this.fieldTypes.find(
-                item => item.name == this.editedItem.type
-            ).type;
+        {
+          text: "Tamanho mínimo",
+          value: "min"
         },
-        fieldMaskSelected() {
-            if (!this.editedItem.mask) return null;
-
-            return this.maskTypes.find(
-                item => item.name == this.editedItem.mask
-            ).format;
+        {
+          text: "Tamanho máximo",
+          value: "max"
         },
-        headers() {
-            var headers = [
-                {
-                    text: "Campo",
-                    align: "start",
-                    value: "name"
-                },
-                {
-                    text: "Descrição",
-                    value: "description"
-                },
-                {
-                    text: "Tamanho mínimo",
-                    value: "min"
-                },
-                {
-                    text: "Tamanho máximo",
-                    value: "max"
-                },
-                {
-                    text: "Máscara",
-                    value: "mask"
-                },
-                {
-                    text: "Ativo",
-                    value: "active"
-                },
-                {
-                    text: "Ações",
-                    value: "actions"
-                }
-            ];
-            if (this.hasSession) {
-                headers.push({
-                    text: "Ações",
-                    value: "actions",
-                    sortable: false
-                });
-            }
-
-            return headers;
+        {
+          text: "Máscara",
+          value: "mask"
         },
-<<<<<<< HEAD
+        {
+          text: "Ativo",
+          value: "active"
+        },
         {
           text: "Obrigatório",
           value: "required"
@@ -323,85 +304,73 @@ export default {
           value: "actions"
         }
       ];
-      if (this.hasSession) {
-        headers.push({
-          text: "Ações",
-          value: "actions",
-          sortable: false
+    },
+    formTitle() {
+      return this.editedIndex === -1 ? "Novo Item" : "Edição de Item";
+    },
+    nameErrors() {
+      const errors = [];
+      if (!this.$v.editedItem.name.$dirty) return errors;
+      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
+      !this.$v.editedItem.name.minLength &&
+        errors.push("Mínimo de 3 caracteres");
+      !this.$v.editedItem.name.maxLength &&
+        errors.push("Máximo de 50 caracteres");
+      return errors;
+    },
+    descriptionErrors() {
+      const errors = [];
+      if (!this.$v.editedItem.description.$dirty) return errors;
+      !this.$v.editedItem.description.required &&
+        errors.push("Campo Obrigatório.");
+      !this.$v.editedItem.description.minLength &&
+        errors.push("Mínimo de 3 caracteres");
+      !this.$v.editedItem.description.maxLength &&
+        errors.push("Máximo de 255 caracteres");
+      return errors;
+    },
+    typeErrors() {
+      const errors = [];
+      if (!this.$v.editedItem.type.$dirty) return errors;
+      !this.$v.editedItem.type.required && errors.push("Campo Obrigatório.");
+      return errors;
+    }
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    }
+  },
+
+  methods: {
+    editItem(item) {
+      this.editedIndex = this.fields.data.indexOf(item);
+      this.editedItem = Object.assign({}, item.data.attributes);
+      this.editedItem.id = item.data.id;
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      if (confirm("Deseja realmente alterar o status este atributo?")) {
+        this.$store.dispatch("updateField", {
+          id: item.data.id,
+          name: item.data.attributes.name,
+          description: item.data.attributes.description,
+          active: !item.data.attributes.active
         });
       }
-=======
->>>>>>> upstream/master
-
-        formTitle() {
-            return this.editedIndex === -1 ? "Novo Item" : "Edição de Item";
-        },
-        nameErrors() {
-            const errors = [];
-            if (!this.$v.editedItem.name.$dirty) return errors;
-            !this.$v.editedItem.name.required &&
-                errors.push("Campo Obrigatório.");
-            !this.$v.editedItem.name.minLength &&
-                errors.push("Mínimo de 3 caracteres");
-            !this.$v.editedItem.name.maxLength &&
-                errors.push("Máximo de 50 caracteres");
-            return errors;
-        },
-        descriptionErrors() {
-            const errors = [];
-            if (!this.$v.editedItem.description.$dirty) return errors;
-            !this.$v.editedItem.description.required &&
-                errors.push("Campo Obrigatório.");
-            !this.$v.editedItem.description.minLength &&
-                errors.push("Mínimo de 3 caracteres");
-            !this.$v.editedItem.description.maxLength &&
-                errors.push("Máximo de 255 caracteres");
-            return errors;
-        },
-        typeErrors() {
-            const errors = [];
-            if (!this.$v.editedItem.type.$dirty) return errors;
-            !this.$v.editedItem.type.required &&
-                errors.push("Campo Obrigatório.");
-            return errors;
-        }
     },
 
-    watch: {
-        dialog(val) {
-            val || this.close();
-        }
+    close() {
+      this.dialog = false;
+      this.$v.$reset();
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
     },
 
-    methods: {
-        editItem(item) {
-            this.editedIndex = this.fields.data.indexOf(item);
-            this.editedItem = Object.assign({}, item.data.attributes);
-            this.editedItem.id = item.data.id;
-            this.dialog = true;
-        },
-
-        deleteItem(item) {
-            if (confirm("Deseja realmente alterar o status este atributo?")) {
-                this.$store.dispatch("updateField", {
-                    id: item.data.id,
-                    name: item.data.attributes.name,
-                    description: item.data.attributes.description,
-                    active: !item.data.attributes.active
-                });
-            }
-        },
-
-        close() {
-            this.dialog = false;
-            this.$v.$reset();
-            setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem);
-                this.editedIndex = -1;
-            }, 300);
-        },
-
-<<<<<<< HEAD
     save() {
       if (this.editedIndex > -1) {
         this.$store.dispatch("updateField", {
@@ -426,32 +395,8 @@ export default {
         });
       }
       this.close();
-=======
-        save() {
-            if (this.editedIndex > -1) {
-                this.$store.dispatch("updateField", {
-                    id: this.editedItem.id,
-                    name: this.editedItem.name,
-                    description: this.editedItem.description,
-                    max: this.editedItem.max,
-                    min: this.editedItem.min,
-                    mask: this.fieldMaskSelected,
-                    active: this.editedItem.active
-                });
-            } else {
-                this.$store.dispatch("createField", {
-                    name: this.editedItem.name,
-                    description: this.editedItem.description,
-                    max: this.editedItem.max,
-                    min: this.editedItem.min,
-                    mask: this.fieldMaskSelected,
-                    type: this.fieldTypeSelected
-                });
-            }
-            this.close();
-        }
->>>>>>> upstream/master
     }
+  }
 };
 </script>
 
