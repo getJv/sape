@@ -26,6 +26,7 @@ const actions = {
                 max: data.max,
                 min: data.min,
                 mask: data.mask,
+                required: data.required,
                 type: data.type,
                 active: data.active,
                 _method: "patch"

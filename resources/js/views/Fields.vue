@@ -27,6 +27,9 @@
                   <v-container>
                     <v-row justify="center" align="center">
                       <v-col cols="12" sm="10">
+                        <v-switch v-model="editedItem.required" label="Obrigatório"></v-switch>
+                      </v-col>
+                      <v-col cols="12" sm="10">
                         <v-select
                           v-if="editedIndex <  0"
                           v-model="editedItem.type"
@@ -69,7 +72,7 @@
                         <v-select
                           v-model="editedItem.mask"
                           :items="fieldMaskList"
-                          label="Máscara para numero numero"
+                          label="Máscara para numero"
                           placeholder="Selecione um formato de máscara"
                           outlined
                           required
@@ -80,7 +83,7 @@
                           <v-col cols="6">
                             <minField
                               label="Quantidade mínima de caracteres"
-                              :min="5"
+                              :min="1"
                               :max="20"
                               :value.sync="editedItem.min"
                             />
@@ -88,7 +91,7 @@
                           <v-col cols="6">
                             <maxField
                               label="Quantidade máxima de caracteres"
-                              :min="5"
+                              :min="1"
                               :max="20"
                               :value.sync="editedItem.max"
                             />
@@ -112,6 +115,10 @@
         <template v-slot:item.min="{ item }">{{item.data.attributes.min}}</template>
         <template v-slot:item.max="{ item }">{{item.data.attributes.max}}</template>
         <template v-slot:item.mask="{ item }">{{item.data.attributes.mask}}</template>
+        <template v-slot:item.required="{ item }">
+          <span v-if="item.data.attributes.required">Sim</span>
+          <span v-else>Não</span>
+        </template>
         <template v-slot:item.active="{ item }">
           <span v-if="item.data.attributes.active">Sim</span>
           <span v-else>Não</span>
@@ -287,6 +294,10 @@ export default {
           value: "active"
         },
         {
+          text: "Obrigatório",
+          value: "required"
+        },
+        {
           text: "Ações",
           value: "actions"
         }
@@ -377,6 +388,7 @@ export default {
           max: this.editedItem.max,
           min: this.editedItem.min,
           mask: this.fieldMaskSelected,
+          required: this.editedItem.required,
           active: this.editedItem.active
         });
       } else {
@@ -386,6 +398,7 @@ export default {
           max: this.editedItem.max,
           min: this.editedItem.min,
           mask: this.fieldMaskSelected,
+          required: this.editedItem.required,
           type: this.fieldTypeSelected
         });
       }

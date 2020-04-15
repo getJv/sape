@@ -3309,6 +3309,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3450,6 +3457,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         text: "Ativo",
         value: "active"
       }, {
+        text: "Obrigatório",
+        value: "required"
+      }, {
         text: "Ações",
         value: "actions"
       }];
@@ -3531,6 +3541,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           max: this.editedItem.max,
           min: this.editedItem.min,
           mask: this.fieldMaskSelected,
+          required: this.editedItem.required,
           active: this.editedItem.active
         });
       } else {
@@ -3540,6 +3551,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           max: this.editedItem.max,
           min: this.editedItem.min,
           mask: this.fieldMaskSelected,
+          required: this.editedItem.required,
           type: this.fieldTypeSelected
         });
       }
@@ -42196,6 +42208,40 @@ var render = function() {
                                                       }
                                                     },
                                                     [
+                                                      _c("v-switch", {
+                                                        attrs: {
+                                                          label: "Obrigatório"
+                                                        },
+                                                        model: {
+                                                          value:
+                                                            _vm.editedItem
+                                                              .required,
+                                                          callback: function(
+                                                            $$v
+                                                          ) {
+                                                            _vm.$set(
+                                                              _vm.editedItem,
+                                                              "required",
+                                                              $$v
+                                                            )
+                                                          },
+                                                          expression:
+                                                            "editedItem.required"
+                                                        }
+                                                      })
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    {
+                                                      attrs: {
+                                                        cols: "12",
+                                                        sm: "10"
+                                                      }
+                                                    },
+                                                    [
                                                       _vm.editedIndex < 0
                                                         ? _c("v-select", {
                                                             attrs: {
@@ -42361,7 +42407,7 @@ var render = function() {
                                                           items:
                                                             _vm.fieldMaskList,
                                                           label:
-                                                            "Máscara para numero numero",
+                                                            "Máscara para numero",
                                                           placeholder:
                                                             "Selecione um formato de máscara",
                                                           outlined: "",
@@ -42411,7 +42457,7 @@ var render = function() {
                                                                 attrs: {
                                                                   label:
                                                                     "Quantidade mínima de caracteres",
-                                                                  min: 5,
+                                                                  min: 1,
                                                                   max: 20,
                                                                   value:
                                                                     _vm
@@ -42446,7 +42492,7 @@ var render = function() {
                                                                 attrs: {
                                                                   label:
                                                                     "Quantidade máxima de caracteres",
-                                                                  min: 5,
+                                                                  min: 1,
                                                                   max: 20,
                                                                   value:
                                                                     _vm
@@ -42566,6 +42612,17 @@ var render = function() {
                       }
                     },
                     {
+                      key: "item.required",
+                      fn: function(ref) {
+                        var item = ref.item
+                        return [
+                          item.data.attributes.required
+                            ? _c("span", [_vm._v("Sim")])
+                            : _c("span", [_vm._v("Não")])
+                        ]
+                      }
+                    },
+                    {
                       key: "item.active",
                       fn: function(ref) {
                         var item = ref.item
@@ -42635,7 +42692,7 @@ var render = function() {
                   ],
                   null,
                   false,
-                  958422918
+                  3228035875
                 )
               })
             ],
@@ -104088,6 +104145,7 @@ var actions = {
       max: data.max,
       min: data.min,
       mask: data.mask,
+      required: data.required,
       type: data.type,
       active: data.active,
       _method: "patch"
@@ -104852,8 +104910,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\git\epl\temp\sape\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\git\epl\temp\sape\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/rene/Documentos/sape/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/rene/Documentos/sape/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
