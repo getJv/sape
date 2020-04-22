@@ -25,3 +25,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/project-fields/project/{project}', 'ProjectFieldController@projectFields');
     Route::get('/project/{project}/events-on-step/{projectStatus}', 'ProjectController@projectEventsOnStatus');
 });
+
+Route::get('/ldap','LdapController@login');
