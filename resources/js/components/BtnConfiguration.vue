@@ -13,7 +13,7 @@
           <v-icon>mdi-bookmark-outline</v-icon>
         </v-btn>
       </template>
-      <span>Gerenciar Status</span>
+      <span>Gerenciar Fases</span>
     </v-tooltip>
 
     <v-tooltip left>
@@ -22,7 +22,7 @@
           <v-icon>mdi-bookmark-multiple-outline</v-icon>
         </v-btn>
       </template>
-      <span>Gerenciar Workflow</span>
+      <span>Gerenciar Ciclo de vida dos projetos</span>
     </v-tooltip>
     <v-tooltip left>
       <template v-slot:activator="{ on }">

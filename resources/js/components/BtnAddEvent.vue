@@ -5,6 +5,7 @@
                 small
                 color="primary"
                 hint="Adicionar atividade"
+                class="pa-1"
                 dark
                 v-on="on"
                 >mdi-calendar-plus</v-icon

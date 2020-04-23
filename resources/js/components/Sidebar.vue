@@ -24,17 +24,25 @@
                 </v-list-item-action>
                 <v-list-item-content>
                     <v-list-item-title>
+
                         <span>
                             Projetos
-                            <BtnAddProject :hasSession="true" />
+                            <BtnProjectFilter   :exibirTodos.sync="exibirTodos"/>
+                            <BtnAddProject    :hasSession="true" />
                         </span>
+                           
+
+
+                        
+                            
                     </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
 
             <span v-if="projects">
+
                 <v-list-item
-                    v-for="item in projects.data"
+                    v-for="item in filteredProjects"
                     :key="item.data.id"
                     link
                 >
@@ -51,13 +59,21 @@
 
 <script>
 import BtnAddProject from "./BtnAddProject";
+import BtnProjectFilter from "./BtnProjectFilter";
+
 import { mapGetters } from "vuex";
 
 export default {
     name: "Sidebar",
     props: ["drawer"],
     components: {
-        BtnAddProject
+        BtnAddProject,
+        BtnProjectFilter
+    },
+    data(){
+        return{
+            exibirTodos:false
+        }
     },
     methods: {
         ocultar() {
@@ -74,7 +90,16 @@ export default {
         this.$store.dispatch("fetchProjects");
     },
     computed: {
-        ...mapGetters(["projects", "loadingProjects"])
+        ...mapGetters(["projects", "loadingProjects"]),
+        filteredProjects(){
+            if(this.exibirTodos){
+                return this.projects.data;
+            }else{
+                return this.projects.data.filter(item => item.data.attributes.active )    
+            }
+            
+            
+        }
     }
 };
 </script>
