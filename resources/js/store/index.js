@@ -6,9 +6,11 @@ import ProjectWorkflows from "./modules/projectWorkflows";
 import Fields from "./modules/field";
 import Events from "./modules/events";
 import ProjectFields from "./modules/projectFields";
+import auth from "./modules/auth";
 
 Vue.use(Vuex);
 
+//export default new Vuex.Store({
 export default new Vuex.Store({
     modules: {
         Projects,
@@ -16,6 +18,7 @@ export default new Vuex.Store({
         ProjectWorkflows,
         Fields,
         Events,
-        ProjectFields
+        ProjectFields,
+        auth
     }
 });

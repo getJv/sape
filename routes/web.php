@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Auth::routes();
+//Auth::routes();
 
-Route::get('{any}', 'AppController@index')->where('any','.*')->middleware('auth')->name('home');
+
+Route::get('{any}', 'AppController@index')->where('any','.*')->name('login');
+//Route::get('{any}', 'AppController@index')->where('any','.*')->middleware('auth')->name('home');

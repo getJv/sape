@@ -7,42 +7,6 @@
 // Bootstrap
 //@import '~bootstrap/scss/bootstrap';
 
-#videoHeader {
-    height: 100vh;
-}
-
-#videoBackground {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -1;
-}
-@media (min-aspect-ratio: 16/9) {
-    #videoBackground {
-        width: 100%;
-        height: auto;
-    }
-}
-@media (max-aspect-ratio: 16/9) {
-    #videoBackground {
-        width: auto;
-        height: 100%;
-    }
-}
-@media (max-width: 767px) {
-    #videoBackground {
-        display: none;
-    }
-    body {
-        background: url("/imagens/video-bg.jpg");
-        background-size: cover;
-    }
-}
-
 @tailwind base;
 
 @tailwind components;

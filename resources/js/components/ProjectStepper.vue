@@ -3,7 +3,7 @@
     <v-card-title>Fases do Projeto</v-card-title>
     <v-divider></v-divider>
     <v-card-text>
-      <p class="text-center" v-if="!projectWorkflow">
+      <p class="text-center" v-if="!projectWorkflow || projectWorkflow.data.length < 1">
         Este projeto ainda não possui um workflow. Crie um no menu
         Gerenciar de workflow.
       </p>
@@ -57,7 +57,7 @@
               </v-card-text>
             </v-card>
           </v-stepper-content>
-          <v-divisor></v-divisor>
+          <v-divider></v-divider>
         </span>
 
         <!-- Ultimo Step do pw -->

@@ -8,8 +8,6 @@ return $request->user();
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::get('auth-user', 'AuthUserController@show');
-
     Route::apiResources([
         '/projects'          => "ProjectController",
         '/project-statuses'  => "ProjectStatusController",
@@ -17,7 +15,6 @@ Route::middleware('auth:api')->group(function () {
         '/fields'            => "FieldController",
         '/project-fields'    => "ProjectFieldController",
         '/project-events'    => "ProjectEventController",
-
     ]);
 
     Route::get('/project-workflows/project/{project}', 'ProjectWorkflowController@projectWorkflow');
@@ -26,4 +23,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/project/{project}/events-on-step/{projectStatus}', 'ProjectController@projectEventsOnStatus');
 });
 
+
+Route::get('/', 'LdapController@show');
+Route::post('/login', 'LdapController@login');
 Route::get('/ldap','LdapController@login');

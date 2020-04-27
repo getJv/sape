@@ -11,14 +11,23 @@ class User extends Authenticatable
 {
     use Notifiable,HasApiTokens;
 
+
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'username','email', 'password',
     ];
+
+    public function findForPassport($identifier)
+    {
+
+        return $this->orWhere('username', $identifier)->first();
+    }
+
 
     /**
      * The attributes that should be hidden for arrays.
