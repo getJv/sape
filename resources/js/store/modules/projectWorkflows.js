@@ -27,6 +27,7 @@ const actions = {
         axios
             .get("/api/project-workflows/project/" + projectId)
             .then(({ data }) => {
+                console.log(data);
                 commit("setProjectWorkflow", data);
             })
             .catch(err => console.log(err.data))

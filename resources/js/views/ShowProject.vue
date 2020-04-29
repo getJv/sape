@@ -37,6 +37,9 @@
                 </v-col>
             </v-row>
         </v-col>
+        <v-col cols="12">
+            <Attachment />
+        </v-col>
     </v-row>
 </template>
 
@@ -46,6 +49,7 @@ import ProjectStepper from "../components/ProjectStepper";
 import ProjectDetails from "../components/ProjectDetails";
 import ProjectMapLayers from "../components/ProjectMapLayers";
 import BtnEditProject from "../components/BtnEditProject";
+import Attachment from "../components/Attachment";
 
 export default {
     name: "ShowProject",
@@ -53,7 +57,8 @@ export default {
         ProjectStepper,
         ProjectDetails,
         ProjectMapLayers,
-        BtnEditProject
+        BtnEditProject,
+        Attachment
     },
     computed: {
         ...mapGetters(["project"])

@@ -5,7 +5,7 @@ import store from "./store";
 import Vuetify from "vuetify";
 import "@mdi/font/css/materialdesignicons.css";
 import Vuelidate from "vuelidate";
-
+/* @ts-ignore */
 Vue.use(Vuetify, Vuelidate);
 
 require("./bootstrap");

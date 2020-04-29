@@ -8,7 +8,7 @@
         clipped
     >
         <v-list dense>
-            <v-list-item two-line :class="miniVariant && 'px-0'">
+            <v-list-item two-line class="px-0">
                 <v-list-item-avatar>
                     <v-avatar color="indigo" size="36">
                         <span class="pa-5 white--text headline">{{
@@ -106,7 +106,7 @@ export default {
 
         showProject(item) {
             this.$store.dispatch("fetchProject", item.data.id);
-            this.$router.push("/show-project");
+            this.$router.push("/show-project").catch(err => {});
         }
     },
     created() {

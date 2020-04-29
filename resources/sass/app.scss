@@ -7,6 +7,32 @@
 // Bootstrap
 //@import '~bootstrap/scss/bootstrap';
 
+#videoBG {
+    position: fixed !important;
+    z-index: -1 !important;
+}
+@media (min-aspect-ratio: 16/9) {
+    #videoBG {
+        width: 100% !important;
+        height: auto !important;
+    }
+}
+@media (max-aspect-ratio: 16/9) {
+    #videoBG {
+        width: auto !important;
+        height: 100% !important;
+    }
+}
+@media (max-width: 767px) {
+    #videoBG {
+        display: none;
+    }
+    body {
+        background: url("/imagens/video-bg.jpg");
+        background-size: cover;
+    }
+}
+
 @tailwind base;
 
 @tailwind components;
