@@ -10,12 +10,18 @@
         <v-list dense>
             <v-list-item two-line :class="miniVariant && 'px-0'">
                 <v-list-item-avatar>
-                    <img src="https://randomuser.me/api/portraits/men/81.jpg" />
+                    <v-avatar color="indigo" size="36">
+                        <span class="pa-5 white--text headline">{{
+                            initialUser
+                        }}</span></v-avatar
+                    >
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                    <v-list-item-title>Jhonatan Morais</v-list-item-title>
-                    <v-list-item-subtitle>Assistente I</v-list-item-subtitle>
+                    <v-list-item-title>{{ nameUser }}</v-list-item-title>
+                    <v-list-item-subtitle>{{
+                        user.data.attributes.cargo
+                    }}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
 
@@ -63,7 +69,7 @@
 
         <template v-slot:append>
             <div class="pa-2">
-                <v-btn block>Sair</v-btn>
+                <v-btn block @click="logout">Sair</v-btn>
             </div>
         </template>
     </v-navigation-drawer>
@@ -88,6 +94,10 @@ export default {
         };
     },
     methods: {
+        logout() {
+            this.$store.dispatch("logout");
+            this.$router.push("/login");
+        },
         ocultar() {
             if (!this.$refs.navbar.isActive) {
                 this.$emit("update:drawer", false);
@@ -103,7 +113,19 @@ export default {
         this.$store.dispatch("fetchProjects");
     },
     computed: {
-        ...mapGetters(["projects", "loadingProjects"]),
+        ...mapGetters(["projects", "loadingProjects", "user"]),
+        nameUser() {
+            var pieces = this.user.data.attributes.name.split(" ");
+            return pieces[0] + " " + pieces[pieces.length - 1];
+        },
+        initialUser() {
+            var pieces = this.user.data.attributes.name.split(" ");
+            return (
+                pieces[0].substring(0, 1) +
+                pieces[pieces.length - 1].substring(0, 1)
+            );
+        },
+
         filteredProjects() {
             if (this.exibirTodos) {
                 return this.projects.data;
