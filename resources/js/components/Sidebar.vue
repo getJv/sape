@@ -8,6 +8,19 @@
         clipped
     >
         <v-list dense>
+            <v-list-item two-line :class="miniVariant && 'px-0'">
+                <v-list-item-avatar>
+                    <img src="https://randomuser.me/api/portraits/men/81.jpg" />
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                    <v-list-item-title>Jhonatan Morais</v-list-item-title>
+                    <v-list-item-subtitle>Assistente I</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+
+            <v-divider></v-divider>
+
             <v-list-item @click="$router.push('/')" link>
                 <v-list-item-action>
                     <v-icon color="green darken-1">mdi-view-dashboard</v-icon>
@@ -26,40 +39,34 @@
                     <v-list-item-title>
                         <span>
                             Projetos
-                            <BtnProjectFilter   :exibirTodos.sync="exibirTodos"/>
-                            <BtnAddProject    :hasSession="true" />
+                            <BtnProjectFilter :exibirTodos.sync="exibirTodos" />
+                            <BtnAddProject :hasSession="true" />
                         </span>
                     </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
 
             <span v-if="projects">
-
                 <v-list-item
                     v-for="item in filteredProjects"
                     :key="item.data.id"
                     link
                 >
                     <v-list-item-content @click="showProject(item)">
-                        <v-list-item-title>
-                            {{ item.data.attributes.name }}
-                        </v-list-item-title>
+                        <v-list-item-title>{{
+                            item.data.attributes.name
+                        }}</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </span>
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+        </v-list>
 
-      <span v-if="projects">
-        <v-list-item v-for="item in projects.data" :key="item.data.id" link>
-          <v-list-item-content @click="showProject(item)">
-            <v-list-item-title>{{ item.data.attributes.name }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </span>
-    </v-list>
-  </v-navigation-drawer>
+        <template v-slot:append>
+            <div class="pa-2">
+                <v-btn block>Sair</v-btn>
+            </div>
+        </template>
+    </v-navigation-drawer>
 </template>
 
 <script>
@@ -75,10 +82,10 @@ export default {
         BtnAddProject,
         BtnProjectFilter
     },
-    data(){
-        return{
-            exibirTodos:false
-        }
+    data() {
+        return {
+            exibirTodos: false
+        };
     },
     methods: {
         ocultar() {
@@ -86,6 +93,7 @@ export default {
                 this.$emit("update:drawer", false);
             }
         },
+
         showProject(item) {
             this.$store.dispatch("fetchProject", item.data.id);
             this.$router.push("/show-project");
@@ -96,14 +104,14 @@ export default {
     },
     computed: {
         ...mapGetters(["projects", "loadingProjects"]),
-        filteredProjects(){
-            if(this.exibirTodos){
+        filteredProjects() {
+            if (this.exibirTodos) {
                 return this.projects.data;
-            }else{
-                return this.projects.data.filter(item => item.data.attributes.active )
+            } else {
+                return this.projects.data.filter(
+                    item => item.data.attributes.active
+                );
             }
-
-
         }
     }
 };
