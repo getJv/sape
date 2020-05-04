@@ -7,6 +7,7 @@ import Fields from "./modules/field";
 import Events from "./modules/events";
 import ProjectFields from "./modules/projectFields";
 import auth from "./modules/auth";
+import attachment from "./modules/attachments";
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
         Fields,
         Events,
         ProjectFields,
-        auth
+        auth,
+        attachment
     }
 });

@@ -54,6 +54,8 @@ const actions = {
                 commit("setProject", res.data);
                 dispatch("fetchProjectWorkflow", projectId);
                 dispatch("fetchProjectFields", projectId);
+                dispatch("fetchProjectAttachment", projectId);
+                dispatch("fetchProjectStatuses");
                 commit("setLoadingProjects", false);
             })
             .catch(err => console.log(err.data));

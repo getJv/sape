@@ -16,4 +16,8 @@ class Project extends Model
     {
         return $this->hasMany('App\ProjectField');
     }
+    public function attachments(){
+        return $this->hasMany('App\Attachment');
+    }
+
 }

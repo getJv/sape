@@ -15,14 +15,19 @@ Route::middleware('auth:api')->group(function () {
         '/fields'            => "FieldController",
         '/project-fields'    => "ProjectFieldController",
         '/project-events'    => "ProjectEventController",
+        '/attachments'        => "AttachmentController",
     ]);
 
     Route::get('/project-workflows/project/{project}', 'ProjectWorkflowController@projectWorkflow');
     Route::get('/project-workflows/step-events/{projectWorkflow}', 'ProjectWorkflowController@stepEvents');
     Route::get('/project-fields/project/{project}', 'ProjectFieldController@projectFields');
     Route::get('/project/{project}/events-on-step/{projectStatus}', 'ProjectController@projectEventsOnStatus');
+
+    Route::get('/attachments/project/{project}', 'AttachmentController@projectAttachments');
+
 });
 
+Route::get('/attachments/download/{attachment}', 'AttachmentController@download');
 
 Route::get('/', 'LdapController@show');
 Route::post('/login', 'LdapController@login');
