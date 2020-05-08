@@ -54,6 +54,7 @@
                     :item="event"
                   />
                 </div>
+                <AttachmentList :step="e13" />
               </v-card-text>
             </v-card>
           </v-stepper-content>
@@ -81,12 +82,14 @@
             <v-card-text>
               <StepCard
                 v-for="event in eventFinder(
-                                            last_step.links.events,
-                                            last_step.data.attributes.new_status_id
-                                        )"
+                                    last_step.links.events,
+                                    last_step.data.attributes.new_status_id
+                                )"
                 :key="event.data.id"
                 :item="event"
               />
+
+              <AttachmentList :step="projectWorkflow.workflow_steps + 1" />
             </v-card-text>
           </v-card>
         </v-stepper-content>
@@ -98,6 +101,7 @@
 <script>
 import StepCard from "../components/StepCard";
 import BtnAddEvent from "../components/BtnAddEvent";
+import AttachmentList from "../components/AttachmentList";
 import { mapGetters } from "vuex";
 
 /**TODO: transformar o tooltip em componente dinamico */
@@ -105,11 +109,12 @@ export default {
   name: "ProjecStepper",
   components: {
     StepCard,
-    BtnAddEvent
+    BtnAddEvent,
+    AttachmentList
   },
 
   computed: {
-    ...mapGetters(["projectWorkflow"]),
+    ...mapGetters(["project", "projectWorkflow"]),
 
     last_step() {
       return this.projectWorkflow.data[this.projectWorkflow.workflow_steps - 1];

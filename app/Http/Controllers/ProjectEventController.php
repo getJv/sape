@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ProjectEvent;
 use App\Http\Resources\ProjectEvent as ProjectEventResource;
-
+use Illuminate\Http\Client\ResponseSequence;
 
 class ProjectEventController extends Controller
 {
@@ -41,5 +41,10 @@ class ProjectEventController extends Controller
     public function show(ProjectEvent $projectEvent)
     {
         return new ProjectEventResource($projectEvent);
+    }
+    public function destroy(ProjectEvent $projectEvent)
+    {
+        $projectEvent->delete();
+        return response()->json([],200);
     }
 }

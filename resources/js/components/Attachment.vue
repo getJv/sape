@@ -176,7 +176,6 @@ export default {
   },
   methods: {
     download(item) {
-      console.log("api/attachments/download/" + item.data.id);
       axios({
         url: "api/attachments/download/" + item.data.id,
 

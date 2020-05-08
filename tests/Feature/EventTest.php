@@ -144,4 +144,18 @@ class EventTest extends TestCase
                  ]
              ]);
      }
+
+     /** @test */
+     public function a_event_can_deleted()
+     {
+         $this->withoutExceptionHandling();
+         $projectEvent = factory(ProjectEvent::class)->create();
+         $this->actingAs($user = factory(User::class)->create(), 'api');
+         $this->assertCount(1,ProjectEvent::all());
+
+         $response = $this->delete('/api/project-events/' . $projectEvent->id)
+             ->assertStatus(200);
+        $this->assertCount(0,ProjectEvent::all());
+
+     }
 }

@@ -26,7 +26,8 @@ class Project extends JsonResource
 
             ],
             'links' => [
-                'self' => url('/projects/' . $this->id)
+                'self' => url('/projects/' . $this->id),
+                'attachments' => new AttachmentCollection($this->attachments)
             ]
         ];
     }

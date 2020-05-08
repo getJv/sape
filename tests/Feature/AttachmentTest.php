@@ -8,15 +8,5 @@ use Tests\TestCase;
 
 class AttachmentTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
+ //TODO: Criar os testes
 }

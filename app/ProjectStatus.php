@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectStatus extends Model
 {
     protected $guarded = [];
+
+    protected function attachments(){
+        return $this->hasMany("App\Attachment");
+    }
 }

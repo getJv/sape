@@ -18,6 +18,14 @@ const actions = {
             )
             .catch(err => console.log(err.data));
     },
+    deleteEvent({ getters, dispatch }, eventId) {
+        axios
+            .delete("/api/project-events/" + eventId)
+            .then(res =>
+                dispatch("fetchProjectWorkflow", getters.project.data.id)
+            )
+            .catch(err => console.log(err.data));
+    },
     updateEvent({ getters, dispatch }, data) {
         axios
             .patch("/api/project-events/" + getters.event.data.id, {
