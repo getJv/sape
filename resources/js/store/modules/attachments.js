@@ -14,6 +14,7 @@ const actions = {
             .post("api/attachments", data)
             .then(res => {
                 dispatch("fetchProjectAttachment", getters.project.data.id);
+                dispatch("fetchProjectWorkflow", getters.project.data.id);
             })
             .catch(err => console.log(err));
     },
@@ -32,6 +33,7 @@ const actions = {
             .delete("api/attachments/" + itemId)
             .then(res => {
                 dispatch("fetchProjectAttachment", getters.project.data.id);
+                dispatch("fetchProjectWorkflow", getters.project.data.id);
             })
             .catch(err => console.log(err));
     }

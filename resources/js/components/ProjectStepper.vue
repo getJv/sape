@@ -16,6 +16,7 @@
             <span>
               {{ phase.links.old_status.data.attributes.name }}
               <BtnAddEvent
+                v-if="e13 == phase.data.attributes.order"
                 :owner_id="phase.links.old_status.data.id"
                 :project_workflow_id="phase.data.id"
                 :step_id="phase.data.attributes.order"
@@ -26,35 +27,47 @@
             <v-card color="grey lighten-1">
               <v-card-text>
                 <div v-if="index == 0">
-                  <StepCard
-                    v-for="event in eventFinder(
-                                            phase.links.events,
-                                            phase.data.attributes.old_status_id
-                                        )"
-                    :key="event.data.id"
-                    :item="event"
-                  />
+                  <v-card outlined color="transparent">
+                    <v-card-text>
+                      <div class="subtitle font-weight-black">Atividades da fase</div>
+                      <StepCard
+                        v-for="event in eventFinder(
+                                                    phase.links.events,
+                                                    phase.data.attributes
+                                                        .old_status_id
+                                                )"
+                        :key="event.data.id"
+                        :item="event"
+                      />
+                    </v-card-text>
+                  </v-card>
                 </div>
                 <div v-else>
-                  <StepCard
-                    v-for="event in [
-                                            ...eventFinder(
-                                                projectWorkflow.data[index - 1]
-                                                    .links.events,
-                                                phase.data.attributes
-                                                    .old_status_id
-                                            ),
-                                            ...eventFinder(
-                                                phase.links.events,
-                                                phase.data.attributes
-                                                    .old_status_id
-                                            )
-                                        ]"
-                    :key="event.data.id"
-                    :item="event"
-                  />
+                  <v-card outlined color="transparent">
+                    <v-card-text>
+                      <div class="subtitle font-weight-black">Atividades da fase</div>
+                      <StepCard
+                        v-for="event in [
+                                                    ...eventFinder(
+                                                        projectWorkflow.data[
+                                                            index - 1
+                                                        ].links.events,
+                                                        phase.data.attributes
+                                                            .old_status_id
+                                                    ),
+                                                    ...eventFinder(
+                                                        phase.links.events,
+                                                        phase.data.attributes
+                                                            .old_status_id
+                                                    )
+                                                ]"
+                        :key="event.data.id"
+                        :item="event"
+                      />
+                    </v-card-text>
+                  </v-card>
                 </div>
-                <AttachmentList :step="e13" />
+                <AttachmentList :step="phase.links.old_status.data.id" />
               </v-card-text>
             </v-card>
           </v-stepper-content>
@@ -71,6 +84,7 @@
           <span>
             {{ last_step.links.new_status.data.attributes.name }}
             <BtnAddEvent
+              v-if="e13 == projectWorkflow.workflow_steps + 1"
               :owner_id="last_step.links.new_status.data.id"
               :project_workflow_id="last_step.data.id"
               :step_id="projectWorkflow.workflow_steps + 1"
@@ -80,16 +94,22 @@
         <v-stepper-content :step="projectWorkflow.workflow_steps + 1">
           <v-card color="grey lighten-1">
             <v-card-text>
-              <StepCard
-                v-for="event in eventFinder(
-                                    last_step.links.events,
-                                    last_step.data.attributes.new_status_id
-                                )"
-                :key="event.data.id"
-                :item="event"
-              />
+              <v-card outlined color="transparent">
+                <v-card-text>
+                  <div class="subtitle font-weight-black">Atividades da fase</div>
+                  <StepCard
+                    v-for="event in eventFinder(
+                                            last_step.links.events,
+                                            last_step.data.attributes
+                                                .new_status_id
+                                        )"
+                    :key="event.data.id"
+                    :item="event"
+                  />
+                </v-card-text>
+              </v-card>
 
-              <AttachmentList :step="projectWorkflow.workflow_steps + 1" />
+              <AttachmentList :step="last_step.data.attributes.new_status_id" />
             </v-card-text>
           </v-card>
         </v-stepper-content>

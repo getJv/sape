@@ -18,6 +18,7 @@ class FieldController extends Controller
             'min'  => 'integer',
             'max'  => 'integer',
             'mask' => '',
+            'items' => '',
             'required' => 'boolean',
 
         ]);
@@ -34,6 +35,7 @@ class FieldController extends Controller
             'min'  => 'integer',
             'max'  => 'integer',
             'mask' => '',
+            'items' => '',
             'required' => 'boolean',
             'active' => 'required | boolean'
         ]);
@@ -43,11 +45,13 @@ class FieldController extends Controller
 
     public function show(Field $field)
     {
+    
+
         return new FieldResource($field);
     }
 
     public function index()
     {
-        return new FieldCollection(Field::all());
+        return new FieldCollection(Field::orderBy('id', 'DESC')->get());
     }
 }

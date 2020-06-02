@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ProjectFieldCollection extends ResourceCollection
+class DashboardCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,10 +15,10 @@ class ProjectFieldCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data'                 => $this->collection,
-            'total_project_fields'       => $this->count(),
+            'data'               => $this->collection,
+            'total_dashboards'   => $this->count(),
             'links'      => [
-                'self' => url('/project-fields/')
+                'self' => url('/dashboards')
             ],
 
         ];

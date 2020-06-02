@@ -1,13 +1,15 @@
 <template>
-  <v-textarea
-    v-model="fieldValue"
-    :label="label"
-    outlined
-    :hint="hint"
-    :error-messages="fieldValueErrors"
-    @input="$v.fieldValue.$touch()"
-    @blur="$v.fieldValue.$touch()"
-  ></v-textarea>
+  <div>
+    <v-textarea
+      v-model="fieldValue"
+      :label="label"
+      :hint="hint"
+      outlined
+      :error-messages="fieldValueErrors"
+      @input="$v.fieldValue.$touch()"
+      @blur="$v.fieldValue.$touch()"
+    ></v-textarea>
+  </div>
 </template>
 
 <script>
@@ -15,7 +17,7 @@ import { validationMixin } from "vuelidate";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
-  name: "TextAreaField",
+  name: "EnumFieldList",
   props: {
     required: {
       type: Boolean

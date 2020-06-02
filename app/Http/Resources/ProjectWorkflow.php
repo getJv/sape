@@ -34,7 +34,7 @@ class ProjectWorkflow extends JsonResource
                 'project' => new ProjectResource($this->project),
                 'old_status' => new ProjectStatusResource($this->old_status),
                 'new_status' => new ProjectStatusResource($this->new_status),
-                'events'     => new ProjectEventCollection($this->events),
+                'events'     => new ProjectEventCollection($this->events()->orderBy('created_at')->get()),
             ]
         ];
     }

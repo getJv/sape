@@ -11,6 +11,7 @@ $factory->define(ProjectField::class, function (Faker $faker) {
         'project_id' => $faker->unique()->randomNumber(),
         'field_id' => $faker->unique()->randomNumber(),
         'value' => Str::random(10),
+        'order' => $faker->unique()->randomNumber(),
         'active' => true
     ];
 });

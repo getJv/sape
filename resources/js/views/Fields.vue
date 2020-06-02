@@ -20,72 +20,43 @@
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">
-                    {{
-                    formTitle
-                    }}
-                  </span>
+                  <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
 
                 <v-card-text>
                   <v-container>
                     <v-row justify="center" align="center">
                       <v-col cols="12" sm="10">
-                        <v-select
-                          v-if="editedIndex < 0"
-                          v-model="editedItem.type"
-                          :items="fieldTypesList"
+                        <typeField
+                          ref="typeField"
                           label="Formato do dado"
+                          :items="fieldTypesList"
                           placeholder="Selecione um dos formatos"
-                          outlined
+                          :value.sync="editedItem.type"
                           required
-                          :error-messages="typeErrors"
-                          @input="
-                                                        $v.editedItem.type.$touch()
-                                                    "
-                          @blur="
-                                                        $v.editedItem.type.$touch()
-                                                    "
-                        ></v-select>
+                          :ifConditional="editedIndex < 0 && dialog"
+                        />
                       </v-col>
                     </v-row>
 
                     <v-row justify="center" align="center" v-if="editedItem.type">
                       <v-col cols="12" sm="10">
-                        <v-text-field
-                          v-model="editedItem.name"
-                          :counter="50"
-                          :error-messages="nameErrors"
+                        <NameField
+                          :value.sync="editedItem.name"
+                          :min="3"
+                          :max="50"
                           label="Nome"
                           required
-                          @input="
-                                                        $v.editedItem.name.$touch()
-                                                    "
-                          @blur="
-                                                        $v.editedItem.name.$touch()
-                                                    "
-                        ></v-text-field>
+                        />
                       </v-col>
                       <v-col cols="12" sm="10">
-                        <v-textarea
-                          v-model="
-                                                        editedItem.description
-                                                    "
+                        <DescriptionField
+                          :value.sync="editedItem.description"
                           hint="Informe uma breve descrição deste projeto"
-                          :error-messages="
-                                                        descriptionErrors
-                                                    "
                           label="Descrição do projeto"
-                          :counter="255"
-                          outlined
-                          required
-                          @input="
-                                                        $v.editedItem.description.$touch()
-                                                    "
-                          @blur="
-                                                        $v.editedItem.description.$touch()
-                                                    "
-                        ></v-textarea>
+                          :min="3"
+                          :max="255"
+                        />
                       </v-col>
 
                       <v-col cols="12" sm="10" v-if="showField('mask')">
@@ -107,20 +78,24 @@
                           <v-col cols="6">
                             <minField
                               label="Quantidade mínima de caracteres"
-                              :value.sync="
-                                                                editedItem.min
-                                                            "
+                              :value.sync="editedItem.min"
                             />
                           </v-col>
                           <v-col cols="6">
                             <maxField
                               label="Quantidade máxima de caracteres"
-                              :value.sync="
-                                                                editedItem.max
-                                                            "
+                              :value.sync="editedItem.max"
                             />
                           </v-col>
                         </v-row>
+                      </v-col>
+                      <v-col cols="12" sm="10" v-if="showField('enum')">
+                        <EnumListField
+                          :value.sync="editedItem.items"
+                          label="Liste as opções do campo"
+                          hint="Cada opção deve ser separada por um ponto-e-virgula"
+                          required
+                        />
                       </v-col>
                     </v-row>
                   </v-container>
@@ -187,35 +162,23 @@
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
 import minField from "../components/formInputs/IntegerField";
 import maxField from "../components/formInputs/IntegerField";
+import typeField from "../components/formInputs/SelectField";
+import NameField from "../components/formInputs/TextField";
+import DescriptionField from "../components/formInputs/TextAreaField";
+import EnumListField from "../components/formInputs/EnumListField";
 
 export default {
   name: "Fields",
   components: {
     minField,
-    maxField
-  },
-  mixins: [validationMixin],
-  validations: {
-    editedItem: {
-      name: {
-        required,
-        minLength: minLength(3),
-        maxLength: maxLength(50)
-      },
-      description: {
-        required,
-        minLength: minLength(3),
-        maxLength: maxLength(255)
-      },
-      type: {
-        required
-      }
-    }
+    maxField,
+    typeField,
+    NameField,
+    DescriptionField,
+    EnumListField
   },
   created() {
     this.$store.dispatch("fetchFields");
@@ -223,69 +186,12 @@ export default {
   data: () => ({
     dialog: false,
     editedIndex: -1,
-    maskTypes: [
-      {
-        name: "Sem máscara",
-        format: ""
-      },
-      {
-        name: "Data simples",
-        format: "##/##/####"
-      },
-      {
-        name: "CEP",
-        format: "#####-###"
-      },
-      {
-        name: "CPF",
-        format: "###.###.###-##"
-      },
-      {
-        name: "CNPJ",
-        format: "###.###.###/####-##"
-      },
-      {
-        name: "Hora",
-        format: "##:##:##"
-      }
-    ],
-    fieldTypes: [
-      {
-        type: "integerField",
-        name: "Número inteiro",
-        description: "Recebe apenas números inteiros. ex: 10",
-        fields: ["mask", "min-max"]
-      },
-      {
-        type: "numberField",
-        name: "Número decimal",
-        description: "Recebe apenas números com parte de fração. ex: 10,00",
-        fields: ["min-max"]
-      },
-      {
-        type: "dateField",
-        name: "Data",
-        description: "Recebe datas no formato brasieiro. ex: 10/04/2020",
-        fields: []
-      },
-      {
-        type: "textField",
-        name: "Texto pequeno",
-        description: "Útil para textos com no máximo 255 caracteres",
-        fields: ["min-max"]
-      },
-      {
-        type: "textAreaField",
-        name: "Texto grande",
-        description: "Útil para textos com mais 255 caracteres",
-        fields: ["min-max"]
-      }
-    ],
     editedItem: {
       id: "",
       name: "",
       type: "",
       mask: "Sem máscara",
+      items: "",
       description: "",
       active: true
     },
@@ -293,13 +199,14 @@ export default {
       name: "",
       type: "",
       mask: "Sem máscara",
+      items: "",
       description: "",
       active: true
     }
   }),
 
   computed: {
-    ...mapGetters(["fields"]),
+    ...mapGetters(["fields", "maskTypes", "fieldTypes"]),
     fieldMaskList() {
       var list = [];
       this.maskTypes.forEach(item => list.push(item.name));
@@ -356,46 +263,11 @@ export default {
           value: "actions"
         }
       ];
-      if (this.hasSession) {
-        headers.push({
-          text: "Ações",
-          value: "actions",
-          sortable: false
-        });
-      }
-
       return headers;
     },
 
     formTitle() {
       return this.editedIndex === -1 ? "Novo Item" : "Edição de Item";
-    },
-    nameErrors() {
-      const errors = [];
-      if (!this.$v.editedItem.name.$dirty) return errors;
-      !this.$v.editedItem.name.required && errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.name.minLength &&
-        errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.name.maxLength &&
-        errors.push("Máximo de 50 caracteres");
-      return errors;
-    },
-    descriptionErrors() {
-      const errors = [];
-      if (!this.$v.editedItem.description.$dirty) return errors;
-      !this.$v.editedItem.description.required &&
-        errors.push("Campo Obrigatório.");
-      !this.$v.editedItem.description.minLength &&
-        errors.push("Mínimo de 3 caracteres");
-      !this.$v.editedItem.description.maxLength &&
-        errors.push("Máximo de 255 caracteres");
-      return errors;
-    },
-    typeErrors() {
-      const errors = [];
-      if (!this.$v.editedItem.type.$dirty) return errors;
-      !this.$v.editedItem.type.required && errors.push("Campo Obrigatório.");
-      return errors;
     }
   },
 
@@ -423,17 +295,23 @@ export default {
         });
       }
     },
+    /**
+     * Metodo identifica quais subcampos campos recarregar conforme seleção do tipo do campo
+     */
     showField(fieldname) {
-      var attachedFields = this.fieldTypes.find(
-        item => item.name == this.editedItem.type
-      ).fields;
+      var attachedFields = this.fieldTypes.find(item => {
+        return (
+          item.name == this.editedItem.type || item.type == this.editedItem.type // item.name to create form, item.type to edit form
+        );
+      }).fields;
 
       return attachedFields.find(item => item == fieldname);
     },
 
     close() {
       this.dialog = false;
-      this.$v.$reset();
+      this.defaultItem.type = null;
+
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -446,18 +324,20 @@ export default {
           id: this.editedItem.id,
           name: this.editedItem.name,
           description: this.editedItem.description,
-          max: this.editedItem.max,
-          min: this.editedItem.min,
+          max: this.editedItem.max ?? 0,
+          min: this.editedItem.min ?? 0,
           mask: this.fieldMaskSelected,
+          items: this.editedItem.items,
           active: this.editedItem.active
         });
       } else {
         this.$store.dispatch("createField", {
           name: this.editedItem.name,
           description: this.editedItem.description,
-          max: this.editedItem.max,
-          min: this.editedItem.min,
+          max: this.editedItem.max ?? 0,
+          min: this.editedItem.min ?? 0,
           mask: this.fieldMaskSelected,
+          items: this.editedItem.items,
           type: this.fieldTypeSelected
         });
       }

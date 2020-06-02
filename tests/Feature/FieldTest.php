@@ -122,6 +122,7 @@ class FieldTest extends TestCase
                         'min' => $field->min,
                         'max' => $field->max,
                         'mask' => $field->mask,
+                        'items' => $field->items,
                         'active' => $field->active,
                     ],
 

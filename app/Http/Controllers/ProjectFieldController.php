@@ -12,6 +12,48 @@ use App\Exceptions\DuplicatedProjectFieldException;
 
 class ProjectFieldController extends Controller
 {
+
+    public function index()
+    {
+        return new ProjectFieldCollection(ProjectField::where('active', true)->orderBy('id')->get());
+    }
+
+    /**
+     * Reset a ordem de todos os projetos tendo seu ordenamento como padrão.
+     */
+    public function orderReset(Project $project)
+    {
+
+
+        $projectFields = $project->fields()->get();
+        $index = 1;
+        foreach ($projectFields as $projectField) {
+
+            $projectField->update(['order' => $index++]);
+        }
+
+        return new ProjectFieldCollection(ProjectField::orderBy('order')->get());
+    }
+    public function orderUp(ProjectField $projectField)
+    {
+
+        $beforeProjectField = ProjectField::where('order', $projectField->order - 1)->first();
+        $beforeProjectField->update(['order' => $beforeProjectField->order + 1]);
+        $projectField->update(['order' => $projectField->order - 1]);
+
+        return new ProjectFieldCollection(ProjectField::orderBy('order')->get());
+    }
+
+    public function orderDown(ProjectField $projectField)
+    {
+
+
+        $afterProjectField = ProjectField::where('order', $projectField->order + 1)->first();
+        $afterProjectField->update(['order' => $afterProjectField->order - 1]);
+        $projectField->update(['order' => $projectField->order + 1]);
+
+        return new ProjectFieldCollection(ProjectField::orderBy('order')->get());
+    }
     public function store()
     {
         $data = request()->validate([
@@ -26,8 +68,8 @@ class ProjectFieldController extends Controller
             throw new DuplicatedProjectFieldException();
         }
 
-
-        $projectField = ProjectField::create(array_merge($data, ['active' => true]));
+        $nextOrder = ProjectField::all()->count() + 1;
+        $projectField = ProjectField::create(array_merge($data, ['active' => true, 'order' => $nextOrder]));
         return new ProjectFieldResource($projectField);
     }
 
@@ -44,7 +86,7 @@ class ProjectFieldController extends Controller
 
     public function projectFields(Project $project)
     {
-        $list = $project->fields;
+        $list = $project->fields()->orderBy('order')->get();
 
         if ($list->count() < 1) {
             return response()->json([

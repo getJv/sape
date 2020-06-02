@@ -12,6 +12,30 @@ const getters = {
 };
 
 const actions = {
+    projectResetOrder({ dispatch }, project) {
+        axios
+            .patch("/api/projects/order/reset", {
+                _method: "patch"
+            })
+            .then(res => dispatch("fetchProjects"))
+            .catch(err => console.log(err.data));
+    },
+    projectMoveUp({ dispatch }, project) {
+        axios
+            .patch("/api/projects/" + project.data.id + "/up", {
+                _method: "patch"
+            })
+            .then(res => dispatch("fetchProjects"))
+            .catch(err => console.log(err.data));
+    },
+    projectMoveDown({ dispatch }, project) {
+        axios
+            .patch("/api/projects/" + project.data.id + "/down", {
+                _method: "patch"
+            })
+            .then(res => dispatch("fetchProjects"))
+            .catch(err => console.log(err.data));
+    },
     createProject({ dispatch }, data) {
         axios
             .post("/api/projects", data)

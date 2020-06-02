@@ -1,16 +1,17 @@
 <template>
-    <v-row v-if="project">
-        <v-col cols="12" md="5">
-            <v-row justify="start" align="start">
+    <v-row v-if="project" align="start" justify="space-around" class="ma-5">
+        <v-col cols="12" md="6">
+            <v-row>
                 <v-col cols="12">
                     <v-card outlined>
                         <v-card-title>
-                            <span
-                                >{{ project.data.attributes.name }}
+                            <span>
+                                {{ project.data.attributes.name }}
                                 <BtnEditProject
                                     :hasSession="hasSession"
                                     :item="project"
-                            /></span>
+                                />
+                            </span>
                         </v-card-title>
                         <v-divider></v-divider>
                         <v-card-text>
@@ -27,7 +28,7 @@
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="12" md="7">
+        <v-col cols="12" md="6">
             <v-row>
                 <!--  <v-col cols="12">
           <ProjectMapLayers />

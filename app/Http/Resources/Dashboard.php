@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Project extends JsonResource
+class Dashboard extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,19 +16,16 @@ class Project extends JsonResource
     {
         return [
             'data' => [
-                'type' => 'projects',
+                'type' => 'dashboards',
                 'id' => $this->id,
                 'attributes' => [
-                    'name' => $this->name,
-                    'description' => $this->description,
-                    'order' =>  $this->order,
-                    'active' => $this->active,
+                    'field_id' => $this->field_id,
+                    'operation' => $this->operation,
+                    'data' => $this->operationData()
                 ],
-
             ],
             'links' => [
-                'self' => url('/projects/' . $this->id),
-                'attachments' => new AttachmentCollection($this->attachments)
+                'self' => url('/dashboards/' . $this->id)
             ]
         ];
     }

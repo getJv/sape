@@ -28,14 +28,15 @@ const actions = {
     },
     updateEvent({ getters, dispatch }, data) {
         axios
-            .patch("/api/project-events/" + getters.event.data.id, {
-                name: getters.event.data.attributes.name,
-                description: getters.event.data.attributes.description,
-                owner_id: getters.event.data.attributes.owner_id,
-                active: getters.event.data.attributes.active,
+            .patch("/api/project-events/" + data.id, {
+                name: data.name,
+                description: data.description,
+                project_workflow_id: data.project_workflow_id,
+                owner_id: data.owner_id,
+                active: data.active,
                 _method: "patch"
             })
-            .then(res => dispatch("fetchProjectWorkflow"))
+            .then(res => dispatch("fetchProjectWorkflow", project_workflow_id))
             .catch(err => {
                 console.log(err.data);
             });

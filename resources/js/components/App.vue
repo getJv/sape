@@ -22,13 +22,7 @@
         </v-app-bar>
 
         <v-content :class="isAuthenticated ? 'grey lighten-5' : ''">
-            <v-container>
-                <v-row align="baseline" justify="start">
-                    <v-col>
-                        <router-view></router-view>
-                    </v-col>
-                </v-row>
-            </v-container>
+            <router-view></router-view>
             <BtnConfiguration v-if="isAuthenticated" />
         </v-content>
 
